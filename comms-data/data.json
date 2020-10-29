@@ -1,9 +1,6 @@
 {
-  "question_1": {
-     "happy":27,
-     "mad":13
-  },
-  "question_2": {
-    "data": [1,4,7,19,23]
+  "read-sent-ratio": {
+    "data": [1.772727273,2.415584416,6.851287879],
+    "labels": ["Faculty", "Staff", "Students"]
   }
 }
