@@ -1,0 +1,16 @@
+[
+  {
+    "read-sent-ratio" : {
+      "data" : [
+        1.772727273,
+        2.415584416,
+        6.851287879
+      ],
+      "labels" : [
+        "Spookies",
+        "Creepies",
+        "Ghosties"
+      ]
+    }
+  }
+]
