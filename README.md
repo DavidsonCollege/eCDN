@@ -11,6 +11,7 @@ comms-data | json data used for the [campuscomms](https://campuscomms.davidson.e
 davidson-one | logos and icons used in the Davidson One app
 drivestream | logos and icons used in Oracle HCM
 eCards | images used in the Send Card Kuali application that sends eCards. These images are referenced in the HTML mailer
+external-apps | non-Davidson application logos (facebook, twitter, zendesk, etc)
 
 
 ### Usage
