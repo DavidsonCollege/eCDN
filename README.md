@@ -10,7 +10,7 @@ college-branding | Official Davidson College logos and branding images
 comms-data | json data used for the [campuscomms](https://campuscomms.davidson.edu/) website
 departmental-logos | official college departmental logos
 davidson-one | logos and icons used in the Davidson One app
-drivestream | logos and icons used in Oracle HCM
+oracle-cloud | logos and icons used in Oracle HCM and other Oracle Cloud services
 eCards | images used in the Send Card Kuali application that sends eCards. These images are referenced in the HTML mailer
 external-apps | non-Davidson application logos (facebook, twitter, zendesk, etc)
 
