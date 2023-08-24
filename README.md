@@ -8,6 +8,7 @@ Directory | Purpose
 --- | ---
 college-branding | Official Davidson College logos and branding images
 comms-data | json data used for the [campuscomms](https://campuscomms.davidson.edu/) website
+departmental-logos | official college departmental logos
 davidson-one | logos and icons used in the Davidson One app
 drivestream | logos and icons used in Oracle HCM
 eCards | images used in the Send Card Kuali application that sends eCards. These images are referenced in the HTML mailer
