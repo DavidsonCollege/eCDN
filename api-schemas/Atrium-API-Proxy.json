@@ -1,0 +1,294 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Atrium API Proxy",
+        "description": "",
+        "version": "v1"
+    },
+    "servers": [
+        {
+            "url": "https://api.davidson.edu/micro/atrium-proxy/v1"
+        }
+    ],
+    "paths": {
+        "/accounts/{campus_id}": {
+            "get": {
+                "summary": "accounts",
+                "description": "Gets the accounts for the user",
+                "operationId": "accounts",
+                "parameters": [
+                    {
+                        "name": "campus_id",
+                        "in": "path",
+                        "description": "Campus ID (i.e. Banner ID)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of accounts for a user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AtriumAccountList"
+                                },
+                                "example": {
+                                    "data": [
+                                        {
+                                            "account_id": "21966",
+                                            "account_definition_id": "2",
+                                            "name": "Dining Dollars",
+                                            "status": "Active",
+                                            "currency": "USD",
+                                            "balance": "19398",
+                                            "online_credit_limit": "0",
+                                            "offline_credit_limit": "0",
+                                            "activation_date": null,
+                                            "expiration_date": null,
+                                            "last_used": "2022-10-18T17:58:00.0000000+00:00",
+                                            "deleted": false
+                                        },
+                                        {
+                                            "account_id": "25958",
+                                            "account_definition_id": "1",
+                                            "name": "CatCard DB Account",
+                                            "status": "Active",
+                                            "currency": "USD",
+                                            "balance": "0",
+                                            "online_credit_limit": "0",
+                                            "offline_credit_limit": "0",
+                                            "activation_date": null,
+                                            "expiration_date": null,
+                                            "last_used": null,
+                                            "deleted": false
+                                        },
+                                        {
+                                            "account_id": "39662",
+                                            "account_definition_id": "82",
+                                            "name": "Prior Semester Dining Dollars",
+                                            "status": "Active",
+                                            "currency": "USD",
+                                            "balance": "0",
+                                            "online_credit_limit": "0",
+                                            "offline_credit_limit": "0",
+                                            "activation_date": null,
+                                            "expiration_date": null,
+                                            "last_used": "2022-10-14T14:24:42.0000000+00:00",
+                                            "deleted": false
+                                        },
+                                        {
+                                            "account_id": "44172",
+                                            "account_definition_id": "75",
+                                            "name": "2 Vail/400",
+                                            "status": "Active",
+                                            "currency": "MEL",
+                                            "balance": "2",
+                                            "online_credit_limit": "0",
+                                            "offline_credit_limit": "0",
+                                            "activation_date": null,
+                                            "expiration_date": null,
+                                            "last_used": "2022-09-21T22:21:23.0000000+00:00",
+                                            "deleted": false
+                                        }
+                                    ],
+                                    "status": "SUCCESS",
+                                    "success": true,
+                                    "message": "Approved",
+                                    "response_code": "APPR000"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/image/{campus_id}": {
+            "get": {
+                "summary": "image",
+                "operationId": "image",
+                "parameters": [
+                    {
+                        "name": "campus_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ImageData"
+                                },
+                                "example": {
+                                    "data": {
+                                        "image_type": "string",
+                                        "image": "string"
+                                    },
+                                    "status": "string",
+                                    "success": true,
+                                    "message": "string",
+                                    "response_code": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/image/{campus_id}/base64": {
+            "get": {
+                "summary": "image/base64",
+                "operationId": "64e4def838a0a26c4e7ec43a",
+                "parameters": [
+                    {
+                        "name": "campus_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": ""
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "text/plain": {}
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AtriumAccountList": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "required": [
+                                "account_id",
+                                "account_definition_id",
+                                "name",
+                                "status",
+                                "currency",
+                                "balance",
+                                "online_credit_limit",
+                                "offline_credit_limit",
+                                "activation_date",
+                                "expiration_date",
+                                "last_used",
+                                "deleted"
+                            ],
+                            "type": "object",
+                            "properties": {
+                                "account_id": {
+                                    "type": "string"
+                                },
+                                "account_definition_id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "status": {
+                                    "type": "string"
+                                },
+                                "currency": {
+                                    "type": "string"
+                                },
+                                "balance": {
+                                    "type": "string"
+                                },
+                                "online_credit_limit": {
+                                    "type": "string"
+                                },
+                                "offline_credit_limit": {
+                                    "type": "string"
+                                },
+                                "activation_date": {},
+                                "expiration_date": {},
+                                "last_used": {
+                                    "type": "string"
+                                },
+                                "deleted": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "response_code": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ImageData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "type": "object",
+                        "properties": {
+                            "image_type": {
+                                "type": "string"
+                            },
+                            "image": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "response_code": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ]
+}
