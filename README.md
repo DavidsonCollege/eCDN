@@ -13,6 +13,7 @@ davidson-one | logos and icons used in the Davidson One app
 oracle-cloud | logos and icons used in Oracle HCM and other Oracle Cloud services
 eCards | images used in the Send Card Kuali application that sends eCards. These images are referenced in the HTML mailer
 external-apps | non-Davidson application logos (facebook, twitter, zendesk, etc)
+ai-innovation | logos and icons for AI Innovation Initiative
 
 
 ### Usage
