@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Decade Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Oswald', sans-serif; background: #0a0840; min-height: 100vh; display: flex; justify-content: center; padding: 32px 16px; }
+  .j-root { width: 100%; max-width: 760px; }
+  .j-loading { text-align: center; padding: 60px 0; color: #c8d8ff; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+  .j-year-screen { text-align: center; padding: 20px 0; }
+  .j-year-prompt { font-size: 18px; font-weight: 600; color: #c8d8ff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+  .j-year-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .j-year-btn { background: #1e1a6e; color: #ffffff; border: 2px solid #3a34a8; border-radius: 10px; padding: 18px 28px; font-size: 22px; font-weight: 700; font-family: 'Oswald', sans-serif; cursor: pointer; letter-spacing: 2px; transition: background 0.15s, border-color 0.15s, color 0.15s; min-width: 130px; }
+  .j-year-btn:hover { background: #2d27a0; border-color: #f0c040; color: #f0c040; }
+  .j-quiz-screen { display: none; }
+  .j-back-btn { background: none; border: none; color: #a0b0ff; font-size: 13px; font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-bottom: 16px; padding: 0; display: flex; align-items: center; gap: 6px; }
+  .j-back-btn:hover { color: #f0c040; }
+  .j-panel { background: #12106a; border: 2px solid #3a34a8; border-radius: 12px; padding: 20px; }
+  .j-cat-title { font-size: 20px; font-weight: 700; color: #f0c040; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1.5px solid #3a34a8; }
+  .j-question-block { margin-bottom: 20px; border-radius: 8px; border: 1.5px solid #2a2488; overflow: hidden; }
+  .j-question-block.answered-correct { border-color: #1a6a54; }
+  .j-question-block.answered-wrong { border-color: #8a2020; }
+  .j-q-header { background: #1a1888; padding: 12px 14px; }
+  .j-q-text { font-size: 15px; color: #eeeaff; font-family: 'Source Serif 4', serif; font-style: italic; line-height: 1.5; }
+  .j-choices { padding: 12px 14px; display: grid; gap: 8px; }
+  .j-choice { background: #2a2490; border: 1.5px solid #4a44c0; border-radius: 6px; padding: 10px 14px; font-size: 15px; font-family: 'Oswald', sans-serif; font-weight: 400; color: #ffffff; cursor: pointer; transition: background 0.12s, border-color 0.12s; text-align: left; letter-spacing: 0.3px; display: flex; align-items: center; gap: 10px; }
+  .j-choice:hover:not(:disabled) { background: #3830b8; border-color: #7870e0; color: #f0c040; }
+  .j-choice:disabled { cursor: default; }
+  .j-choice.correct { background: #14443a; border-color: #3ecfa0; color: #d0fff0; }
+  .j-choice.wrong { background: #3a1414; border-color: #cf3e3e; color: #ffd0d0; }
+  .j-choice.reveal-correct { background: #14443a; border-color: #3ecfa0; color: #d0fff0; opacity: 0.75; }
+  .j-choice-letter { width: 24px; height: 24px; border-radius: 50%; background: #5550d0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .j-choice.correct .j-choice-letter, .j-choice.reveal-correct .j-choice-letter { background: #3ecfa0; color: #04342c; }
+  .j-choice.wrong .j-choice-letter { background: #cf3e3e; color: #fff; }
+  .j-feedback { display: none; padding: 6px 14px 10px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+  .j-feedback.show { display: block; }
+  .j-feedback.correct { color: #3ecfa0; }
+  .j-feedback.wrong { color: #ff8080; }
+  .j-progress { text-align: center; font-size: 12px; color: #8888bb; letter-spacing: 1px; margin-top: 14px; }
+  .j-complete-banner { display: none; background: #14443a; border: 1.5px solid #3ecfa0; border-radius: 8px; text-align: center; padding: 12px; margin-top: 14px; color: #3ecfa0; font-size: 14px; font-weight: 600; letter-spacing: 1px; }
+  .j-complete-banner.show { display: block; }
+  .j-error { text-align: center; padding: 40px 20px; color: #ff8080; font-size: 14px; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="j-root">
+  <div class="j-loading" id="loading">Loading questions...</div>
+
+  <div class="j-year-screen" id="year-screen" style="display:none;">
+    <div class="j-year-prompt">Select your class year</div>
+    <div class="j-year-grid" id="year-grid"></div>
+  </div>
+
+  <div class="j-quiz-screen" id="quiz-screen">
+    <button class="j-back-btn" onclick="goBack()">&#8592; Change decade</button>
+    <div class="j-panel" id="panel"></div>
+    <div class="j-progress" id="progress"></div>
+    <div class="j-complete-banner" id="complete-banner"></div>
+  </div>
+</div>
+
+<script>
+// -------------------------------------------------------
+// CONFIGURATION — update this URL if your sheet changes
+// -------------------------------------------------------
+var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU9oMj75iSElaN3gsiYUoeALmitGhcEOFq4SvI-fsXDXirv9U6hyxSEAjsPc0FStrmoA5z7VLo1Qy6/pub?gid=0&single=true&output=csv";
+// -------------------------------------------------------
+
+var categories = [];
+var activeDecade = null;
+var answered = [];
+var letters = ['A','B','C','D'];
+
+function parseCSV(text) {
+  var lines = text.trim().split('\n');
+  var headers = lines[0].split(',').map(function(h){ return h.trim().toLowerCase().replace(/"/g,''); });
+  return lines.slice(1).map(function(line) {
+    var cols = [], cur = '', inQuote = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (ch === '"') { inQuote = !inQuote; }
+      else if (ch === ',' && !inQuote) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim());
+    var row = {};
+    headers.forEach(function(h, i){ row[h] = (cols[i] || '').replace(/^"|"$/g,'').trim(); });
+    return row;
+  }).filter(function(r){ return r.decade && r.question; });
+}
+
+function buildCategories(rows) {
+  var map = {}, order = [];
+  rows.forEach(function(row) {
+    var decade = row.decade.trim();
+    if (!map[decade]) { map[decade] = []; order.push(decade); }
+    var correctLetter = (row.correct || 'A').trim().toUpperCase();
+    var answerIndex = ['A','B','C','D'].indexOf(correctLetter);
+    map[decade].push({
+      q: row.question,
+      choices: [row.choice_a, row.choice_b, row.choice_c, row.choice_d],
+      answer: answerIndex >= 0 ? answerIndex : 0
+    });
+  });
+  return order.map(function(d){ return { name: d, questions: map[d] }; });
+}
+
+function loadSheet() {
+  fetch(SHEET_CSV_URL)
+    .then(function(res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.text();
+    })
+    .then(function(text) {
+      var rows = parseCSV(text);
+      if (!rows.length) throw new Error('No data rows found. Check your sheet headers.');
+      categories = buildCategories(rows);
+      answered = categories.map(function(c){ return c.questions.map(function(){ return null; }); });
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('year-screen').style.display = 'block';
+      renderYears();
+    })
+    .catch(function(e) {
+      document.getElementById('loading').innerHTML =
+        '<div class="j-error">Could not load questions.<br>Make sure the Google Sheet is published to the web as CSV.<br><br><small>' + e.message + '</small></div>';
+    });
+}
+
+function goBack() {
+  document.getElementById('year-screen').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'none';
+}
+
+function selectDecade(i) {
+  activeDecade = i;
+  document.getElementById('year-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  renderQuiz();
+}
+
+function renderYears() {
+  var grid = document.getElementById('year-grid');
+  grid.innerHTML = '';
+  categories.forEach(function(cat, i) {
+    var btn = document.createElement('button');
+    btn.className = 'j-year-btn';
+    btn.textContent = cat.name;
+    btn.onclick = (function(idx){ return function(){ selectDecade(idx); }; })(i);
+    grid.appendChild(btn);
+  });
+}
+
+function renderQuiz() {
+  var cat = categories[activeDecade];
+  var qs = cat.questions;
+  var html = '<div class="j-cat-title">' + cat.name + '</div>';
+  qs.forEach(function(q, qi) {
+    var result = answered[activeDecade][qi];
+    var blockClass = result === null ? '' : (result ? ' answered-correct' : ' answered-wrong');
+    html += '<div class="j-question-block' + blockClass + '"><div class="j-q-header"><span class="j-q-text">' + q.q + '</span></div><div class="j-choices">';
+    q.choices.forEach(function(ch, ci) {
+      var cls = 'j-choice';
+      var disabled = result !== null ? 'disabled' : '';
+      if (result !== null) {
+        if (ci === q.answer) cls += (result && answered[activeDecade][qi+'_chosen'] === ci) ? ' correct' : ' reveal-correct';
+        else if (answered[activeDecade][qi+'_chosen'] === ci) cls += ' wrong';
+      }
+      html += '<button class="' + cls + '" ' + disabled + ' onclick="choose(' + qi + ',' + ci + ')" style="color:#ffffff;"><span class="j-choice-letter">' + letters[ci] + '</span><span style="color:inherit;">' + ch + '</span></button>';
+    });
+    html += '</div>';
+    if (result !== null) {
+      html += '<div class="j-feedback show ' + (result ? 'correct' : 'wrong') + '">' + (result ? '&#10003; Correct!' : '&#10007; Incorrect &mdash; the answer was: ' + q.choices[q.answer]) + '</div>';
+    }
+    html += '</div>';
+  });
+  document.getElementById('panel').innerHTML = html;
+  var done = answered[activeDecade].filter(function(a){ return a !== null; }).length;
+  document.getElementById('progress').textContent = done + ' of ' + qs.length + ' questions answered';
+  var banner = document.getElementById('complete-banner');
+  if (done === qs.length) { banner.textContent = 'All done for the ' + cat.name + '!'; banner.classList.add('show'); }
+  else { banner.classList.remove('show'); }
+}
+
+function choose(qi, choiceIdx) {
+  if (answered[activeDecade][qi] !== null) return;
+  answered[activeDecade][qi] = choiceIdx === categories[activeDecade].questions[qi].answer;
+  answered[activeDecade][qi+'_chosen'] = choiceIdx;
+  renderQuiz();
+}
+
+loadSheet();
+</script>
+</body>
+</html>
