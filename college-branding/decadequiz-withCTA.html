@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Oswald', sans-serif; background: #0a0840; min-height: 100vh; display: flex; justify-content: center; padding: 32px 16px; }
-  .j-root { width: 100%; max-width: 760px; }
+  body { font-family: 'Oswald', sans-serif; background: #0a0840; padding: 32px 16px 24px; }
+  .j-root { width: 100%; max-width: 760px; margin: 0 auto; }
   .j-loading { text-align: center; padding: 60px 0; color: #c8d8ff; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
   .j-year-screen { text-align: center; padding: 20px 0; }
   .j-year-prompt { font-size: 18px; font-weight: 600; color: #c8d8ff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
@@ -43,6 +43,13 @@
   .j-complete-banner { display: none; background: #14443a; border: 1.5px solid #3ecfa0; border-radius: 8px; text-align: center; padding: 12px; margin-top: 14px; color: #3ecfa0; font-size: 14px; font-weight: 600; letter-spacing: 1px; }
   .j-complete-banner.show { display: block; }
   .j-error { text-align: center; padding: 40px 20px; color: #ff8080; font-size: 14px; line-height: 1.6; }
+
+  /* CTA */
+  .j-cta { margin-top: 28px; background: #D42121; border-radius: 10px; padding: 24px 28px; }
+  .j-cta-headline { font-size: 18px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; margin-bottom: 10px; font-family: 'Oswald', sans-serif; }
+  .j-cta-body { font-size: 14px; color: #ffffff; font-family: 'Source Serif 4', serif; line-height: 1.65; margin-bottom: 20px; opacity: 0.95; }
+  .j-cta-btn { display: inline-block; background: #294878; color: #ffffff; border: none; border-radius: 6px; padding: 13px 28px; font-size: 14px; font-weight: 700; font-family: 'Oswald', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+  .j-cta-btn:hover { background: #1a3055; }
 </style>
 </head>
 <body>
@@ -60,6 +67,13 @@
     <div class="j-progress" id="progress"></div>
     <div class="j-complete-banner" id="complete-banner"></div>
   </div>
+
+  <!-- CTA — always visible -->
+  <div class="j-cta">
+    <div class="j-cta-headline">You've mastered the decades—now help shape the future.</div>
+    <div class="j-cta-body">Gifts from alumni, families, and friends do more than preserve our history; they fuel academic excellence and ensure a Davidson education remains accessible for the next generation of leaders.</div>
+    <a class="j-cta-btn" href="http://www.davidson.edu/makeagift" target="_blank" rel="noopener">Make a Gift</a>
+  </div>
 </div>
 
 <script>
@@ -73,6 +87,11 @@ var categories = [];
 var activeDecade = null;
 var answered = [];
 var letters = ['A','B','C','D'];
+
+function notifyHeight() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ type: 'quizHeight', height: h }, '*');
+}
 
 function parseCSV(text) {
   var lines = text.trim().split('\n');
@@ -122,16 +141,19 @@ function loadSheet() {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('year-screen').style.display = 'block';
       renderYears();
+      notifyHeight();
     })
     .catch(function(e) {
       document.getElementById('loading').innerHTML =
         '<div class="j-error">Could not load questions.<br>Make sure the Google Sheet is published to the web as CSV.<br><br><small>' + e.message + '</small></div>';
+      notifyHeight();
     });
 }
 
 function goBack() {
   document.getElementById('year-screen').style.display = 'block';
   document.getElementById('quiz-screen').style.display = 'none';
+  notifyHeight();
 }
 
 function selectDecade(i) {
@@ -182,6 +204,7 @@ function renderQuiz() {
   var banner = document.getElementById('complete-banner');
   if (done === qs.length) { banner.textContent = 'All done for the ' + cat.name + '!'; banner.classList.add('show'); }
   else { banner.classList.remove('show'); }
+  notifyHeight();
 }
 
 function choose(qi, choiceIdx) {
