@@ -41,68 +41,49 @@
   .j-feedback.wrong { color: #ff8080; }
   .j-progress { text-align: center; font-size: 12px; color: #8888bb; letter-spacing: 1px; margin-top: 14px; }
   .j-error { text-align: center; padding: 40px 20px; color: #ff8080; font-size: 14px; line-height: 1.6; }
-
-  /* Completion panel */
-  .j-complete { display: none; margin-top: 20px; }
-  .j-complete.show { display: block; }
-
-  /* Brag graphic */
-  .j-brag { background: #D42121; border-radius: 12px; padding: 28px 24px; text-align: center; margin-bottom: 16px; }
-  .j-brag-decade { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
-  .j-brag-score { font-size: 64px; font-weight: 700; color: #ffffff; line-height: 1; margin-bottom: 4px; font-family: 'Oswald', sans-serif; }
-  .j-brag-label { font-size: 14px; color: rgba(255,255,255,0.85); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
-  .j-brag-tagline { font-size: 15px; color: #ffffff; font-family: 'Source Serif 4', serif; font-style: italic; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 14px; line-height: 1.5; }
-
-  /* CTA box */
-  .j-cta-box { background: #12106a; border: 2px solid #3a34a8; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
-  .j-cta-headline { font-size: 17px; font-weight: 700; color: #f0c040; margin-bottom: 10px; font-family: 'Oswald', sans-serif; }
-  .j-cta-body { font-size: 14px; color: #c8d0ff; font-family: 'Source Serif 4', serif; line-height: 1.65; margin-bottom: 20px; }
-
-  /* Action buttons */
+  .j-result { display: none; margin-top: 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+  .j-result.show { display: block; }
+  .j-result-illo { width: 100%; display: block; }
+  .j-result-body { background: #ffffff; padding: 24px 28px; }
+  .j-result-score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .j-result-score-badge { background: #D42121; color: #ffffff; font-size: 32px; font-weight: 700; font-family: 'Oswald', sans-serif; border-radius: 10px; padding: 8px 18px; letter-spacing: 1px; white-space: nowrap; }
+  .j-result-score-label { font-size: 13px; color: #294878; font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; line-height: 1.5; }
+  .j-result-cta-head { font-size: 18px; font-weight: 700; color: #294878; font-family: 'Oswald', sans-serif; margin-bottom: 8px; }
+  .j-result-cta-body { font-size: 14px; color: #444; font-family: 'Source Serif 4', serif; line-height: 1.65; margin-bottom: 20px; }
   .j-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-  .j-btn { display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 6px; padding: 12px 20px; font-size: 13px; font-weight: 700; font-family: 'Oswald', sans-serif; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: opacity 0.15s; }
-  .j-btn:hover { opacity: 0.85; }
+  .j-btn { display: inline-flex; align-items: center; gap: 7px; border: none; border-radius: 6px; padding: 11px 17px; font-size: 12px; font-weight: 700; font-family: 'Oswald', sans-serif; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: opacity 0.15s; }
+  .j-btn:hover { opacity: 0.82; }
   .j-btn-gift { background: #D42121; color: #ffffff; }
   .j-btn-restart { background: #294878; color: #ffffff; }
   .j-btn-x { background: #000000; color: #ffffff; }
   .j-btn-fb { background: #1877F2; color: #ffffff; }
   .j-btn-li { background: #0A66C2; color: #ffffff; }
-
-  .j-btn svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+  .j-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
 </style>
 </head>
 <body>
 <div class="j-root">
   <div class="j-loading" id="loading">Loading questions...</div>
-
   <div class="j-year-screen" id="year-screen" style="display:none;">
     <div class="j-year-prompt">Select your class year</div>
     <div class="j-year-grid" id="year-grid"></div>
   </div>
-
   <div class="j-quiz-screen" id="quiz-screen">
     <button class="j-back-btn" onclick="goBack()">&#8592; Change decade</button>
     <div class="j-panel" id="panel"></div>
     <div class="j-progress" id="progress"></div>
-
-    <!-- Completion panel -->
-    <div class="j-complete" id="complete-panel">
-
-      <!-- Brag graphic -->
-      <div class="j-brag">
-        <div class="j-brag-decade" id="brag-decade"></div>
-        <div class="j-brag-score" id="brag-score"></div>
-        <div class="j-brag-label">on the Davidson Decades Quiz</div>
-        <div class="j-brag-tagline">I scored <span id="brag-inline"></span> on the Davidson Decades Quiz!<br>How well do you know Davidson history? davidson.edu/decades</div>
-      </div>
-
-      <!-- CTA -->
-      <div class="j-cta-box">
-        <div class="j-cta-headline">You've mastered the decades—now help shape the future.</div>
-        <div class="j-cta-body">Gifts from alumni, families, and friends do more than preserve our history; they fuel academic excellence and ensure a Davidson education remains accessible for the next generation of leaders.</div>
+    <div class="j-result" id="result-card">
+      <svg id="result-illo" class="j-result-illo" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="j-result-body">
+        <div class="j-result-score-row">
+          <div class="j-result-score-badge" id="result-score-badge"></div>
+          <div class="j-result-score-label">on the Davidson<br>Decades Quiz</div>
+        </div>
+        <div class="j-result-cta-head">You've mastered the decades—now help shape the future.</div>
+        <div class="j-result-cta-body">Gifts from alumni, families, and friends do more than preserve our history; they fuel academic excellence and ensure a Davidson education remains accessible for the next generation of leaders.</div>
         <div class="j-actions">
           <a class="j-btn j-btn-gift" href="http://www.davidson.edu/makeagift" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.51 15.49 0 12.36 0c-1.73 0-3.06.93-3.91 1.95L12 5.69l3.55-3.74C16.27 1.16 17.22.5 18.36.5 19.83.5 21 1.67 21 3.14c0 .48-.11.92-.18 1.36H20z M4.18 6C4.11 5.56 4 5.12 4 4.64 4 2.51 5.67.5 8 .5c1.14 0 2.09.66 2.81 1.45L12 5.69 8.45 1.95C7.6.93 6.27 0 4.54 0 1.41 0-1.1 2.51-.1 4.64-.1 5.12.01 5.56.08 6H4.18zM22 8H2v2h1v12a2 2 0 002 2h14a2 2 0 002-2V10h1V8zm-3 14H5V10h14v12z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.51 15.49 0 12.36 0c-1.73 0-3.06.93-3.91 1.95L12 5.69l3.55-3.74C16.27 1.16 17.22.5 18.36.5 19.83.5 21 1.67 21 3.14c0 .48-.11.92-.18 1.36H20zM4 6H2c-.07-.44-.18-.88-.18-1.36C1.82 2.51 4.33 0 7.46 0c1.73 0 3.06.93 3.91 1.95L12 5.69 8.45 1.95C7.6.93 6.27 0 4.54 0 3.07 0 2 1.17 2 2.64c0 .48.11.92.18 1.36H4zM22 8H2v2h1v12a2 2 0 002 2h14a2 2 0 002-2V10h1V8zm-3 14H5V10h14v12z"/></svg>
             Make a Gift
           </a>
           <button class="j-btn j-btn-restart" onclick="restartDecade()">
@@ -123,193 +104,131 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
-
 <script>
-// -------------------------------------------------------
-// CONFIGURATION
-// -------------------------------------------------------
 var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU9oMj75iSElaN3gsiYUoeALmitGhcEOFq4SvI-fsXDXirv9U6hyxSEAjsPc0FStrmoA5z7VLo1Qy6/pub?gid=0&single=true&output=csv";
 var QUIZ_URL = "https://davidson.edu/decades";
-// -------------------------------------------------------
-
-var categories = [];
-var activeDecade = null;
-var answered = [];
+var categories = [], activeDecade = null, answered = [];
 var letters = ['A','B','C','D'];
 
-function notifyHeight() {
-  var h = document.body.scrollHeight;
-  window.parent.postMessage({ type: 'quizHeight', height: h }, '*');
+function notifyHeight() { window.parent.postMessage({ type: 'quizHeight', height: document.body.scrollHeight }, '*'); }
+
+function confetti(n) {
+  var colors = ['#D42121','#f0c040','#294878','#3ecfa0','#ff6b35','#a259ff','#ffffff'];
+  var s = ''; var seed = 42;
+  function rand(min,max){ seed=(seed*1664525+1013904223)&0xffffffff; return min+(Math.abs(seed)%(max-min)); }
+  for(var i=0;i<n;i++){
+    var x=rand(10,750),y=rand(10,290),c=colors[i%colors.length],r=rand(0,360);
+    if(i%3===0) s+='<rect x="'+x+'" y="'+y+'" width="9" height="9" fill="'+c+'" opacity="0.75" transform="rotate('+r+','+x+','+y+')"/>';
+    else if(i%3===1) s+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="'+c+'" opacity="0.7"/>';
+    else s+='<rect x="'+x+'" y="'+y+'" width="14" height="4" fill="'+c+'" opacity="0.65" transform="rotate('+r+','+(x+7)+','+(y+2)+')"/>';
+  }
+  return s;
+}
+
+function scoreCircle(score, total, cx, cy) {
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="68" fill="#D42121"/>'
+    +'<text x="'+cx+'" y="'+(cy+15)+'" text-anchor="middle" font-family="Oswald,sans-serif" font-size="46" font-weight="700" fill="#ffffff">'+score+'/'+total+'</text>';
+}
+
+function decadeLabel(name, x, y, bg, fg) {
+  return '<rect x="'+(x-90)+'" y="'+y+'" width="180" height="36" rx="18" fill="'+bg+'"/>'
+    +'<text x="'+x+'" y="'+(y+23)+'" text-anchor="middle" font-family="Oswald,sans-serif" font-size="15" font-weight="700" fill="'+fg+'" letter-spacing="3">'+name+'</text>';
+}
+
+function getIllo(decadeName) {
+  return '<rect width="760" height="300" fill="#d5d5d5"/>'
+    + '<line x1="0" y1="0" x2="760" y2="300" stroke="#bbbbbb" stroke-width="2"/>'
+    + '<line x1="760" y1="0" x2="0" y2="300" stroke="#bbbbbb" stroke-width="2"/>'
+    + '<rect x="260" y="115" width="240" height="70" rx="6" fill="#c0c0c0"/>'
+    + '<text x="380" y="156" text-anchor="middle" font-family="Oswald,sans-serif" font-size="18" font-weight="600" fill="#888888" letter-spacing="2">' + decadeName + ' ILLUSTRATION</text>';
 }
 
 function parseCSV(text) {
-  var lines = text.trim().split('\n');
-  var headers = lines[0].split(',').map(function(h){ return h.trim().toLowerCase().replace(/"/g,''); });
-  return lines.slice(1).map(function(line) {
-    var cols = [], cur = '', inQuote = false;
-    for (var i = 0; i < line.length; i++) {
-      var ch = line[i];
-      if (ch === '"') { inQuote = !inQuote; }
-      else if (ch === ',' && !inQuote) { cols.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
-    }
+  var lines=text.trim().split('\n');
+  var headers=lines[0].split(',').map(function(h){return h.trim().toLowerCase().replace(/"/g,'');});
+  return lines.slice(1).map(function(line){
+    var cols=[],cur='',inQuote=false;
+    for(var i=0;i<line.length;i++){var ch=line[i];if(ch==='"'){inQuote=!inQuote;}else if(ch===','&&!inQuote){cols.push(cur.trim());cur='';}else{cur+=ch;}}
     cols.push(cur.trim());
-    var row = {};
-    headers.forEach(function(h, i){ row[h] = (cols[i] || '').replace(/^"|"$/g,'').trim(); });
-    return row;
-  }).filter(function(r){ return r.decade && r.question; });
+    var row={};headers.forEach(function(h,i){row[h]=(cols[i]||'').replace(/^"|"$/g,'').trim();});return row;
+  }).filter(function(r){return r.decade&&r.question;});
 }
 
 function buildCategories(rows) {
-  var map = {}, order = [];
-  rows.forEach(function(row) {
-    var decade = row.decade.trim();
-    if (!map[decade]) { map[decade] = []; order.push(decade); }
-    var correctLetter = (row.correct || 'A').trim().toUpperCase();
-    var answerIndex = ['A','B','C','D'].indexOf(correctLetter);
-    map[decade].push({
-      q: row.question,
-      choices: [row.choice_a, row.choice_b, row.choice_c, row.choice_d],
-      answer: answerIndex >= 0 ? answerIndex : 0
-    });
+  var map={},order=[];
+  rows.forEach(function(row){
+    var d=row.decade.trim();if(!map[d]){map[d]=[];order.push(d);}
+    var ai=['A','B','C','D'].indexOf((row.correct||'A').trim().toUpperCase());
+    map[d].push({q:row.question,choices:[row.choice_a,row.choice_b,row.choice_c,row.choice_d],answer:ai>=0?ai:0});
   });
-  return order.map(function(d){ return { name: d, questions: map[d] }; });
+  return order.map(function(d){return{name:d,questions:map[d]};});
 }
 
-function loadSheet() {
-  fetch(SHEET_CSV_URL)
-    .then(function(res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return res.text();
-    })
-    .then(function(text) {
-      var rows = parseCSV(text);
-      if (!rows.length) throw new Error('No data rows found. Check your sheet headers.');
-      categories = buildCategories(rows);
-      answered = categories.map(function(c){ return c.questions.map(function(){ return null; }); });
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('year-screen').style.display = 'block';
-      renderYears();
-      notifyHeight();
-    })
-    .catch(function(e) {
-      document.getElementById('loading').innerHTML =
-        '<div class="j-error">Could not load questions.<br>Make sure the Google Sheet is published to the web as CSV.<br><br><small>' + e.message + '</small></div>';
-      notifyHeight();
+function loadSheet(){
+  fetch(SHEET_CSV_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
+  .then(function(text){
+    var rows=parseCSV(text);if(!rows.length)throw new Error('No data rows found.');
+    categories=buildCategories(rows);answered=categories.map(function(c){return c.questions.map(function(){return null;});});
+    document.getElementById('loading').style.display='none';document.getElementById('year-screen').style.display='block';
+    renderYears();notifyHeight();
+  }).catch(function(e){document.getElementById('loading').innerHTML='<div class="j-error">Could not load questions.<br><small>'+e.message+'</small></div>';notifyHeight();});
+}
+
+function goBack(){document.getElementById('year-screen').style.display='block';document.getElementById('quiz-screen').style.display='none';notifyHeight();}
+
+function selectDecade(i){activeDecade=i;document.getElementById('year-screen').style.display='none';document.getElementById('quiz-screen').style.display='block';renderQuiz();}
+
+function renderYears(){
+  var grid=document.getElementById('year-grid');grid.innerHTML='';
+  categories.forEach(function(cat,i){var btn=document.createElement('button');btn.className='j-year-btn';btn.textContent=cat.name;btn.onclick=(function(idx){return function(){selectDecade(idx);};})(i);grid.appendChild(btn);});
+}
+
+function getScore(){return answered[activeDecade].filter(function(a){return a===true;}).length;}
+
+function renderQuiz(){
+  var cat=categories[activeDecade],qs=cat.questions;
+  var html='<div class="j-cat-title">'+cat.name+'</div>';
+  qs.forEach(function(q,qi){
+    var result=answered[activeDecade][qi];
+    var bc=result===null?'':(result?' answered-correct':' answered-wrong');
+    html+='<div class="j-question-block'+bc+'"><div class="j-q-header"><span class="j-q-text">'+q.q+'</span></div><div class="j-choices">';
+    q.choices.forEach(function(ch,ci){
+      var cls='j-choice',dis=result!==null?'disabled':'';
+      if(result!==null){if(ci===q.answer)cls+=(result&&answered[activeDecade][qi+'_chosen']===ci)?' correct':' reveal-correct';else if(answered[activeDecade][qi+'_chosen']===ci)cls+=' wrong';}
+      html+='<button class="'+cls+'" '+dis+' onclick="choose('+qi+','+ci+')" style="color:#ffffff;"><span class="j-choice-letter">'+letters[ci]+'</span><span style="color:inherit;">'+ch+'</span></button>';
     });
-}
-
-function goBack() {
-  document.getElementById('year-screen').style.display = 'block';
-  document.getElementById('quiz-screen').style.display = 'none';
+    html+='</div>';
+    if(result!==null) html+='<div class="j-feedback show '+(result?'correct':'wrong')+'">'+(result?'&#10003; Correct!':'&#10007; Incorrect &mdash; the answer was: '+q.choices[q.answer])+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('panel').innerHTML=html;
+  var done=answered[activeDecade].filter(function(a){return a!==null;}).length;
+  document.getElementById('progress').textContent=done+' of '+qs.length+' questions answered';
+  var rc=document.getElementById('result-card');
+  if(done===qs.length){
+    var sc=getScore(),decName=cat.name;
+    document.getElementById('result-illo').innerHTML=getIllo(decName);
+    document.getElementById('result-score-badge').textContent=sc+'/'+qs.length;
+    rc.classList.add('show');
+  } else {rc.classList.remove('show');}
   notifyHeight();
 }
 
-function selectDecade(i) {
-  activeDecade = i;
-  document.getElementById('year-screen').style.display = 'none';
-  document.getElementById('quiz-screen').style.display = 'block';
-  renderQuiz();
+function choose(qi,ci){
+  if(answered[activeDecade][qi]!==null)return;
+  answered[activeDecade][qi]=ci===categories[activeDecade].questions[qi].answer;
+  answered[activeDecade][qi+'_chosen']=ci;renderQuiz();
 }
 
-function renderYears() {
-  var grid = document.getElementById('year-grid');
-  grid.innerHTML = '';
-  categories.forEach(function(cat, i) {
-    var btn = document.createElement('button');
-    btn.className = 'j-year-btn';
-    btn.textContent = cat.name;
-    btn.onclick = (function(idx){ return function(){ selectDecade(idx); }; })(i);
-    grid.appendChild(btn);
-  });
-}
+function restartDecade(){answered[activeDecade]=categories[activeDecade].questions.map(function(){return null;});document.getElementById('result-card').classList.remove('show');renderQuiz();}
 
-function getScore() {
-  return answered[activeDecade].filter(function(a){ return a === true; }).length;
-}
-
-function renderQuiz() {
-  var cat = categories[activeDecade];
-  var qs = cat.questions;
-  var html = '<div class="j-cat-title">' + cat.name + '</div>';
-  qs.forEach(function(q, qi) {
-    var result = answered[activeDecade][qi];
-    var blockClass = result === null ? '' : (result ? ' answered-correct' : ' answered-wrong');
-    html += '<div class="j-question-block' + blockClass + '"><div class="j-q-header"><span class="j-q-text">' + q.q + '</span></div><div class="j-choices">';
-    q.choices.forEach(function(ch, ci) {
-      var cls = 'j-choice';
-      var disabled = result !== null ? 'disabled' : '';
-      if (result !== null) {
-        if (ci === q.answer) cls += (result && answered[activeDecade][qi+'_chosen'] === ci) ? ' correct' : ' reveal-correct';
-        else if (answered[activeDecade][qi+'_chosen'] === ci) cls += ' wrong';
-      }
-      html += '<button class="' + cls + '" ' + disabled + ' onclick="choose(' + qi + ',' + ci + ')" style="color:#ffffff;"><span class="j-choice-letter">' + letters[ci] + '</span><span style="color:inherit;">' + ch + '</span></button>';
-    });
-    html += '</div>';
-    if (result !== null) {
-      html += '<div class="j-feedback show ' + (result ? 'correct' : 'wrong') + '">' + (result ? '&#10003; Correct!' : '&#10007; Incorrect &mdash; the answer was: ' + q.choices[q.answer]) + '</div>';
-    }
-    html += '</div>';
-  });
-  document.getElementById('panel').innerHTML = html;
-
-  var done = answered[activeDecade].filter(function(a){ return a !== null; }).length;
-  var total = qs.length;
-  document.getElementById('progress').textContent = done + ' of ' + total + ' questions answered';
-
-  var completePanel = document.getElementById('complete-panel');
-  if (done === total) {
-    var score = getScore();
-    var scoreStr = score + '/' + total;
-    var decadeName = cat.name;
-    document.getElementById('brag-decade').textContent = decadeName;
-    document.getElementById('brag-score').textContent = scoreStr;
-    document.getElementById('brag-inline').textContent = scoreStr;
-    completePanel.classList.add('show');
-  } else {
-    completePanel.classList.remove('show');
-  }
-
-  notifyHeight();
-}
-
-function choose(qi, choiceIdx) {
-  if (answered[activeDecade][qi] !== null) return;
-  answered[activeDecade][qi] = choiceIdx === categories[activeDecade].questions[qi].answer;
-  answered[activeDecade][qi+'_chosen'] = choiceIdx;
-  renderQuiz();
-}
-
-function restartDecade() {
-  answered[activeDecade] = categories[activeDecade].questions.map(function(){ return null; });
-  document.getElementById('complete-panel').classList.remove('show');
-  renderQuiz();
-}
-
-function getShareText() {
-  var score = getScore();
-  var total = categories[activeDecade].questions.length;
-  return 'I scored ' + score + '/' + total + ' on the Davidson Decades Quiz! How well do you know Davidson history? ' + QUIZ_URL;
-}
-
-function shareX() {
-  var url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(getShareText());
-  window.open(url, '_blank');
-}
-
-function shareFacebook() {
-  var url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(QUIZ_URL) + '&quote=' + encodeURIComponent(getShareText());
-  window.open(url, '_blank');
-}
-
-function shareLinkedIn() {
-  var url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(QUIZ_URL);
-  window.open(url, '_blank');
-}
+function getShareText(){var sc=getScore(),tot=categories[activeDecade].questions.length;return'I scored '+sc+'/'+tot+' on the Davidson Decades Quiz! How well do you know Davidson history? '+QUIZ_URL;}
+function shareX(){window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(getShareText()),'_blank');}
+function shareFacebook(){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(QUIZ_URL)+'&quote='+encodeURIComponent(getShareText()),'_blank');}
+function shareLinkedIn(){window.open('https://www.linkedin.com/sharing/share-offsite/?url='+encodeURIComponent(QUIZ_URL),'_blank');}
 
 loadSheet();
 </script>
