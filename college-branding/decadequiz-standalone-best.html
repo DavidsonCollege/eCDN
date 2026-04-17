@@ -207,7 +207,17 @@ body {
 #decade-strip .strip-item:hover .strip-label {
   color: #8888bb;
 }
-#decade-strip .strip-item.active {
+#decade-strip .strip-item--random .strip-decade {
+  color: #D42121;
+}
+
+#decade-strip .strip-item--random:hover .strip-decade {
+  color: #ff6060;
+}
+
+#decade-strip .strip-item--random:hover {
+  background: #2a0808;
+}
   background: #12106a;
 }
 #decade-strip .strip-item.active .strip-decade {
@@ -517,10 +527,9 @@ body {
 <!-- ══ Hero ══════════════════════════════════════════════════ -->
 <header id="hero" role="banner">
   <div class="hero-inner">
-    <p class="hero-eyebrow">Davidson College Alumni</p>
-    <p class="hero-challenge">How well do you know Davidson?</p>
+    <p class="hero-challenge">Test your knowledge with</p>
     <h1 class="hero-title">The Decades<br>Challenge</h1>
-    <p class="hero-sub">Test your knowledge of your era for a chance to win.</p>
+    <p class="hero-sub">Think you know everything about Davidson? Take the quiz for a chance to win.</p>
   </div>
   <div id="decade-strip" aria-hidden="true">
     <!-- Populated by JS after sheet loads -->
@@ -741,11 +750,12 @@ function showPreview(decadeName) {
   var panel = document.getElementById('decade-preview');
   var label = document.getElementById('preview-decade-label');
   if (!panel) return;
-  var img = DECADE_IMAGES[decadeName] || '';
-  var color = DECADE_COLORS[decadeName] || '#12106a';
+  var isRandom = decadeName === '?';
+  var img = isRandom ? '' : (DECADE_IMAGES[decadeName] || '');
+  var color = isRandom ? '#1a0820' : (DECADE_COLORS[decadeName] || '#12106a');
   panel.style.backgroundColor = color;
   panel.style.backgroundImage = img ? 'url(' + img + ')' : 'none';
-  if (label) label.textContent = decadeName;
+  if (label) label.textContent = isRandom ? '?' : decadeName;
   panel.classList.add('visible');
 }
 
@@ -895,5 +905,3 @@ loadSheet();
 </script>
 </body>
 </html>
-
-
