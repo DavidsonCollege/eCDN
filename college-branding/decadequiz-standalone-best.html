@@ -143,16 +143,23 @@ body {
   margin-top: 36px;
   border-top: 1px solid #2a2860;
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
 }
 
 #decade-strip .strip-item {
-  flex: 1;
+  flex: 1 0 25%;
   padding: 14px 8px 16px;
   text-align: center;
   border-right: 1px solid #2a2860;
-  cursor: default;
+  border-bottom: 1px solid #2a2860;
+  cursor: pointer;
   transition: background 0.15s;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 480px) {
+  #decade-strip .strip-item { flex: 1 0 33.333%; }
 }
 
 #decade-strip .strip-item:last-child { border-right: none; }
@@ -199,8 +206,45 @@ body {
 }
 
 /* ══════════════════════════════════════════════
-   QUIZ AREA
+   DECADE PREVIEW PANEL
 ══════════════════════════════════════════════ */
+
+#decade-preview {
+  display: none;
+  width: 100%;
+  min-height: 340px;
+  background-color: #12106a;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.3s ease, background-color 0.3s ease;
+  position: relative;
+}
+
+#decade-preview.visible { display: block; }
+
+#decade-preview .preview-label {
+  position: absolute;
+  bottom: 24px;
+  left: 28px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+}
+
+#decade-preview .preview-decade {
+  position: absolute;
+  bottom: 40px;
+  left: 28px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
 
 #quiz-area {
   background: #0a0840;
@@ -484,6 +528,13 @@ body {
 
 <!-- ══ Quiz ═══════════════════════════════════════════════════ -->
 <main id="quiz-area" role="main">
+
+  <!-- Decade preview — shows on strip hover, hidden until then -->
+  <div id="decade-preview">
+    <div class="preview-decade" id="preview-decade-label"></div>
+    <div class="preview-label">Hover to preview · Click to begin</div>
+  </div>
+
   <div class="j-root">
     <div class="j-loading" id="loading">Loading questions...</div>
     <div class="j-year-screen" id="year-screen" style="display:none !important;">
@@ -624,6 +675,40 @@ var QUIZ_URL = "https://davidson.edu/decades";
 var categories = [], activeDecade = null, answered = [];
 var letters = ['A','B','C','D'];
 
+/* ── Decade images ─────────────────────────────────────────────
+   Add your image URL for each decade name (must match exactly
+   what's in the Google Sheet). Leave as empty string '' to show
+   a solid color placeholder until you have real images.
+──────────────────────────────────────────────────────────────── */
+var DECADE_IMAGES = {
+  '1920s': '',
+  '1930s': '',
+  '1940s': '',
+  '1950s': '',
+  '1960s': '',
+  '1970s': '',
+  '1980s': '',
+  '1990s': '',
+  '2000s': '',
+  '2010s': '',
+  '2020s': ''
+};
+
+/* Placeholder colors shown until real images are added */
+var DECADE_COLORS = {
+  '1920s': '#1a0a30',
+  '1930s': '#0a1a30',
+  '1940s': '#0a2a20',
+  '1950s': '#1a1a10',
+  '1960s': '#2a1a00',
+  '1970s': '#2a0a10',
+  '1980s': '#1a0a2a',
+  '1990s': '#0a1a2a',
+  '2000s': '#0a2a2a',
+  '2010s': '#1a2a10',
+  '2020s': '#2a1a1a'
+};
+
 function buildStrip() {
   var strip = document.getElementById('decade-strip');
   if (!strip || !categories.length) return;
@@ -632,10 +717,29 @@ function buildStrip() {
     var item = document.createElement('div');
     item.className = 'strip-item';
     item.innerHTML = '<div class="strip-label">Decade</div><div class="strip-decade">' + cat.name + '</div>';
+    item.addEventListener('mouseenter', function() { showPreview(cat.name); });
+    item.addEventListener('mouseleave', function() { hidePreview(); });
     item.addEventListener('click', function() { selectDecade(i); });
     item.style.cursor = 'pointer';
     strip.appendChild(item);
   });
+}
+
+function showPreview(decadeName) {
+  var panel = document.getElementById('decade-preview');
+  var label = document.getElementById('preview-decade-label');
+  if (!panel) return;
+  var img = DECADE_IMAGES[decadeName] || '';
+  var color = DECADE_COLORS[decadeName] || '#12106a';
+  panel.style.backgroundColor = color;
+  panel.style.backgroundImage = img ? 'url(' + img + ')' : 'none';
+  if (label) label.textContent = decadeName;
+  panel.classList.add('visible');
+}
+
+function hidePreview() {
+  var panel = document.getElementById('decade-preview');
+  if (panel) panel.classList.remove('visible');
 }
 
 function highlightStrip(idx) {
@@ -779,3 +883,4 @@ loadSheet();
 </script>
 </body>
 </html>
+
