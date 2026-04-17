@@ -176,7 +176,18 @@ body {
   transition: color 0.15s;
 }
 
-/* Populated by JS once sheet loads — highlighted item */
+#decade-strip .strip-item:hover {
+  background: #1a1870;
+  cursor: pointer;
+}
+
+#decade-strip .strip-item:hover .strip-decade {
+  color: #f0c040;
+}
+
+#decade-strip .strip-item:hover .strip-label {
+  color: #8888bb;
+}
 #decade-strip .strip-item.active {
   background: #12106a;
 }
@@ -307,6 +318,13 @@ body {
 #bottom-footer li, #bottom-footer .copyright { display: block; font-size: 14px; }
 #bottom-footer .footer-inline-menu { margin-top: 10px; }
 #bottom-footer li + li { margin-top: 10px; }
+
+@media screen and (min-width: 640px) {
+  #bottom-footer .copyright { display: inline-block; }
+  #bottom-footer li { display: inline-block; margin-left: 8px !important; margin-top: 0 !important; }
+  #bottom-footer .footer-inline-menu { margin-top: 0; margin-left: 16px; }
+  #bottom-footer li + li { margin-top: 0; }
+}
 
 .sr-only {
   position: absolute !important;
@@ -454,10 +472,10 @@ body {
 <!-- ══ Hero ══════════════════════════════════════════════════ -->
 <header id="hero" role="banner">
   <div class="hero-inner">
-    <p class="hero-eyebrow">Davidson College · Est. 1837</p>
+    <p class="hero-eyebrow">Davidson College Alumni</p>
     <p class="hero-challenge">How well do you know Davidson?</p>
     <h1 class="hero-title">The Decades<br>Challenge</h1>
-    <p class="hero-sub">Pick a decade. Five questions. Find out.</p>
+    <p class="hero-sub">Test your knowledge of your era for a chance to win.</p>
   </div>
   <div id="decade-strip" aria-hidden="true">
     <!-- Populated by JS after sheet loads -->
@@ -468,7 +486,7 @@ body {
 <main id="quiz-area" role="main">
   <div class="j-root">
     <div class="j-loading" id="loading">Loading questions...</div>
-    <div class="j-year-screen" id="year-screen" style="display:none;">
+    <div class="j-year-screen" id="year-screen" style="display:none !important;">
       <div class="j-year-prompt">Select your decade</div>
       <div class="j-year-grid" id="year-grid"></div>
     </div>
@@ -671,9 +689,7 @@ function loadSheet() {
       categories = buildCategories(rows);
       answered = categories.map(function(c) { return c.questions.map(function() { return null; }); });
       document.getElementById('loading').style.display = 'none';
-      document.getElementById('year-screen').style.display = 'block';
       buildStrip();
-      renderYears();
     })
     .catch(function(e) {
       document.getElementById('loading').innerHTML = '<div class="j-error">Could not load questions.<br><small>' + e.message + '</small></div>';
@@ -681,17 +697,16 @@ function loadSheet() {
 }
 
 function goBack() {
-  document.getElementById('year-screen').style.display = 'block';
   document.getElementById('quiz-screen').style.display = 'none';
   highlightStrip(null);
 }
 
 function selectDecade(i) {
   activeDecade = i;
-  document.getElementById('year-screen').style.display = 'none';
   document.getElementById('quiz-screen').style.display = 'block';
   highlightStrip(i);
   renderQuiz();
+  document.getElementById('quiz-area').scrollIntoView({ behavior: 'smooth' });
 }
 
 function renderYears() {
