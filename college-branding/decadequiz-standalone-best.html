@@ -156,10 +156,22 @@ body {
   cursor: pointer;
   transition: background 0.15s;
   box-sizing: border-box;
+  min-width: 80px;
 }
 
+/* Wide screens: all in one row */
+@media screen and (min-width: 900px) {
+  #decade-strip .strip-item { flex: 1 0 0%; }
+}
+
+/* Medium: 4 columns */
+@media screen and (max-width: 899px) {
+  #decade-strip .strip-item { flex: 1 0 25%; }
+}
+
+/* Small: 2 columns */
 @media screen and (max-width: 480px) {
-  #decade-strip .strip-item { flex: 1 0 33.333%; }
+  #decade-strip .strip-item { flex: 1 0 50%; }
 }
 
 #decade-strip .strip-item:last-child { border-right: none; }
@@ -218,32 +230,21 @@ body {
   background-position: center;
   transition: background-image 0.3s ease, background-color 0.3s ease;
   position: relative;
+  align-items: center;
+  justify-content: center;
 }
 
-#decade-preview.visible { display: block; }
-
-#decade-preview .preview-label {
-  position: absolute;
-  bottom: 24px;
-  left: 28px;
-  font-family: 'Oswald', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-}
+#decade-preview.visible { display: flex; }
 
 #decade-preview .preview-decade {
-  position: absolute;
-  bottom: 40px;
-  left: 28px;
   font-family: 'Oswald', sans-serif;
-  font-size: 48px;
+  font-size: clamp(48px, 10vw, 96px);
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.04em;
   line-height: 1;
+  text-align: center;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.5);
 }
 
 #quiz-area {
@@ -532,7 +533,6 @@ body {
   <!-- Decade preview — shows on strip hover, hidden until then -->
   <div id="decade-preview">
     <div class="preview-decade" id="preview-decade-label"></div>
-    <div class="preview-label">Hover to preview · Click to begin</div>
   </div>
 
   <div class="j-root">
@@ -713,6 +713,7 @@ function buildStrip() {
   var strip = document.getElementById('decade-strip');
   if (!strip || !categories.length) return;
   strip.innerHTML = '';
+
   categories.forEach(function(cat, i) {
     var item = document.createElement('div');
     item.className = 'strip-item';
@@ -720,9 +721,20 @@ function buildStrip() {
     item.addEventListener('mouseenter', function() { showPreview(cat.name); });
     item.addEventListener('mouseleave', function() { hidePreview(); });
     item.addEventListener('click', function() { selectDecade(i); });
-    item.style.cursor = 'pointer';
     strip.appendChild(item);
   });
+
+  // Random decade tile
+  var randItem = document.createElement('div');
+  randItem.className = 'strip-item strip-item--random';
+  randItem.innerHTML = '<div class="strip-label">Feeling lucky?</div><div class="strip-decade">&#9733;</div>';
+  randItem.addEventListener('mouseenter', function() { showPreview('?'); });
+  randItem.addEventListener('mouseleave', function() { hidePreview(); });
+  randItem.addEventListener('click', function() {
+    var idx = Math.floor(Math.random() * categories.length);
+    selectDecade(idx);
+  });
+  strip.appendChild(randItem);
 }
 
 function showPreview(decadeName) {
@@ -883,4 +895,5 @@ loadSheet();
 </script>
 </body>
 </html>
+
 
