@@ -1145,6 +1145,8 @@ function submitEntry() {
   document.getElementById('submit-form-wrap').style.display = 'none';
   document.getElementById('submit-thankyou').classList.add('show');
 }
+
+function getShareText() {
   var sc = getScore(), tot = categories[activeDecade].questions.length;
   return 'I scored ' + sc + '/' + tot + ' on the Davidson Decades Quiz! How well do you know Davidson history? ' + QUIZ_URL;
 }
