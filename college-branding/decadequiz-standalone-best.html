@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Davidson Decades Quiz</title>
+<meta name="description" content="How well do you know Davidson College history? Test your knowledge decade by decade." />
+<meta property="og:title" content="Davidson Decades Quiz" />
+<meta property="og:description" content="How well do you know Davidson College history? Test your knowledge decade by decade." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://davidson.edu/decades" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Davidson Decades Quiz" />
+<meta name="twitter:description" content="How well do you know Davidson College history? Test your knowledge decade by decade." />
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Oswald:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0840;
+}
+
+/* ══════════════════════════════════════════════
+   NAV BAR (Option B — white bar above dark hero)
+══════════════════════════════════════════════ */
+
+#site-nav {
+  background: #D42121;
+  width: 100%;
+}
+
+#site-nav .container {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+}
+
+#site-nav .nav-links {
+  display: flex;
+  gap: 32px;
+}
+
+#site-nav .nav-links a {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+#site-nav .nav-links a:hover { opacity: 0.8; }
+#site-nav .nav-links a.nav-cta { color: #ffffff; }
+
+/* ══════════════════════════════════════════════
+   HERO — marquee with optional background image
+══════════════════════════════════════════════ */
+
+#hero {
+  background-color: #0a0840;
+
+  /* ── BACKGROUND IMAGE (optional) ───────────────
+     To enable: replace 'none' below with a URL,
+     e.g. url('images/campus.jpg')
+     Recommended: a dark campus photo works best.
+     The overlay below will dim it automatically.
+  ──────────────────────────────────────────── */
+  background-image: none;
+  background-size: cover;
+  background-position: center 30%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark overlay — only visible when background-image is set */
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 4, 40, 0.72);
+  pointer-events: none;
+}
+
+#hero .hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 52px 20px 0;
+  text-align: center;
+}
+
+#hero .hero-eyebrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #6666aa;
+  margin-bottom: 20px;
+}
+
+#hero .hero-challenge {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(13px, 2vw, 16px);
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9090c8;
+  margin-bottom: 12px;
+}
+
+#hero .hero-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(36px, 7vw, 68px);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+#hero .hero-sub {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: clamp(14px, 2vw, 17px);
+  color: #8080c0;
+  margin-bottom: 0;
+}
+
+/* Marquee decade strip */
+#decade-strip {
+  position: relative;
+  z-index: 1;
+  margin-top: 36px;
+  border-top: 1px solid #2a2860;
+  display: flex;
+  width: 100%;
+}
+
+#decade-strip .strip-item {
+  flex: 1;
+  padding: 14px 8px 16px;
+  text-align: center;
+  border-right: 1px solid #2a2860;
+  cursor: default;
+  transition: background 0.15s;
+}
+
+#decade-strip .strip-item:last-child { border-right: none; }
+
+#decade-strip .strip-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #4444aa;
+  margin-bottom: 4px;
+}
+
+#decade-strip .strip-decade {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(16px, 3vw, 26px);
+  font-weight: 700;
+  color: #8888cc;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+/* Populated by JS once sheet loads — highlighted item */
+#decade-strip .strip-item.active {
+  background: #12106a;
+}
+#decade-strip .strip-item.active .strip-decade {
+  color: #f0c040;
+}
+#decade-strip .strip-item.active .strip-label {
+  color: #8888bb;
+}
+
+/* ══════════════════════════════════════════════
+   QUIZ AREA
+══════════════════════════════════════════════ */
+
+#quiz-area {
+  background: #0a0840;
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER — matches dav-wrapper-2025-2
+══════════════════════════════════════════════ */
+
+#footer {
+  background-color: #0F1012;
+  width: 100%;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 17px;
+  margin-top: 70px;
+}
+
+#footer .container {
+  max-width: 1160px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+  margin: 0 auto;
+  width: calc(100% - 40px);
+  align-items: center;
+  padding: 32px 20px 20px 20px;
+}
+
+.footer-column.first { text-align: center; }
+.footer-column.second { margin-top: 16px; }
+
+#footer a, #bottom-footer a {
+  color: #fff;
+  text-decoration: none;
+}
+#footer a:hover, #bottom-footer a:hover { text-decoration: underline; }
+
+#footer ul { padding-left: 0; margin: 0; }
+#footer li { list-style: none; }
+#footer li + li { margin-top: 8px; }
+#footer li::before {
+  content: '\203A';
+  color: #fff;
+  margin-right: 8px;
+  font-size: 14px;
+}
+#footer .social-media li::before { content: unset; }
+#footer .social-media li + li { margin-top: 0; }
+
+#footer-logo {
+  width: 160px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+#footer-logo svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media screen and (max-width: 991px) {
+  #footer-logo { width: 100px; }
+}
+
+.footer-column { width: 100%; min-width: 0; }
+
+.social-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  justify-content: center;
+}
+
+.social-media a {
+  font-size: 22px;
+  color: #fff;
+  text-decoration: none;
+}
+.social-media a:hover { color: #D42121; }
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+.social-icon svg { width: 20px; height: 20px; fill: currentColor; }
+
+.site-footer__address { margin-top: 24px; font-size: 14px; line-height: 1.7; }
+.site-footer__address a { color: #fff; }
+
+#bottom-footer {
+  padding: 24px;
+  background-color: #0F1012;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  border-top: 1px solid #6A6869;
+  text-align: center;
+}
+
+#bottom-footer ul {
+  padding: 0; margin: 0;
+  display: inline-block;
+  list-style: none;
+}
+
+#bottom-footer li, #bottom-footer .copyright { display: block; font-size: 14px; }
+#bottom-footer .footer-inline-menu { margin-top: 10px; }
+#bottom-footer li + li { margin-top: 10px; }
+
+.sr-only {
+  position: absolute !important;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+}
+
+/* ── Responsive footer ── */
+@media screen and (max-width: 991px) {
+  #footer-logo { width: 120px; }
+
+  #footer .container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px 24px;
+    width: 100%;
+  }
+
+  .footer-column { width: auto; text-align: center; }
+  .footer-column.second { margin-top: 0; }
+
+  #footer li::before { content: unset; }
+
+  .social-media { justify-content: center; }
+  .site-footer__address { text-align: center; }
+
+  #bottom-footer li { display: inline-block; margin-left: 8px !important; margin-top: 0 !important; }
+  #bottom-footer { padding-bottom: 40px; }
+  #bottom-footer .copyright { display: block; margin-bottom: 8px; }
+}
+
+@media screen and (min-width: 992px) {
+  #footer .container {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    padding: 60px 70px 32px 70px;
+    width: calc(100% - 140px);
+  }
+  #footer .first { text-align: left; margin-right: 40px; }
+  #footer .first, #footer .second, #footer .third, #footer .fourth { flex: 0 1 auto; margin-top: 0; }
+  #footer .second { flex: 1 0 200px; text-align: left; }
+  #footer .third { flex: 1 0 170px; text-align: left; }
+  #footer .fourth { text-align: left; }
+  #footer li::before { content: '\203A'; }
+  #footer .social-media li::before { content: unset; }
+  .social-media { justify-content: left; }
+  #bottom-footer { padding-top: 0; border-top: unset; }
+  #bottom-footer .container {
+    padding: 24px 70px;
+    border-top: 1px solid #6A6869;
+    text-align: center;
+    max-width: 1160px;
+    width: calc(100% - 140px);
+    margin: 0 auto;
+  }
+  #footer li + li { margin-top: 16px; }
+  #footer .social-media li + li { margin-top: 0; }
+}
+
+@media screen and (min-width: 1300px) {
+  #footer .container {
+    padding: 120px 140px 64px 140px;
+    width: calc(100% - 280px);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   QUIZ STYLES — original, do not edit
+══════════════════════════════════════════════ */
+
+.j-root { width: 100%; max-width: 760px; margin: 0 auto; padding: 32px 16px 24px; }
+.j-loading { text-align: center; padding: 60px 0; color: #c8d8ff; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+.j-year-screen { text-align: center; padding: 20px 0; }
+.j-year-prompt { font-size: 18px; font-weight: 600; color: #c8d8ff; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
+.j-year-grid { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.j-year-btn { background: #1e1a6e; color: #ffffff; border: 2px solid #3a34a8; border-radius: 10px; padding: 18px 28px; font-size: 22px; font-weight: 700; font-family: 'Oswald', sans-serif; cursor: pointer; letter-spacing: 2px; transition: background 0.15s, border-color 0.15s, color 0.15s; min-width: 130px; }
+.j-year-btn:hover { background: #2d27a0; border-color: #f0c040; color: #f0c040; }
+.j-quiz-screen { display: none; }
+.j-back-btn { background: none; border: none; color: #a0b0ff; font-size: 13px; font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-bottom: 16px; padding: 0; display: flex; align-items: center; gap: 6px; }
+.j-back-btn:hover { color: #f0c040; }
+.j-panel { background: #12106a; border: 2px solid #3a34a8; border-radius: 12px; padding: 20px; }
+.j-cat-title { font-size: 20px; font-weight: 700; color: #f0c040; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1.5px solid #3a34a8; }
+.j-question-block { margin-bottom: 20px; border-radius: 8px; border: 1.5px solid #2a2488; overflow: hidden; }
+.j-question-block.answered-correct { border-color: #1a6a54; }
+.j-question-block.answered-wrong { border-color: #8a2020; }
+.j-q-header { background: #1a1888; padding: 12px 14px; }
+.j-q-text { font-size: 15px; color: #eeeaff; font-family: 'Source Serif 4', serif; font-style: italic; line-height: 1.5; }
+.j-choices { padding: 12px 14px; display: grid; gap: 8px; }
+.j-choice { background: #2a2490; border: 1.5px solid #4a44c0; border-radius: 6px; padding: 10px 14px; font-size: 15px; font-family: 'Oswald', sans-serif; font-weight: 400; color: #ffffff; cursor: pointer; transition: background 0.12s, border-color 0.12s; text-align: left; letter-spacing: 0.3px; display: flex; align-items: center; gap: 10px; }
+.j-choice:hover:not(:disabled) { background: #3830b8; border-color: #7870e0; color: #f0c040; }
+.j-choice:disabled { cursor: default; }
+.j-choice.correct { background: #14443a; border-color: #3ecfa0; color: #d0fff0; }
+.j-choice.wrong { background: #3a1414; border-color: #cf3e3e; color: #ffd0d0; }
+.j-choice.reveal-correct { background: #14443a; border-color: #3ecfa0; color: #d0fff0; opacity: 0.75; }
+.j-choice-letter { width: 24px; height: 24px; border-radius: 50%; background: #5550d0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.j-choice.correct .j-choice-letter, .j-choice.reveal-correct .j-choice-letter { background: #3ecfa0; color: #04342c; }
+.j-choice.wrong .j-choice-letter { background: #cf3e3e; color: #fff; }
+.j-feedback { display: none; padding: 6px 14px 10px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.j-feedback.show { display: block; }
+.j-feedback.correct { color: #3ecfa0; }
+.j-feedback.wrong { color: #ff8080; }
+.j-progress { text-align: center; font-size: 12px; color: #8888bb; letter-spacing: 1px; margin-top: 14px; }
+.j-error { text-align: center; padding: 40px 20px; color: #ff8080; font-size: 14px; line-height: 1.6; }
+.j-result { display: none; margin-top: 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
+.j-result.show { display: block; }
+.j-result-illo { width: 100%; display: block; }
+.j-result-body { background: #ffffff; padding: 24px 28px; }
+.j-result-score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.j-result-score-badge { background: #D42121; color: #ffffff; font-size: 32px; font-weight: 700; font-family: 'Oswald', sans-serif; border-radius: 10px; padding: 8px 18px; letter-spacing: 1px; white-space: nowrap; }
+.j-result-score-label { font-size: 13px; color: #294878; font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; line-height: 1.5; }
+.j-result-cta-head { font-size: 18px; font-weight: 700; color: #294878; font-family: 'Oswald', sans-serif; margin-bottom: 8px; }
+.j-result-cta-body { font-size: 14px; color: #444; font-family: 'Source Serif 4', serif; line-height: 1.65; margin-bottom: 20px; }
+.j-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.j-btn { display: inline-flex; align-items: center; gap: 7px; border: none; border-radius: 6px; padding: 11px 17px; font-size: 12px; font-weight: 700; font-family: 'Oswald', sans-serif; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: opacity 0.15s; }
+.j-btn:hover { opacity: 0.82; }
+.j-btn-gift { background: #D42121; color: #ffffff; }
+.j-btn-restart { background: #294878; color: #ffffff; }
+.j-btn-x { background: #000000; color: #ffffff; }
+.j-btn-fb { background: #1877F2; color: #ffffff; }
+.j-btn-li { background: #0A66C2; color: #ffffff; }
+.j-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  #decade-strip .strip-label { display: none; }
+  #decade-strip .strip-item { padding: 12px 4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ Nav bar ═══════════════════════════════════════════════ -->
+<nav id="site-nav" role="navigation" aria-label="Site navigation">
+  <div class="container">
+    <div class="nav-links">
+      <a href="https://www.davidson.edu">Davidson.edu ↗</a>
+      <a href="http://www.davidson.edu/makeagift" class="nav-cta">Make a Gift ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ Hero ══════════════════════════════════════════════════ -->
+<header id="hero" role="banner">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Davidson College · Est. 1837</p>
+    <p class="hero-challenge">How well do you know Davidson?</p>
+    <h1 class="hero-title">The Decades<br>Challenge</h1>
+    <p class="hero-sub">Pick a decade. Five questions. Find out.</p>
+  </div>
+  <div id="decade-strip" aria-hidden="true">
+    <!-- Populated by JS after sheet loads -->
+  </div>
+</header>
+
+<!-- ══ Quiz ═══════════════════════════════════════════════════ -->
+<main id="quiz-area" role="main">
+  <div class="j-root">
+    <div class="j-loading" id="loading">Loading questions...</div>
+    <div class="j-year-screen" id="year-screen" style="display:none;">
+      <div class="j-year-prompt">Select your decade</div>
+      <div class="j-year-grid" id="year-grid"></div>
+    </div>
+    <div class="j-quiz-screen" id="quiz-screen">
+      <button class="j-back-btn" onclick="goBack()">&#8592; Change decade</button>
+      <div class="j-panel" id="panel"></div>
+      <div class="j-progress" id="progress"></div>
+      <div class="j-result" id="result-card">
+        <svg id="result-illo" class="j-result-illo" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="j-result-body">
+          <div class="j-result-score-row">
+            <div class="j-result-score-badge" id="result-score-badge"></div>
+            <div class="j-result-score-label">on the Davidson<br>Decades Quiz</div>
+          </div>
+          <div class="j-result-cta-head">You've mastered the decades—now help shape the future.</div>
+          <div class="j-result-cta-body">Gifts from alumni, families, and friends do more than preserve our history; they fuel academic excellence and ensure a Davidson education remains accessible for the next generation of leaders.</div>
+          <div class="j-actions">
+            <a class="j-btn j-btn-gift" href="http://www.davidson.edu/makeagift" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.51 15.49 0 12.36 0c-1.73 0-3.06.93-3.91 1.95L12 5.69l3.55-3.74C16.27 1.16 17.22.5 18.36.5 19.83.5 21 1.67 21 3.14c0 .48-.11.92-.18 1.36H20zM4 6H2c-.07-.44-.18-.88-.18-1.36C1.82 2.51 4.33 0 7.46 0c1.73 0 3.06.93 3.91 1.95L12 5.69 8.45 1.95C7.6.93 6.27 0 4.54 0 3.07 0 2 1.17 2 2.64c0 .48.11.92.18 1.36H4zM22 8H2v2h1v12a2 2 0 002 2h14a2 2 0 002-2V10h1V8zm-3 14H5V10h14v12z"/></svg>
+              Make a Gift
+            </a>
+            <button class="j-btn j-btn-restart" onclick="restartDecade()">
+              <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+              Start Over
+            </button>
+            <button class="j-btn j-btn-x" onclick="shareX()">
+              <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              Share on X
+            </button>
+            <button class="j-btn j-btn-fb" onclick="shareFacebook()">
+              <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.931-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+              Share on Facebook
+            </button>
+            <button class="j-btn j-btn-li" onclick="shareLinkedIn()">
+              <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              Share on LinkedIn
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══ Footer ════════════════════════════════════════════════ -->
+<footer id="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-column first">
+      <div id="footer-logo">
+        <svg width="200" height="123" viewBox="0 0 200 123" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_61_87)">
+            <path d="M137.446 48.9989C131.855 55.0937 125.542 58.1172 118.747 58.1172C106.843 58.1172 97.735 50.7266 97.735 38.3449C97.735 26.683 105.494 18.1886 115.711 18.1886C118.265 18.1886 121.253 18.7645 124.771 20.1083L135.277 31.0982H135.325V17.2288C126.795 15.7891 118.41 14.9252 114.41 14.9252C98.2169 14.9252 86.747 27.2109 86.747 41.0324C86.747 56.3895 98.9398 66.4196 114.361 66.4196C126.458 66.4676 134.554 59.9888 137.446 48.9989Z" fill="white"/>
+            <path d="M80.8193 46.5513V3.50335H90.0241C100.434 3.50335 107.133 9.6942 107.133 25.0033C107.133 40.3125 100.434 46.5033 90.0241 46.5033H80.8193V46.5513ZM119.518 25.0033C119.518 9.31027 107.084 0 89.1566 0H62.2169V0.0479911L68.7711 5.61495V44.4397L62.2169 50.0067V50.0547H89.1566C107.084 50.0547 119.518 40.7444 119.518 25.0033Z" fill="white"/>
+            <path d="M12.3373 75.49H0L2.74699 78.1295V97.9018L0 100.541H12.3373C21.1566 100.541 27.0361 95.8862 27.0361 88.0156C27.0361 80.1451 21.1084 75.49 12.3373 75.49ZM12.5783 97.8058H9.83133V78.2734H12.5783C17.3976 78.2734 19.4699 80.385 19.4699 88.0636C19.4699 95.6942 17.3976 97.8058 12.5783 97.8058Z" fill="white"/>
+            <path d="M141.349 92.9587C141.349 89.3594 139.229 86.6239 133.639 84.9442L129.639 83.7444C127.036 82.9765 126.313 82.1127 126.313 80.769C126.313 79.1373 127.374 77.9375 130.651 77.9375C132.145 77.9375 133.542 78.1295 135.325 78.7053L140 84.1283V76.4018C136.241 75.5379 133.398 75.154 131.325 75.154C124.241 75.154 120.771 78.8493 120.771 83.1205C120.771 86.6239 122.988 89.3594 128.241 90.9431L132.048 92.0949C134.747 92.9107 135.711 93.8705 135.711 95.1663C135.711 97.0859 133.88 98.1897 130.361 98.1897C128.867 98.1897 127.422 97.9018 125.928 97.3259L120.482 91.087V99.4855C124.096 100.349 127.277 100.973 129.976 100.973C137.398 100.925 141.349 97.1819 141.349 92.9587Z" fill="white"/>
+            <path d="M60.4819 100.541H62.9398L72.5783 78.1295L74.6024 75.49H66.3132L69.3494 78.1295L63.9518 91.135L58.5542 78.1295L61.5904 75.49H48.0964L50.8434 78.1295L60.4819 100.541Z" fill="white"/>
+            <path d="M90.4578 100.541H102.795C111.614 100.541 117.494 95.8862 117.494 88.0156C117.494 80.1451 111.614 75.49 102.795 75.49H90.4578L93.2048 78.1295V97.9018L90.4578 100.541ZM100.241 78.2734H102.988C107.807 78.2734 109.88 80.385 109.88 88.0636C109.88 95.7422 107.807 97.8538 102.988 97.8538H100.241V78.2734Z" fill="white"/>
+            <path d="M75.1325 100.541H87.7108L84.9638 97.9018V78.1295L87.7108 75.49H75.1325L77.8795 78.1295V97.9018L75.1325 100.541Z" fill="white"/>
+            <path d="M41.1566 100.541H54.6024L51.8554 97.9018L42.2169 75.49H34.5542L36.2892 79.5212L28.3855 97.9018L25.6385 100.541H34.6988L31.6626 97.9018L32.9639 94.8304H42.8916L44.1928 97.9018L41.1566 100.541ZM34.1205 92.1429L37.9759 83.1205L41.7831 92.1429H34.1205Z" fill="white"/>
+            <path d="M146.506 107.932V120.65L144.627 122.425H159.663V116.282L156 120.506H151.229V115.227H153.542L156.048 117.29V111.243L153.542 113.307H151.229V108.172H156.241L159.614 112.059V106.252H144.578L146.506 107.932Z" fill="white"/>
+            <path d="M137.976 115.85V120.362C137.494 120.458 137.06 120.554 136.626 120.554C133.59 120.554 131.277 118.586 131.277 113.883C131.277 110.283 133.06 107.932 135.904 107.932C136.675 107.932 137.59 108.076 138.651 108.412L141.88 112.107V106.828C139.373 106.204 137.349 105.916 135.422 105.916C130.41 105.916 126.217 109.612 126.217 114.315C126.217 119.498 130.169 122.713 134.554 122.713C136.916 122.713 138.699 122.281 140.53 121.081L142.41 122.665V115.946L144.289 114.219H136.096L137.976 115.85Z" fill="white"/>
+            <path d="M157.783 75.106C150.361 75.106 144.193 80.0491 144.193 88.0156C144.193 95.9821 150.361 100.925 157.783 100.925C165.205 100.925 171.374 95.9821 171.374 88.0156C171.374 80.0491 165.205 75.106 157.783 75.106ZM157.783 98.0937C153.976 98.0937 151.711 95.9821 151.711 88.0156C151.711 80.0491 153.976 77.9375 157.783 77.9375C161.59 77.9375 163.855 80.0491 163.855 88.0156C163.855 95.9821 161.59 98.0937 157.783 98.0937Z" fill="white"/>
+            <path d="M190.554 75.49L193.928 79.1373V89.0714L181.205 75.49H171.566L175.614 79.8091V96.942L172.867 100.589H182.313L178.94 96.942V83.3125L195.084 100.589H197.301V79.1853L200.048 75.5379H190.554V75.49Z" fill="white"/>
+            <path d="M52 119.498C48.7711 119.498 46.6024 117.29 46.6024 113.355C46.6024 109.756 48.4819 107.884 51.2771 107.884C51.9036 107.884 52.7229 108.028 53.6867 108.316L56.9638 112.059V106.78C54.4096 106.156 52.3855 105.868 50.6988 105.868C45.7349 105.868 41.5903 109.564 41.5903 114.363C41.5903 119.546 45.5903 122.617 50.0723 122.617C53.9759 122.617 57.0602 120.122 57.8313 116.474C56.2891 118.298 54.3132 119.498 52 119.498Z" fill="white"/>
+            <path d="M67.9036 105.868C63.0361 105.868 58.7952 109.084 58.7952 114.267C58.7952 119.45 63.0361 122.665 67.9036 122.665C72.7711 122.665 77.012 119.45 77.012 114.267C77.012 109.084 72.7711 105.868 67.9036 105.868ZM67.9036 120.65C65.4458 120.65 63.9036 119.258 63.9036 114.267C63.9036 109.276 65.4458 107.884 67.9036 107.884C70.3614 107.884 71.9036 109.276 71.9036 114.267C71.9036 119.306 70.3614 120.65 67.9036 120.65Z" fill="white"/>
+            <path d="M83.9518 120.458V107.932L85.8313 106.156H77.3494L79.2289 107.932V120.65L77.3494 122.425H91.8072V116.282L88.1445 120.506H83.9518V120.458Z" fill="white"/>
+            <path d="M99.8554 120.458V107.932L101.735 106.156H93.253L95.1325 107.932V120.65L93.253 122.425H107.711V116.282L104.048 120.506H99.8554V120.458Z" fill="white"/>
+            <path d="M110.94 107.932V120.65L109.06 122.425H124.096V116.282L120.434 120.506H115.663V115.227H117.976L120.482 117.29V111.243L117.976 113.307H115.663V108.172H120.675L124.048 112.059V106.252H109.012L110.94 107.932Z" fill="white"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_61_87">
+              <rect width="200" height="122.857" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <div class="footer-column second">
+      <ul>
+        <li><a href="https://www.davidson.edu/offices-and-services/human-resources/work-davidson" target="_blank">Work at Davidson</a></li>
+        <li><a href="https://www.davidson.edu/about/campus-and-surroundings/maps-and-directions" target="_blank">Maps &amp; Directions</a></li>
+        <li><a href="https://www.davidson.edu/about/contact-us" target="_blank">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-column third">
+      <ul>
+        <li><a href="https://www.davidson.edu/social-hub" target="_blank">Social Hub</a></li>
+        <li><a href="https://www.davidson.edu/about/contact-us/directories" target="_blank">Directories</a></li>
+      </ul>
+    </div>
+    <div class="footer-column fourth">
+      <div class="site-footer__social-media">
+        <h2 class="sr-only">Social Media Links</h2>
+        <ul class="social-media">
+          <li><a href="https://www.instagram.com/davidsoncollege" aria-label="Instagram">
+            <span class="social-icon"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></span>
+          </a></li>
+          <li><a href="https://www.facebook.com/davidsoncollege.nc/" aria-label="Facebook">
+            <span class="social-icon"><svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.931-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></span>
+          </a></li>
+          <li><a href="https://www.youtube.com/channel/UCO-VaiReXakQWdCIhgyReLg" aria-label="YouTube">
+            <span class="social-icon"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></span>
+          </a></li>
+          <li><a href="https://www.linkedin.com/school/davidson-college/" aria-label="LinkedIn">
+            <span class="social-icon"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span>
+          </a></li>
+          <li><a href="https://www.tiktok.com/@davidsoncollege.nc" aria-label="TikTok">
+            <span class="social-icon"><svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></span>
+          </a></li>
+        </ul>
+        <div class="site-footer__address">
+          <p>Davidson, North Carolina 28035</p>
+          <p><a href="tel:7048942000">(704) 894-2000</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div id="bottom-footer">
+  <div class="container">
+    <span class="copyright">&copy; Davidson College</span>
+    <ul class="footer-inline-menu">
+      <li><a href="https://www.davidson.edu/offices-and-services/technology-innovation/it-guidelines-policies/data-privacy-statement">Privacy Policy</a></li>
+      <li><a href="https://www.davidson.edu/offices-and-services/technology-innovation/it-guidelines-policies/davidson-college-technology-terms-service">Terms of Services</a></li>
+      <li><a href="https://www.davidson.edu/accessibility">Accessibility</a></li>
+      <li><a href="https://sites.google.com/davidson.edu/policies">Policies Library</a></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU9oMj75iSElaN3gsiYUoeALmitGhcEOFq4SvI-fsXDXirv9U6hyxSEAjsPc0FStrmoA5z7VLo1Qy6/pub?gid=0&single=true&output=csv";
+var QUIZ_URL = "https://davidson.edu/decades";
+var categories = [], activeDecade = null, answered = [];
+var letters = ['A','B','C','D'];
+
+function buildStrip() {
+  var strip = document.getElementById('decade-strip');
+  if (!strip || !categories.length) return;
+  strip.innerHTML = '';
+  categories.forEach(function(cat, i) {
+    var item = document.createElement('div');
+    item.className = 'strip-item';
+    item.innerHTML = '<div class="strip-label">Decade</div><div class="strip-decade">' + cat.name + '</div>';
+    item.addEventListener('click', function() { selectDecade(i); });
+    item.style.cursor = 'pointer';
+    strip.appendChild(item);
+  });
+}
+
+function highlightStrip(idx) {
+  var items = document.querySelectorAll('.strip-item');
+  items.forEach(function(el, i) { el.classList.toggle('active', i === idx); });
+}
+
+function getIllo(decadeName) {
+  return '<rect width="760" height="300" fill="#d5d5d5"/>'
+    + '<line x1="0" y1="0" x2="760" y2="300" stroke="#bbbbbb" stroke-width="2"/>'
+    + '<line x1="760" y1="0" x2="0" y2="300" stroke="#bbbbbb" stroke-width="2"/>'
+    + '<rect x="260" y="115" width="240" height="70" rx="6" fill="#c0c0c0"/>'
+    + '<text x="380" y="156" text-anchor="middle" font-family="Oswald,sans-serif" font-size="18" font-weight="600" fill="#888888" letter-spacing="2">' + decadeName + ' ILLUSTRATION</text>';
+}
+
+function parseCSV(text) {
+  var lines = text.trim().split('\n');
+  var headers = lines[0].split(',').map(function(h) { return h.trim().toLowerCase().replace(/"/g, ''); });
+  return lines.slice(1).map(function(line) {
+    var cols = [], cur = '', inQuote = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (ch === '"') { inQuote = !inQuote; }
+      else if (ch === ',' && !inQuote) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim());
+    var row = {};
+    headers.forEach(function(h, i) { row[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
+    return row;
+  }).filter(function(r) { return r.decade && r.question; });
+}
+
+function buildCategories(rows) {
+  var map = {}, order = [];
+  rows.forEach(function(row) {
+    var d = row.decade.trim();
+    if (!map[d]) { map[d] = []; order.push(d); }
+    var ai = ['A','B','C','D'].indexOf((row.correct || 'A').trim().toUpperCase());
+    map[d].push({ q: row.question, choices: [row.choice_a, row.choice_b, row.choice_c, row.choice_d], answer: ai >= 0 ? ai : 0 });
+  });
+  return order.map(function(d) { return { name: d, questions: map[d] }; });
+}
+
+function loadSheet() {
+  fetch(SHEET_CSV_URL)
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(text) {
+      var rows = parseCSV(text);
+      if (!rows.length) throw new Error('No data rows found.');
+      categories = buildCategories(rows);
+      answered = categories.map(function(c) { return c.questions.map(function() { return null; }); });
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('year-screen').style.display = 'block';
+      buildStrip();
+      renderYears();
+    })
+    .catch(function(e) {
+      document.getElementById('loading').innerHTML = '<div class="j-error">Could not load questions.<br><small>' + e.message + '</small></div>';
+    });
+}
+
+function goBack() {
+  document.getElementById('year-screen').style.display = 'block';
+  document.getElementById('quiz-screen').style.display = 'none';
+  highlightStrip(null);
+}
+
+function selectDecade(i) {
+  activeDecade = i;
+  document.getElementById('year-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  highlightStrip(i);
+  renderQuiz();
+}
+
+function renderYears() {
+  var grid = document.getElementById('year-grid');
+  grid.innerHTML = '';
+  categories.forEach(function(cat, i) {
+    var btn = document.createElement('button');
+    btn.className = 'j-year-btn';
+    btn.textContent = cat.name;
+    btn.onclick = (function(idx) { return function() { selectDecade(idx); }; })(i);
+    grid.appendChild(btn);
+  });
+}
+
+function getScore() { return answered[activeDecade].filter(function(a) { return a === true; }).length; }
+
+function renderQuiz() {
+  var cat = categories[activeDecade], qs = cat.questions;
+  var html = '<div class="j-cat-title">' + cat.name + '</div>';
+  qs.forEach(function(q, qi) {
+    var result = answered[activeDecade][qi];
+    var bc = result === null ? '' : (result ? ' answered-correct' : ' answered-wrong');
+    html += '<div class="j-question-block' + bc + '"><div class="j-q-header"><span class="j-q-text">' + q.q + '</span></div><div class="j-choices">';
+    q.choices.forEach(function(ch, ci) {
+      var cls = 'j-choice', dis = result !== null ? 'disabled' : '';
+      if (result !== null) {
+        if (ci === q.answer) cls += (result && answered[activeDecade][qi + '_chosen'] === ci) ? ' correct' : ' reveal-correct';
+        else if (answered[activeDecade][qi + '_chosen'] === ci) cls += ' wrong';
+      }
+      html += '<button class="' + cls + '" ' + dis + ' onclick="choose(' + qi + ',' + ci + ')" style="color:#ffffff;"><span class="j-choice-letter">' + letters[ci] + '</span><span style="color:inherit;">' + ch + '</span></button>';
+    });
+    html += '</div>';
+    if (result !== null) html += '<div class="j-feedback show ' + (result ? 'correct' : 'wrong') + '">' + (result ? '&#10003; Correct!' : '&#10007; Incorrect &mdash; the answer was: ' + q.choices[q.answer]) + '</div>';
+    html += '</div>';
+  });
+  document.getElementById('panel').innerHTML = html;
+  var done = answered[activeDecade].filter(function(a) { return a !== null; }).length;
+  document.getElementById('progress').textContent = done + ' of ' + qs.length + ' questions answered';
+  var rc = document.getElementById('result-card');
+  if (done === qs.length) {
+    var sc = getScore(), decName = cat.name;
+    document.getElementById('result-illo').innerHTML = getIllo(decName);
+    document.getElementById('result-score-badge').textContent = sc + '/' + qs.length;
+    rc.classList.add('show');
+  } else { rc.classList.remove('show'); }
+}
+
+function choose(qi, ci) {
+  if (answered[activeDecade][qi] !== null) return;
+  answered[activeDecade][qi] = ci === categories[activeDecade].questions[qi].answer;
+  answered[activeDecade][qi + '_chosen'] = ci;
+  renderQuiz();
+}
+
+function restartDecade() {
+  answered[activeDecade] = categories[activeDecade].questions.map(function() { return null; });
+  document.getElementById('result-card').classList.remove('show');
+  renderQuiz();
+}
+
+function getShareText() {
+  var sc = getScore(), tot = categories[activeDecade].questions.length;
+  return 'I scored ' + sc + '/' + tot + ' on the Davidson Decades Quiz! How well do you know Davidson history? ' + QUIZ_URL;
+}
+function shareX() { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(getShareText()), '_blank'); }
+function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(QUIZ_URL) + '&quote=' + encodeURIComponent(getShareText()), '_blank'); }
+function shareLinkedIn() { window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(QUIZ_URL), '_blank'); }
+
+loadSheet();
+</script>
+</body>
+</html>
