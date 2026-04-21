@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Davidson Decades Quiz</title>
+<meta name="description" content="How well do you know Davidson College history? Test your knowledge decade by decade." />
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Oswald:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+}
+
+#quiz-area {
+  background: #ffffff;
+}
+
+/* ══════════════════════════════════════════════
+   DECADE STRIP
+══════════════════════════════════════════════ */
+
+#decade-strip {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border-top: 1px solid #e0ddd8;
+  border-bottom: 1px solid #e0ddd8;
+}
+
+#decade-strip .strip-item {
+  flex: 1 0 25%;
+  padding: 14px 8px 16px;
+  text-align: center;
+  border-right: 1px solid #e0ddd8;
+  border-bottom: 1px solid #e0ddd8;
+  cursor: pointer;
+  transition: background 0.15s;
+  box-sizing: border-box;
+  min-width: 80px;
+}
+
+@media screen and (min-width: 900px) {
+  #decade-strip .strip-item { flex: 1 0 0%; }
+}
+@media screen and (max-width: 899px) {
+  #decade-strip .strip-item { flex: 1 0 25%; }
+}
+@media screen and (max-width: 480px) {
+  #decade-strip .strip-item { flex: 1 0 50%; }
+}
+
+#decade-strip .strip-item:last-child { border-right: none; }
+
+#decade-strip .strip-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 4px;
+}
+
+#decade-strip .strip-decade {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(16px, 3vw, 26px);
+  font-weight: 700;
+  color: #294878;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+#decade-strip .strip-item:hover { background: #f0f4ff; }
+#decade-strip .strip-item:hover .strip-decade { color: #D42121; }
+#decade-strip .strip-item:hover .strip-label { color: #888; }
+
+#decade-strip .strip-item--random .strip-decade { color: #D42121; }
+#decade-strip .strip-item--random:hover { background: #fff5f5; }
+#decade-strip .strip-item--random:hover .strip-decade { color: #aa0000; }
+
+#decade-strip .strip-item.active { background: #294878; }
+#decade-strip .strip-item.active .strip-decade { color: #f0c040; }
+#decade-strip .strip-item.active .strip-label { color: rgba(255,255,255,0.6); }
+
+/* ══════════════════════════════════════════════
+   DECADE PREVIEW PANEL
+══════════════════════════════════════════════ */
+
+#decade-preview {
+  display: none;
+  width: 100%;
+  min-height: 200px;
+  background-color: #e8ecf4;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+#decade-preview.visible { display: flex; }
+#decade-preview .preview-decade {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(48px, 10vw, 96px);
+  font-weight: 700;
+  color: #294878;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════
+   QUIZ STYLES
+══════════════════════════════════════════════ */
+
+.j-root { width: 100%; max-width: 760px; margin: 0 auto; padding: 32px 16px 24px; }
+.j-loading { text-align: center; padding: 60px 0; color: #888; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; }
+.j-quiz-screen { display: none; }
+.j-back-btn { background: none; border: none; color: #a0b0ff; font-size: 13px; font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; margin-bottom: 16px; padding: 0; display: flex; align-items: center; gap: 6px; }
+.j-back-btn:hover { color: #f0c040; }
+.j-panel { background: #12106a; border: 2px solid #3a34a8; border-radius: 12px; padding: 20px; }
+.j-cat-title { font-size: 20px; font-weight: 700; color: #f0c040; letter-spacing: 2px; text-transform: uppercase; text-align: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1.5px solid #3a34a8; }
+.j-question-block { margin-bottom: 20px; border-radius: 8px; border: 1.5px solid #2a2488; overflow: hidden; }
+.j-question-block.answered-correct { border-color: #1a6a54; }
+.j-question-block.answered-wrong { border-color: #8a2020; }
+.j-q-header { background: #1a1888; padding: 12px 14px; }
+.j-q-text { font-size: 15px; color: #eeeaff; font-family: 'Source Serif 4', serif; font-style: italic; line-height: 1.5; }
+.j-choices { padding: 12px 14px; display: grid; gap: 8px; }
+.j-choice { background: #2a2490; border: 1.5px solid #4a44c0; border-radius: 6px; padding: 10px 14px; font-size: 15px; font-family: 'Oswald', sans-serif; font-weight: 400; color: #ffffff; cursor: pointer; transition: background 0.12s, border-color 0.12s; text-align: left; letter-spacing: 0.3px; display: flex; align-items: center; gap: 10px; }
+.j-choice:hover:not(:disabled) { background: #3830b8; border-color: #7870e0; color: #f0c040; }
+.j-choice:disabled { cursor: default; }
+.j-choice.correct { background: #14443a; border-color: #3ecfa0; color: #d0fff0; }
+.j-choice.wrong { background: #3a1414; border-color: #cf3e3e; color: #ffd0d0; }
+.j-choice.reveal-correct { background: #14443a; border-color: #3ecfa0; color: #d0fff0; opacity: 0.75; }
+.j-choice-letter { width: 24px; height: 24px; border-radius: 50%; background: #5550d0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.j-choice.correct .j-choice-letter, .j-choice.reveal-correct .j-choice-letter { background: #3ecfa0; color: #04342c; }
+.j-choice.wrong .j-choice-letter { background: #cf3e3e; color: #fff; }
+.j-feedback { display: none; padding: 6px 14px 10px; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.j-feedback.show { display: block; }
+.j-feedback.correct { color: #3ecfa0; }
+.j-feedback.wrong { color: #ff8080; }
+.j-progress { text-align: center; font-size: 12px; color: #8888bb; letter-spacing: 1px; margin-top: 14px; }
+.j-error { text-align: center; padding: 40px 20px; color: #ff8080; font-size: 14px; line-height: 1.6; }
+.j-result { display: none; margin-top: 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
+.j-result.show { display: block; }
+.j-result-illo { width: 100%; display: block; }
+.j-result-body { background: #ffffff; padding: 24px 28px; border: 1.5px solid #e0ddd8; border-top: none; border-radius: 0 0 16px 16px; }
+.j-result-score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+.j-result-score-badge { background: #D42121; color: #ffffff; font-size: 32px; font-weight: 700; font-family: 'Oswald', sans-serif; border-radius: 10px; padding: 8px 18px; letter-spacing: 1px; white-space: nowrap; }
+.j-result-score-label { font-size: 13px; color: #294878; font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; line-height: 1.5; }
+.j-result-cta-head { font-size: 18px; font-weight: 700; color: #294878; font-family: 'Oswald', sans-serif; margin-bottom: 8px; }
+.j-result-cta-body { font-size: 14px; color: #444; font-family: 'Source Serif 4', serif; line-height: 1.65; margin-bottom: 20px; }
+.j-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.j-btn { display: inline-flex; align-items: center; gap: 7px; border: none; border-radius: 6px; padding: 11px 17px; font-size: 12px; font-weight: 700; font-family: 'Oswald', sans-serif; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: opacity 0.15s; }
+.j-btn:hover { opacity: 0.82; }
+.j-btn-gift { background: #D42121; color: #ffffff; }
+.j-btn-x { background: #000000; color: #ffffff; }
+.j-btn-fb { background: #1877F2; color: #ffffff; }
+.j-btn-li { background: #0A66C2; color: #ffffff; }
+.j-btn-submit { background: #D42121; color: #ffffff; }
+.j-btn-another { background: #294878; color: #ffffff; }
+.j-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+/* ══════════════════════════════════════════════
+   SUBMIT SCREEN
+══════════════════════════════════════════════ */
+
+#submit-screen {
+  display: none;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 16px 48px;
+}
+#submit-screen.show { display: block; }
+
+.submit-scores {
+  background: #12106a;
+  border: 2px solid #3a34a8;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+}
+.submit-scores-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #8888bb; margin-bottom: 14px; }
+.submit-score-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #2a2488; font-family: 'Oswald', sans-serif; font-size: 16px; color: #c8d8ff; }
+.submit-score-row:last-child { border-bottom: none; }
+.submit-score-row .decade-score { font-weight: 700; color: #f0c040; }
+.submit-total-row { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 2px solid #3a34a8; font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #ffffff; }
+.submit-total-row .total-score { color: #f0c040; }
+
+.submit-form { background: #ffffff; border-radius: 12px; padding: 24px 28px; border: 1.5px solid #e0ddd8; }
+.submit-form h2 { font-family: 'Oswald', sans-serif; font-size: 20px; font-weight: 700; color: #294878; margin-bottom: 6px; }
+.submit-form p { font-family: 'Source Serif 4', serif; font-size: 14px; color: #555; margin-bottom: 20px; line-height: 1.6; }
+.submit-field { margin-bottom: 14px; }
+.submit-field label { display: block; font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: #294878; margin-bottom: 5px; }
+.submit-field input { width: 100%; padding: 10px 14px; font-size: 15px; font-family: 'Source Serif 4', serif; border: 1.5px solid #d4cfce; border-radius: 6px; outline: none; color: #0F1012; transition: border-color 0.15s; }
+.submit-field input:focus { border-color: #294878; }
+.submit-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+.submit-thankyou { display: none; text-align: center; padding: 32px 20px; }
+.submit-thankyou.show { display: block; }
+.submit-thankyou h2 { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; color: #294878; margin-bottom: 10px; }
+.submit-thankyou p { font-family: 'Source Serif 4', serif; font-size: 15px; color: #555; margin-bottom: 24px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<main id="quiz-area" role="main">
+
+  <div id="decade-strip" aria-hidden="true"></div>
+
+  <div id="decade-preview">
+    <div class="preview-decade" id="preview-decade-label"></div>
+  </div>
+
+  <div class="j-root">
+    <div class="j-loading" id="loading">Loading questions...</div>
+    <div class="j-quiz-screen" id="quiz-screen">
+      <button class="j-back-btn" onclick="goBack()">&#8592; Change decade</button>
+      <div class="j-panel" id="panel"></div>
+      <div class="j-progress" id="progress"></div>
+      <div class="j-result" id="result-card">
+        <svg id="result-illo" class="j-result-illo" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="j-result-body">
+          <div class="j-result-score-row">
+            <div class="j-result-score-badge" id="result-score-badge"></div>
+            <div class="j-result-score-label">on the Davidson<br>Decades Quiz</div>
+          </div>
+          <div class="j-result-cta-head">You've mastered the decades—now help shape the future.</div>
+          <div class="j-result-cta-body">Gifts from alumni, families, and friends do more than preserve our history; they fuel academic excellence and ensure a Davidson education remains accessible for the next generation of leaders.</div>
+          <div class="j-actions">
+            <button class="j-btn j-btn-another" onclick="tryAnotherDecade()">&#8592; Try Another Decade</button>
+            <button class="j-btn j-btn-submit" onclick="showSubmitScreen()">Submit My Score &#8594;</button>
+          </div>
+          <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+            <span style="font-size:11px;color:#888;font-family:'Oswald',sans-serif;letter-spacing:0.1em;text-transform:uppercase;">Share:</span>
+            <button class="j-btn j-btn-x" onclick="shareX()">
+              <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X
+            </button>
+            <button class="j-btn j-btn-fb" onclick="shareFacebook()">
+              <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.931-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>Facebook
+            </button>
+            <button class="j-btn j-btn-li" onclick="shareLinkedIn()">
+              <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="submit-screen">
+    <div class="submit-scores">
+      <div class="submit-scores-title">Your scores</div>
+      <div id="submit-score-list"></div>
+      <div class="submit-total-row">
+        <span>Grand total</span>
+        <span class="total-score" id="submit-grand-total"></span>
+      </div>
+    </div>
+    <div class="submit-form" id="submit-form-wrap">
+      <h2>Claim your prize entry</h2>
+      <p>Enter your name and graduation year for a chance to win a Davidson tote bag, YETI, t-shirt, sweatshirt, or hat.</p>
+      <div class="submit-field">
+        <label for="entry-name">Full name</label>
+        <input type="text" id="entry-name" placeholder="Jane Smith" autocomplete="name" />
+      </div>
+      <div class="submit-field">
+        <label for="entry-gradyear">Graduation year</label>
+        <input type="text" id="entry-gradyear" placeholder="e.g. 2003" autocomplete="off" maxlength="4" />
+      </div>
+      <div class="submit-actions">
+        <button class="j-btn j-btn-submit" onclick="submitEntry()">Submit &#8594;</button>
+        <button class="j-btn j-btn-another" onclick="tryAnotherDecade()">&#8592; Play More</button>
+        <a class="j-btn j-btn-gift" href="http://www.davidson.edu/makeagift" target="_blank" rel="noopener">Make a Gift</a>
+      </div>
+    </div>
+    <div class="submit-thankyou" id="submit-thankyou">
+      <h2>You're in!</h2>
+      <p>Thanks for playing. We'll be in touch if you win. Good luck, Wildcat!</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+        <button class="j-btn j-btn-another" onclick="tryAnotherDecade()">&#8592; Play Another Decade</button>
+        <a class="j-btn j-btn-gift" href="http://www.davidson.edu/makeagift" target="_blank" rel="noopener">Make a Gift</a>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU9oMj75iSElaN3gsiYUoeALmitGhcEOFq4SvI-fsXDXirv9U6hyxSEAjsPc0FStrmoA5z7VLo1Qy6/pub?gid=0&single=true&output=csv";
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxl7GEhJB6hVIVZFwM2AL_fN1Sf_vyVaCdhND-OfcO7q5wQGkXUiEi6nIeKcuDQcNDf1Q/exec';
+var QUIZ_URL = "https://davidson.edu/decades";
+var categories = [], activeDecade = null, answered = [];
+var letters = ['A','B','C','D'];
+
+var DECADE_IMAGES = {};
+var DECADE_COLORS = {
+  '1920s':'#dde4f0','1930s':'#dde8f0','1940s':'#ddeef0','1950s':'#f0eddd',
+  '1960s':'#f0e8dd','1970s':'#f0dddd','1980s':'#edddf0','1990s':'#dde4f0',
+  '2000s':'#ddf0ee','2010s':'#e4f0dd','2020s':'#f0eedd'
+};
+
+/* ── postMessage height reporter ── */
+function reportHeight() {
+  var h = document.body.scrollHeight;
+  window.parent.postMessage({ type: 'dav-quiz-height', height: h }, '*');
+}
+/* Fire on any DOM change */
+var _ro = new ResizeObserver(reportHeight);
+_ro.observe(document.body);
+/* Also fire after interactions */
+function afterRender() { setTimeout(reportHeight, 50); }
+
+function buildStrip() {
+  var strip = document.getElementById('decade-strip');
+  if (!strip || !categories.length) return;
+  strip.innerHTML = '';
+  categories.forEach(function(cat, i) {
+    var item = document.createElement('div');
+    item.className = 'strip-item';
+    item.innerHTML = '<div class="strip-label">Decade</div><div class="strip-decade">' + cat.name + '</div>';
+    item.addEventListener('mouseenter', function() { showPreview(cat.name); });
+    item.addEventListener('mouseleave', hidePreview);
+    item.addEventListener('click', function() { selectDecade(i); });
+    strip.appendChild(item);
+  });
+  var randItem = document.createElement('div');
+  randItem.className = 'strip-item strip-item--random';
+  randItem.innerHTML = '<div class="strip-label">Feeling lucky?</div><div class="strip-decade">&#9733;</div>';
+  randItem.addEventListener('mouseenter', function() { showPreview('?'); });
+  randItem.addEventListener('mouseleave', hidePreview);
+  randItem.addEventListener('click', function() { selectDecade(Math.floor(Math.random() * categories.length)); });
+  strip.appendChild(randItem);
+  afterRender();
+}
+
+function showPreview(decadeName) {
+  var panel = document.getElementById('decade-preview');
+  var label = document.getElementById('preview-decade-label');
+  if (!panel) return;
+  var img = (decadeName !== '?' && DECADE_IMAGES[decadeName]) ? DECADE_IMAGES[decadeName] : '';
+  var color = (decadeName !== '?') ? (DECADE_COLORS[decadeName] || '#e8ecf4') : '#f5eef5';
+  panel.style.backgroundColor = color;
+  panel.style.backgroundImage = img ? 'url(' + img + ')' : 'none';
+  if (label) label.textContent = decadeName === '?' ? '?' : decadeName;
+  panel.classList.add('visible');
+  afterRender();
+}
+
+function hidePreview() {
+  var panel = document.getElementById('decade-preview');
+  if (panel) panel.classList.remove('visible');
+  afterRender();
+}
+
+function highlightStrip(idx) {
+  document.querySelectorAll('.strip-item').forEach(function(el, i) {
+    el.classList.toggle('active', i === idx);
+  });
+}
+
+function parseCSV(text) {
+  var lines = text.trim().split('\n');
+  var headers = lines[0].split(',').map(function(h) { return h.trim().toLowerCase().replace(/"/g, ''); });
+  return lines.slice(1).map(function(line) {
+    var cols = [], cur = '', inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+    cols.push(cur.trim());
+    var row = {};
+    headers.forEach(function(h, i) { row[h] = (cols[i] || '').replace(/^"|"$/g, '').trim(); });
+    return row;
+  }).filter(function(r) { return r.decade && r.question; });
+}
+
+function buildCategories(rows) {
+  var map = {}, order = [];
+  rows.forEach(function(row) {
+    var d = row.decade.trim();
+    if (!map[d]) { map[d] = []; order.push(d); }
+    var ai = ['A','B','C','D'].indexOf((row.correct || 'A').trim().toUpperCase());
+    map[d].push({ q: row.question, choices: [row.choice_a, row.choice_b, row.choice_c, row.choice_d], answer: ai >= 0 ? ai : 0 });
+  });
+  return order.map(function(d) { return { name: d, questions: map[d] }; });
+}
+
+function loadSheet() {
+  fetch(SHEET_CSV_URL)
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(function(text) {
+      var rows = parseCSV(text);
+      if (!rows.length) throw new Error('No data rows found.');
+      categories = buildCategories(rows);
+      answered = categories.map(function(c) { return c.questions.map(function() { return null; }); });
+      document.getElementById('loading').style.display = 'none';
+      buildStrip();
+    })
+    .catch(function(e) {
+      document.getElementById('loading').innerHTML = '<div class="j-error">Could not load questions.<br><small>' + e.message + '</small></div>';
+      afterRender();
+    });
+}
+
+function goBack() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  highlightStrip(null);
+  afterRender();
+}
+
+function selectDecade(i) {
+  activeDecade = i;
+  document.getElementById('quiz-screen').style.display = 'block';
+  highlightStrip(i);
+  renderQuiz();
+}
+
+function getScore() { return answered[activeDecade].filter(function(a) { return a === true; }).length; }
+
+function renderQuiz() {
+  var cat = categories[activeDecade], qs = cat.questions;
+  var html = '<div class="j-cat-title">' + cat.name + '</div>';
+  qs.forEach(function(q, qi) {
+    var result = answered[activeDecade][qi];
+    var bc = result === null ? '' : (result ? ' answered-correct' : ' answered-wrong');
+    html += '<div class="j-question-block' + bc + '"><div class="j-q-header"><span class="j-q-text">' + q.q + '</span></div><div class="j-choices">';
+    q.choices.forEach(function(ch, ci) {
+      var cls = 'j-choice', dis = result !== null ? 'disabled' : '';
+      if (result !== null) {
+        if (ci === q.answer) cls += (result && answered[activeDecade][qi + '_chosen'] === ci) ? ' correct' : ' reveal-correct';
+        else if (answered[activeDecade][qi + '_chosen'] === ci) cls += ' wrong';
+      }
+      html += '<button class="' + cls + '" ' + dis + ' onclick="choose(' + qi + ',' + ci + ')"><span class="j-choice-letter">' + letters[ci] + '</span><span>' + ch + '</span></button>';
+    });
+    html += '</div>';
+    if (result !== null) html += '<div class="j-feedback show ' + (result ? 'correct' : 'wrong') + '">' + (result ? '&#10003; Correct!' : '&#10007; Incorrect &mdash; the answer was: ' + q.choices[q.answer]) + '</div>';
+    html += '</div>';
+  });
+  document.getElementById('panel').innerHTML = html;
+  var done = answered[activeDecade].filter(function(a) { return a !== null; }).length;
+  document.getElementById('progress').textContent = done + ' of ' + qs.length + ' questions answered';
+  var rc = document.getElementById('result-card');
+  if (done === qs.length) {
+    document.getElementById('result-illo').innerHTML = getIllo(cat.name);
+    document.getElementById('result-score-badge').textContent = getScore() + '/' + qs.length;
+    rc.classList.add('show');
+  } else {
+    rc.classList.remove('show');
+  }
+  afterRender();
+}
+
+function choose(qi, ci) {
+  if (answered[activeDecade][qi] !== null) return;
+  answered[activeDecade][qi] = ci === categories[activeDecade].questions[qi].answer;
+  answered[activeDecade][qi + '_chosen'] = ci;
+  renderQuiz();
+}
+
+function getIllo(decadeName) {
+  return '<rect width="760" height="300" fill="#d5d5d5"/>'
+    + '<line x1="0" y1="0" x2="760" y2="300" stroke="#bbbbbb" stroke-width="2"/>'
+    + '<line x1="760" y1="0" x2="0" y2="300" stroke="#bbbbbb" stroke-width="2"/>'
+    + '<rect x="260" y="115" width="240" height="70" rx="6" fill="#c0c0c0"/>'
+    + '<text x="380" y="156" text-anchor="middle" font-family="Oswald,sans-serif" font-size="18" font-weight="600" fill="#888888" letter-spacing="2">' + decadeName + ' ILLUSTRATION</text>';
+}
+
+function tryAnotherDecade() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  document.getElementById('submit-screen').classList.remove('show');
+  highlightStrip(null);
+  afterRender();
+}
+
+function showSubmitScreen() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  var sub = document.getElementById('submit-screen');
+  sub.classList.add('show');
+  document.getElementById('submit-form-wrap').style.display = 'block';
+  document.getElementById('submit-thankyou').classList.remove('show');
+  var list = document.getElementById('submit-score-list');
+  list.innerHTML = '';
+  var totalCorrect = 0, totalPossible = 0;
+  categories.forEach(function(cat, i) {
+    var ans = answered[i];
+    if (!ans || ans.every(function(a) { return a === null; })) return;
+    var correct = ans.filter(function(a) { return a === true; }).length;
+    var possible = cat.questions.length;
+    totalCorrect += correct; totalPossible += possible;
+    var row = document.createElement('div');
+    row.className = 'submit-score-row';
+    row.innerHTML = '<span class="decade-name">' + cat.name + '</span><span class="decade-score">' + correct + '/' + possible + '</span>';
+    list.appendChild(row);
+  });
+  document.getElementById('submit-grand-total').textContent = totalCorrect + '/' + totalPossible;
+  afterRender();
+}
+
+function submitEntry() {
+  var name = document.getElementById('entry-name').value.trim();
+  var gradYear = document.getElementById('entry-gradyear').value.trim();
+  if (!name || !gradYear) { alert('Please enter your name and graduation year.'); return; }
+  var scoreLines = [], totalCorrect = 0, totalPossible = 0;
+  categories.forEach(function(cat, i) {
+    var ans = answered[i];
+    if (!ans || ans.every(function(a) { return a === null; })) return;
+    var correct = ans.filter(function(a) { return a === true; }).length;
+    var possible = cat.questions.length;
+    totalCorrect += correct; totalPossible += possible;
+    scoreLines.push(cat.name + ': ' + correct + '/' + possible);
+  });
+  fetch(SCRIPT_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name, gradYear: gradYear, scores: scoreLines.join(', '), total: totalCorrect + '/' + totalPossible })
+  }).catch(function() {});
+  document.getElementById('submit-form-wrap').style.display = 'none';
+  document.getElementById('submit-thankyou').classList.add('show');
+  afterRender();
+}
+
+function getShareText() {
+  var sc = getScore(), tot = categories[activeDecade].questions.length;
+  return 'I scored ' + sc + '/' + tot + ' on the Davidson Decades Quiz! How well do you know Davidson history? ' + QUIZ_URL;
+}
+function shareX() { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(getShareText()), '_blank'); }
+function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(QUIZ_URL) + '&quote=' + encodeURIComponent(getShareText()), '_blank'); }
+function shareLinkedIn() { window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(QUIZ_URL), '_blank'); }
+
+loadSheet();
+</script>
+</body>
+</html>
