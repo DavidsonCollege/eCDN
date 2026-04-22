@@ -107,12 +107,19 @@
   .check-btn.next-q { background: #D42121; color: #fff; }
 
   /* Score screen */
-  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 2rem 2.5rem; text-align: center; min-height: 300px; }
+  .score-screen { display: none; flex-direction: column; align-items: stretch; justify-content: center; padding: 0; min-height: 300px; }
   .score-screen.visible { display: flex; }
-  .score-gif { width: 180px; height: 180px; object-fit: cover; border-radius: 50%; margin-bottom: 1.25rem; }
+  .score-inner { display: flex; flex-direction: column; align-items: center; }
+  .score-gif { width: 100%; max-height: 220px; object-fit: cover; display: block; flex-shrink: 0; }
+  .score-content { padding: 2rem 2rem 2.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  @media (min-width: 600px) {
+    .score-inner { flex-direction: row; align-items: stretch; }
+    .score-gif { width: 240px; max-height: none; height: auto; object-fit: cover; }
+    .score-content { text-align: left; align-items: flex-start; padding: 2rem 2rem 2.5rem; }
+  }
   .score-big { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 4rem; font-weight: 700; color: #D42121; line-height: 1; margin-bottom: 0.5rem; }
   .score-sub { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 1.25rem; }
-  .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.15rem; color: #0F1012; margin-bottom: 2rem; max-width: 420px; line-height: 1.55; }
+  .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.15rem; color: #0F1012; margin-bottom: 2rem; max-width: 380px; line-height: 1.55; }
   .restart-btn { padding: 0.75rem 2rem; border-radius: 6px; border: none; background: #294878; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-bottom: 1.5rem; }
   .restart-btn:hover { background: #1e3560; }
   .share-row { display: flex; align-items: center; gap: 0.6rem; }
@@ -163,47 +170,31 @@
   </div>
 
   <div class="score-screen" id="score-screen">
-    <img class="score-gif" id="score-gif" src="" alt="Celebration" />
-    <p class="score-big" id="score-big"></p>
-    <p class="score-sub">Correct answers</p>
-    <p class="score-msg" id="score-msg"></p>
-    <button class="restart-btn" id="restart-btn">Try Another Decade</button>
-    <div class="share-row">
-      <span class="share-label">Share</span>
-      <button class="share-btn share-btn-x" onclick="shareX()" title="Share on X">
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </button>
-      <button class="share-btn share-btn-fb" onclick="shareFacebook()" title="Share on Facebook">
-        <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.931-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-      </button>
-      <button class="share-btn share-btn-li" onclick="shareLinkedIn()" title="Share on LinkedIn">
-        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-      </button>
+    <div class="score-inner">
+      <img class="score-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHp6eXp0bnNuczR6czJxd2oxbHozZXFrc2JsZjBrbXY4bG53cmE0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/fUQ4rhUZJYiQsas6WD/giphy.gif" alt="Celebration" />
+      <div class="score-content">
+        <p class="score-big" id="score-big"></p>
+        <p class="score-sub">Correct answers</p>
+        <p class="score-msg" id="score-msg"></p>
+        <button class="restart-btn" id="restart-btn">Try Another Decade</button>
+        <div class="share-row">
+          <span class="share-label">Share</span>
+          <button class="share-btn share-btn-x" onclick="shareX()" title="Share on X">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </button>
+          <button class="share-btn share-btn-fb" onclick="shareFacebook()" title="Share on Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.931-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          </button>
+          <button class="share-btn share-btn-li" onclick="shareLinkedIn()" title="Share on LinkedIn">
+            <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
 <script>
 var QUIZ_URL = 'https://davidson.edu/decades';
-
-var CELEBRATE_GIFS = [
-  'https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif',  // confetti burst
-  'https://media.giphy.com/media/26u4lOMA8JKSnL9Uk/giphy.gif',  // celebration
-  'https://media.giphy.com/media/l0MYGb1LuZ3n7dRnO/giphy.gif',  // happy dance
-];
-var GOOD_GIFS = [
-  'https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif',
-  'https://media.giphy.com/media/xT9IgG50Lg7russbBu/giphy.gif',
-];
-var MEH_GIFS = [
-  'https://media.giphy.com/media/l2JehQ2GitHGdVG9y/giphy.gif',
-  'https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif',
-];
-
-function pickGif(pct) {
-  var pool = pct === 1 ? CELEBRATE_GIFS : pct >= 0.5 ? GOOD_GIFS : MEH_GIFS;
-  return pool[Math.floor(Math.random() * pool.length)];
-}
 
 function getShareText() {
   var sc = score, tot = questions.length;
@@ -385,7 +376,6 @@ function nextQuestion() {
     document.getElementById('game-area').style.display = 'none';
     var total = questions.length;
     var pct = score / total;
-    document.getElementById('score-gif').src = pickGif(pct);
     document.getElementById('score-big').textContent = score + '/' + total;
     document.getElementById('score-msg').textContent =
       pct === 1 ? 'Perfect score — you really know your Davidson history.' :
