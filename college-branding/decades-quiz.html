@@ -7,15 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@400;500;600;700&family=Archivo+SemiExpanded:wght@600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
-  body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; display: flex; flex-direction: column; }
-  .trivia-embed { display: flex; flex-direction: column; flex: 1; min-height: 0; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
-  #game-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: #fff; }
-  #game-area .question-zone { flex-shrink: 0; }
-  #game-area .answer-zone { flex-shrink: 0; }
-  #game-area .feedback-panel { flex-shrink: 0; }
-  #game-area .game-footer { flex-shrink: 0; margin-top: auto; }
-  .score-screen { flex: 1; overflow-y: auto; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; }
+  .trivia-embed { background: #fff; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
 
   /* Decade tabs */
   .decade-strip { border-bottom: 1px solid #D4CFCE; display: flex; align-items: stretch; flex-wrap: wrap; }
@@ -29,13 +23,13 @@
   .decade-tab:last-child { border-right: none; }
   .decade-tab:hover { background: #F9F5F2; }
   .decade-tab .eyebrow { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #B0ABAB; margin-bottom: 0.3rem; }
-  .decade-tab .label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.85rem, 3vw, 1.15rem); font-weight: 700; color: #294878; line-height: 1; }
+  .decade-tab .label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.75rem, 2vw, 1.15rem); font-weight: 700; color: #294878; line-height: 1; }
   .decade-tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 3px; background: #D42121; }
   .decade-tab.active .label { color: #D42121; }
   .decade-tab.active .eyebrow { color: #D42121; opacity: 0.7; }
   .decade-tab.lucky { background: #2d2b7b; }
   .decade-tab.lucky .eyebrow { color: #F5C518; }
-  .decade-tab.lucky .label { color: #F5C518; font-size: clamp(1.1rem, 3.5vw, 1.4rem); }
+  .decade-tab.lucky .label { color: #F5C518; font-size: clamp(1rem, 2.5vw, 1.4rem); }
   .decade-tab.lucky:hover { background: #23216a; }
   @media (max-width: 480px) {
     .decade-tab { flex: 1 1 25%; }
@@ -43,7 +37,6 @@
     .decade-tab.lucky .eyebrow { display: none; }
   }
 
-  
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
   .error-msg { padding: 3rem 2rem; text-align: center; color: #C8251A; font-size: 0.9rem; line-height: 1.6; }
 
@@ -216,10 +209,10 @@ var QUIZ_URL = 'https://davidson.edu/decades';
 
 /* ── iframe height reporter ── */
 function reportHeight() {
-  var h = document.documentElement.scrollHeight;
+  var h = document.body.offsetHeight;
   window.parent.postMessage({ type: 'dav-quiz-height', height: h }, '*');
 }
-var _ro = new ResizeObserver(reportHeight);
+var _ro = new ResizeObserver(function() { reportHeight(); });
 _ro.observe(document.body);
 function afterRender() { setTimeout(reportHeight, 80); }
 
