@@ -7,9 +7,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@400;500;600;700&family=Archivo+SemiExpanded:wght@600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; }
-
-  .trivia-embed { background: #fff; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
+  html, body { height: 100%; }
+  body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; display: flex; flex-direction: column; }
+  .trivia-embed { display: flex; flex-direction: column; flex: 1; min-height: 0; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
+  #game-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: #fff; }
+  #game-area .question-zone { flex-shrink: 0; }
+  #game-area .answer-zone { flex-shrink: 0; }
+  #game-area .feedback-panel { flex-shrink: 0; }
+  #game-area .game-footer { flex-shrink: 0; margin-top: auto; }
+  .score-screen { flex: 1; overflow-y: auto; }
 
   /* Decade tabs */
   .decade-strip { border-bottom: 1px solid #D4CFCE; display: flex; align-items: stretch; flex-wrap: wrap; }
@@ -37,7 +43,7 @@
     .decade-tab.lucky .eyebrow { display: none; }
   }
 
-  #game-area { background: #D42121; }
+  
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
   .error-msg { padding: 3rem 2rem; text-align: center; color: #C8251A; font-size: 0.9rem; line-height: 1.6; }
 
