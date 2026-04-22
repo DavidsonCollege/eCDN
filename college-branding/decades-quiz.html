@@ -8,9 +8,9 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; }
-
+ 
   .trivia-embed { background: #fff; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
-
+ 
   /* Decade tabs */
   .decade-strip { border-bottom: 1px solid #D4CFCE; display: flex; align-items: stretch; flex-wrap: wrap; }
   .decade-tab {
@@ -36,18 +36,23 @@
     .decade-tab .eyebrow { display: none; }
     .decade-tab.lucky .eyebrow { display: none; }
   }
-
-  /* Loading / error */
+ 
+  #game-area { background: #D42121; }
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
   .error-msg { padding: 3rem 2rem; text-align: center; color: #C8251A; font-size: 0.9rem; line-height: 1.6; }
-
+ 
   /* Question */
-  .question-zone { background: #F9F5F2; padding: 1.75rem 2.5rem; min-height: 110px; display: flex; align-items: center; }
+  .question-zone { background: #F9F5F2; padding: 1.25rem 1rem; min-height: 90px; display: flex; align-items: center; }
   .question-counter { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.6rem; }
-  .question-text { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.2rem; font-weight: 400; color: #0F1012; line-height: 1.55; }
-
+  .question-text { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.05rem; font-weight: 400; color: #0F1012; line-height: 1.55; }
+  @media (min-width: 600px) {
+    .question-zone { padding: 1.75rem 2.5rem; min-height: 110px; }
+    .question-text { font-size: 1.2rem; }
+  }
+ 
   /* Answer rows */
-  .answer-zone { padding: 1.25rem 2.5rem 0; background: #fff; }
+  .answer-zone { padding: 1rem 1rem 0; background: #fff; }
+  @media (min-width: 600px) { .answer-zone { padding: 1.25rem 2.5rem 0; } }
   .answer-list { display: flex; flex-direction: column; gap: 0.6rem; }
   .answer-row {
     display: flex; align-items: center; gap: 0.85rem;
@@ -63,7 +68,7 @@
   .answer-row.revealed:hover { border-color: #D4CFCE; background: #fff; }
   .answer-row.correct:hover { border-color: #1DB87A; background: #EAFFF7; }
   .answer-row.incorrect:hover { border-color: #C8251A; background: #FFF0EE; }
-
+ 
   .radio-circle {
     width: 20px; height: 20px; border-radius: 50%; border: 2px solid #D4CFCE;
     flex-shrink: 0; display: flex; align-items: center; justify-content: center;
@@ -77,21 +82,23 @@
   .answer-row.incorrect .radio-circle::after { content: '✕'; }
   .answer-row-text { font-family: 'Inter', Helvetica, sans-serif; font-size: 0.9rem; font-weight: 500; color: #0F1012; line-height: 1.4; }
   .answer-row.incorrect .answer-row-text { text-decoration: line-through; color: #8D898A; }
-
+ 
   /* Feedback */
   .feedback-panel {
-    margin: 1rem 2.5rem 0; padding: 0.9rem 1rem; border-radius: 6px;
+    margin: 0.75rem 1rem 0; padding: 0.9rem 1rem; border-radius: 6px;
     display: none; align-items: center; gap: 0.85rem; border: 1.5px solid transparent;
   }
+  @media (min-width: 600px) { .feedback-panel { margin: 1rem 2.5rem 0; } }
   .feedback-panel.visible { display: flex; }
   .feedback-panel.correct-feedback { background: #F9F5F2; border-color: #9F8B76; }
   .feedback-panel.incorrect-feedback { background: #F9F5F2; border-color: #9F8B76; }
   .feedback-icon { font-size: 1.3rem; flex-shrink: 0; }
   .feedback-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.15rem; }
   .feedback-detail { font-size: 0.82rem; color: #4A484A; line-height: 1.4; }
-
+ 
   /* Footer */
-  .game-footer { padding: 1rem 2.5rem 1.5rem; background: #fff; }
+  .game-footer { padding: 0.85rem 1rem 1.25rem; background: #fff; }
+  @media (min-width: 600px) { .game-footer { padding: 1rem 2.5rem 1.5rem; } }
   .progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; }
   .progress-bar-wrap { flex: 1; height: 5px; background: #D4CFCE; border-radius: 3px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: #1DB87A; border-radius: 3px; transition: width 0.4s ease; }
@@ -105,24 +112,25 @@
   .check-btn.inactive { background: #DCDCDC; color: #8D898A; cursor: default; }
   .check-btn.ready { background: #D42121; color: #fff; }
   .check-btn.next-q { background: #D42121; color: #fff; }
-
+ 
   /* Score screen */
-  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; min-height: 300px; background: #D42121; }
+  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem; min-height: 300px; background: #D42121; }
   .score-screen.visible { display: flex; }
   .score-inner { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 640px; background: #fff; border: 1.5px solid #D4CFCE; border-radius: 8px; overflow: hidden; }
-  .score-gif-wrap { width: 100%; padding: 1.25rem 1.25rem 0; }
-  .score-gif { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 6px; display: block; }
-  .score-content { padding: 1.5rem 1.75rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+  .score-gif-wrap { width: 100%; padding: 1rem 1rem 0; }
+  .score-gif { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; display: block; }
+  .score-content { padding: 1.25rem 1.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
   @media (min-width: 600px) {
+    .score-screen { padding: 2rem; }
     .score-inner { flex-direction: row; align-items: stretch; }
     .score-gif-wrap { width: 260px; flex-shrink: 0; padding: 1.25rem 0 1.25rem 1.25rem; display: flex; align-items: center; }
-    .score-gif { aspect-ratio: 4/3; height: 100%; max-height: 220px; }
+    .score-gif { height: 100%; max-height: 220px; }
     .score-content { text-align: left; align-items: flex-start; padding: 1.75rem; }
   }
-  .score-big { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 4rem; font-weight: 700; color: #D42121; line-height: 1; margin-bottom: 0.5rem; }
-  .score-sub { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 1.25rem; }
-  .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.15rem; color: #0F1012; margin-bottom: 2rem; max-width: 380px; line-height: 1.55; }
-  .restart-btn { padding: 0.75rem 2rem; border-radius: 6px; border: none; background: #294878; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-bottom: 1.5rem; }
+  .score-big { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 3.5rem; font-weight: 700; color: #D42121; line-height: 1; margin-bottom: 0.35rem; }
+  .score-sub { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.85rem; }
+  .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.05rem; color: #0F1012; margin-bottom: 1.25rem; max-width: 380px; line-height: 1.55; }
+  .restart-btn { padding: 0.75rem 2rem; border-radius: 6px; border: none; background: #294878; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-bottom: 1rem; }
   .restart-btn:hover { background: #1e3560; }
   .share-row { display: flex; align-items: center; gap: 0.6rem; }
   .share-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #B0ABAB; }
@@ -139,12 +147,12 @@
 </style>
 </head>
 <body>
-
+ 
 <div class="trivia-embed">
   <div class="decade-strip" id="decade-strip"></div>
-
+ 
   <div id="loading-area" class="loading-msg">Loading questions…</div>
-
+ 
   <div id="game-area" style="display:none;">
     <div class="question-zone">
       <div>
@@ -170,7 +178,7 @@
       <button class="check-btn inactive" id="check-btn">Check</button>
     </div>
   </div>
-
+ 
   <div class="score-screen" id="score-screen">
     <div class="score-inner">
       <div class="score-gif-wrap">
@@ -196,10 +204,10 @@
       </div>
     </div>
   </div>
-
+ 
 <script>
 var QUIZ_URL = 'https://davidson.edu/decades';
-
+ 
 function getShareText() {
   var sc = score, tot = questions.length;
   var decade = categories[currentDecade] ? categories[currentDecade].name : '';
@@ -208,14 +216,14 @@ function getShareText() {
 function shareX() { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(getShareText()), '_blank'); }
 function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(QUIZ_URL) + '&quote=' + encodeURIComponent(getShareText()), '_blank'); }
 function shareLinkedIn() { window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(QUIZ_URL), '_blank'); }
-
+ 
 var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU9oMj75iSElaN3gsiYUoeALmitGhcEOFq4SvI-fsXDXirv9U6hyxSEAjsPc0FStrmoA5z7VLo1Qy6/pub?gid=0&single=true&output=csv";
-
+ 
 var categories = [];        // [{ name, questions: [{q, choices, answer}] }]
 var currentDecade = null;   // index into categories
 var questions = [];         // active shuffled question list
 var qIndex = 0, score = 0, selectedIndex = null, checked = false;
-
+ 
 /* ── CSV helpers (from functionality file) ── */
 function parseCSV(text) {
   var lines = text.trim().split('\n');
@@ -234,7 +242,7 @@ function parseCSV(text) {
     return row;
   }).filter(function(r) { return r.decade && r.question; });
 }
-
+ 
 function buildCategories(rows) {
   var map = {}, order = [];
   rows.forEach(function(row) {
@@ -251,7 +259,7 @@ function buildCategories(rows) {
   });
   return order.map(function(d) { return { name: d, questions: map[d] }; });
 }
-
+ 
 /* ── Sheet loader ── */
 function loadSheet() {
   fetch(SHEET_CSV_URL)
@@ -270,7 +278,7 @@ function loadSheet() {
       document.getElementById('loading-area').innerHTML = 'Could not load questions.<br><small>' + e.message + '</small>';
     });
 }
-
+ 
 /* ── Shuffle ── */
 function shuffle(arr) {
   var a = arr.slice();
@@ -280,7 +288,7 @@ function shuffle(arr) {
   }
   return a;
 }
-
+ 
 /* ── Tabs ── */
 function buildTabs() {
   var strip = document.getElementById('decade-strip');
@@ -298,7 +306,7 @@ function buildTabs() {
   lucky.addEventListener('click', function() { selectDecade(Math.floor(Math.random() * categories.length)); });
   strip.appendChild(lucky);
 }
-
+ 
 function selectDecade(i) {
   currentDecade = i;
   questions = shuffle(categories[i].questions);
@@ -308,7 +316,7 @@ function selectDecade(i) {
   document.getElementById('score-screen').classList.remove('visible');
   loadQuestion();
 }
-
+ 
 /* ── Question flow ── */
 function loadQuestion() {
   selectedIndex = null; checked = false;
@@ -318,7 +326,7 @@ function loadQuestion() {
   document.getElementById('q-text').textContent = q.q;
   document.getElementById('progress-label').textContent = (qIndex + 1) + ' / ' + total;
   document.getElementById('progress-bar').style.width = ((qIndex / total) * 100) + '%';
-
+ 
   var list = document.getElementById('answer-list');
   list.innerHTML = '';
   q.choices.forEach(function(a, i) {
@@ -328,14 +336,14 @@ function loadQuestion() {
     row.addEventListener('click', function() { selectAnswer(i); });
     list.appendChild(row);
   });
-
+ 
   document.getElementById('feedback-panel').className = 'feedback-panel';
   var btn = document.getElementById('check-btn');
   btn.className = 'check-btn inactive';
   btn.textContent = 'Check';
   btn.onclick = null;
 }
-
+ 
 function selectAnswer(i) {
   if (checked) return;
   selectedIndex = i;
@@ -346,32 +354,32 @@ function selectAnswer(i) {
   btn.className = 'check-btn ready';
   btn.onclick = checkAnswer;
 }
-
+ 
 function checkAnswer() {
   if (checked || selectedIndex === null) return;
   checked = true;
   var q = questions[qIndex];
   var isCorrect = selectedIndex === q.answer;
   if (isCorrect) score++;
-
+ 
   document.querySelectorAll('.answer-row').forEach(function(r, i) {
     if (i === q.answer) r.className = 'answer-row correct';
     else if (i === selectedIndex) r.className = 'answer-row incorrect';
     else r.className = 'answer-row revealed';
   });
-
+ 
   var panel = document.getElementById('feedback-panel');
   panel.className = 'feedback-panel visible ' + (isCorrect ? 'correct-feedback' : 'incorrect-feedback');
   document.getElementById('feedback-icon').textContent = isCorrect ? '✅' : '❌';
   document.getElementById('feedback-label').textContent = isCorrect ? 'Correct!' : 'Not quite.';
   document.getElementById('feedback-detail').textContent = q.explanation;
-
+ 
   var btn = document.getElementById('check-btn');
   btn.className = 'check-btn next-q';
   btn.textContent = qIndex + 1 < questions.length ? 'Next →' : 'See Results';
   btn.onclick = nextQuestion;
 }
-
+ 
 function nextQuestion() {
   qIndex++;
   if (qIndex < questions.length) {
@@ -390,7 +398,7 @@ function nextQuestion() {
     document.getElementById('restart-btn').onclick = function() { selectDecade(currentDecade); };
   }
 }
-
+ 
 loadSheet();
 </script>
 </body>
