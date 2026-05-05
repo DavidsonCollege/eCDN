@@ -13,11 +13,11 @@
   .trivia-embed { background: #fff; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
 
   /* Decade pill nav */
-  .decade-nav { border-bottom: 1px solid #D4CFCE; padding: 0.85rem 1rem; display: flex; align-items: center; gap: 0.65rem; }
-  .decade-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; flex: 1; }
+  .decade-nav { border-bottom: 1px solid #D4CFCE; padding: 1rem 1.5rem 0.85rem; display: flex; flex-direction: column; align-items: center; gap: 0.65rem; }
+  .decade-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; width: 100%; }
   .decade-pill {
     font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.875rem; font-weight: 700;
-    letter-spacing: 0.04em; padding: 0.5rem 1rem; border-radius: 999px;
+    letter-spacing: 0.04em; padding: 0.5rem 1.25rem; border-radius: 999px;
     border: 1.5px solid #D4CFCE; background: #fff; color: #294878;
     cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s;
     white-space: nowrap; line-height: 1.4;
@@ -25,23 +25,26 @@
   .decade-pill:hover { border-color: #294878; background: #F0F4FA; }
   .decade-pill.active { background: #D42121; border-color: #D42121; color: #fff; }
   .shuffle-btn {
-    flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%;
+    border-radius: 999px;
     background: #2d2b7b; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s; color: #F5C518; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    transition: background 0.15s; color: #F5C518; font-size: 0.85rem;
   }
+  .shuffle-btn .shuffle-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #F5C518; }
   .shuffle-btn:hover { background: #23216a; }
 
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
   .error-msg { padding: 3rem 2rem; text-align: center; color: #C8251A; font-size: 0.9rem; line-height: 1.6; }
 
   /* Question */
-  .question-zone { background: #F9F5F2; padding: 1.25rem 1rem; min-height: 90px; display: flex; align-items: center; }
+  .question-zone { background: #F9F5F2; padding: 1.5rem 2rem; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+  .question-zone > div { width: 100%; text-align: center; }
   .question-counter { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.6rem; }
-  .question-text { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.05rem; font-weight: 400; color: #0F1012; line-height: 1.55; }
+  .question-text { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.2rem; font-weight: 400; color: #0F1012; line-height: 1.55; }
   @media (min-width: 600px) {
-    .question-zone { padding: 1.75rem 2.5rem; min-height: 110px; }
-    .question-text { font-size: 1.2rem; }
+    .question-zone { padding: 2rem 3.5rem; min-height: 120px; }
+    .question-text { font-size: 1.4rem; }
   }
 
   /* Answer rows */
@@ -144,7 +147,7 @@
 <div class="trivia-embed">
   <div class="decade-nav" id="decade-nav">
     <div class="decade-pills" id="decade-pills"></div>
-    <button class="shuffle-btn" id="lucky-btn" title="Random decade"><i class="fa-solid fa-shuffle"></i></button>
+    <button class="shuffle-btn" id="lucky-btn" title="Random decade"><i class="fa-solid fa-shuffle"></i><span class="shuffle-label">Random Decade</span></button>
   </div>
 
   <div id="loading-area" class="loading-msg">Loading questions…</div>
@@ -328,7 +331,7 @@ function loadQuestion() {
   document.getElementById('q-counter').textContent = 'Question ' + (qIndex + 1) + ' of ' + total;
   document.getElementById('q-text').textContent = q.q;
   document.getElementById('progress-label').textContent = (qIndex + 1) + ' / ' + total;
-  document.getElementById('progress-bar').style.width = ((qIndex / total) * 100) + '%';
+  document.getElementById('progress-bar').style.width = (qIndex / total * 100) + '%';
 
   var list = document.getElementById('answer-list');
   list.innerHTML = '';
@@ -381,6 +384,7 @@ function checkAnswer() {
   btn.className = 'check-btn next-q';
   btn.textContent = qIndex + 1 < questions.length ? 'Next →' : 'See Results';
   btn.onclick = nextQuestion;
+  document.getElementById('progress-bar').style.width = ((qIndex + 1) / questions.length * 100) + '%';
   afterRender();
 }
 
