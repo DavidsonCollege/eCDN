@@ -15,9 +15,9 @@
 
   /* Decade pill nav */
   .decade-nav { padding: 1.75rem 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.85rem; }
-  .decade-pills { display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: center; max-width: 560px; width: 100%; }
+  .decade-pills { display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: center; width: 100%; }
   .decade-pill {
-    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 1.1rem; font-weight: 700;
+    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.65rem, 2vw, 1.1rem); font-weight: 700;
     letter-spacing: 0.04em; padding: 0.75rem 1.75rem; border-radius: 999px;
     border: 1.5px solid #D4CFCE; background: #fff; color: #294878;
     cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s;
@@ -25,15 +25,7 @@
   }
   .decade-pill:hover { border-color: #294878; background: #F0F4FA; }
   .decade-pill.active { background: #D42121; border-color: #D42121; color: #fff; }
-  .shuffle-btn {
-    border-radius: 999px;
-    background: #2d2b7b; border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-    padding: 0.55rem 1.25rem;
-    transition: background 0.15s; color: #F5C518; font-size: 0.9rem;
-  }
-  .shuffle-btn .shuffle-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #F5C518; }
-  .shuffle-btn:hover { background: #23216a; }
+
 
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
   .error-msg { padding: 3rem 2rem; text-align: center; color: #C8251A; font-size: 0.9rem; line-height: 1.6; }
@@ -96,7 +88,8 @@
   /* Footer */
   .game-footer { padding: 0.85rem 1rem 1.25rem; background: #fff; }
   @media (min-width: 600px) { .game-footer { padding: 1rem 2.5rem 1.5rem; } }
-  .progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; }
+  .progress-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1rem; background: #fff; }
+  @media (min-width: 600px) { .progress-row { padding: 0.75rem 2.5rem; } }
   .progress-bar-wrap { flex: 1; height: 5px; background: #D4CFCE; border-radius: 3px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: #1DB87A; border-radius: 3px; transition: width 0.4s ease; }
   .progress-label { font-size: 0.7rem; font-weight: 600; color: #9F8B76; white-space: nowrap; }
@@ -148,7 +141,7 @@
 <div class="trivia-embed">
   <div class="decade-nav" id="decade-nav">
     <div class="decade-pills" id="decade-pills"></div>
-    <button class="shuffle-btn" id="lucky-btn" title="Random decade"><i class="fa-solid fa-shuffle"></i><span class="shuffle-label">Random Decade</span></button>
+
   </div>
 
   <div class="trivia-game-card">
@@ -161,6 +154,10 @@
         <p class="question-text" id="q-text"></p>
       </div>
     </div>
+    <div class="progress-row">
+      <span class="progress-label" id="progress-label"></span>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    </div>
     <div class="answer-zone">
       <div class="answer-list" id="answer-list"></div>
     </div>
@@ -171,10 +168,6 @@
       </div>
     </div>
     <div class="game-footer">
-      <div class="progress-row">
-        <span class="progress-label" id="progress-label"></span>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
-      </div>
       <button class="check-btn inactive" id="check-btn">Check</button>
     </div>
   </div>
@@ -312,9 +305,6 @@ function buildNav() {
 }
 
 function initNavListeners() {
-  document.getElementById('lucky-btn').addEventListener('click', function() {
-    selectDecade(Math.floor(Math.random() * categories.length));
-  });
 }
 
 function selectDecade(i) {
