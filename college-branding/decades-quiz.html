@@ -73,23 +73,12 @@
   .answer-row-text { font-family: 'Inter', Helvetica, sans-serif; font-size: 0.9rem; font-weight: 500; color: #0F1012; line-height: 1.4; }
   .answer-row.incorrect .answer-row-text { text-decoration: line-through; color: #8D898A; }
 
-  /* Feedback */
-  .feedback-panel {
-    margin: 0.75rem 1rem 0; padding: 0.9rem 1rem; border-radius: 6px;
-    display: none; align-items: center; gap: 0.85rem; border: 1.5px solid transparent;
-  }
-  @media (min-width: 600px) { .feedback-panel { margin: 1rem 2.5rem 0; } }
-  .feedback-panel.visible { display: flex; }
-  .feedback-panel.correct-feedback { background: #F9F5F2; border-color: #9F8B76; }
-  .feedback-panel.incorrect-feedback { background: #F9F5F2; border-color: #9F8B76; }
-  .feedback-icon { font-size: 1.3rem; flex-shrink: 0; }
-  .feedback-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9F8B76; }
+
 
   /* Footer */
   .game-footer { padding: 0.85rem 1rem 1.25rem; background: #fff; }
   @media (min-width: 600px) { .game-footer { padding: 1rem 2.5rem 1.5rem; } }
-  .progress-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1rem; background: #fff; }
-  @media (min-width: 600px) { .progress-row { padding: 0.75rem 2.5rem; } }
+  .progress-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.85rem; }
   .progress-bar-wrap { flex: 1; height: 5px; background: #D4CFCE; border-radius: 3px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: #1DB87A; border-radius: 3px; transition: width 0.4s ease; }
   .progress-label { font-size: 0.7rem; font-weight: 600; color: #9F8B76; white-space: nowrap; }
@@ -150,23 +139,17 @@
   <div id="game-area" style="display:none;">
     <div class="question-zone">
       <div>
-        <p class="question-counter" id="q-counter"></p>
+        <div class="progress-row">
+          <span class="progress-label" id="progress-label"></span>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+        </div>
         <p class="question-text" id="q-text"></p>
       </div>
-    </div>
-    <div class="progress-row">
-      <span class="progress-label" id="progress-label"></span>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
     </div>
     <div class="answer-zone">
       <div class="answer-list" id="answer-list"></div>
     </div>
-    <div class="feedback-panel" id="feedback-panel">
-      <div class="feedback-icon" id="feedback-icon"></div>
-      <div>
-        <p class="feedback-label" id="feedback-label"></p>
-      </div>
-    </div>
+
     <div class="game-footer">
       <button class="check-btn inactive" id="check-btn">Check</button>
     </div>
@@ -323,7 +306,6 @@ function loadQuestion() {
   selectedIndex = null; checked = false;
   var q = questions[qIndex];
   var total = questions.length;
-  document.getElementById('q-counter').textContent = 'Question ' + (qIndex + 1) + ' of ' + total;
   document.getElementById('q-text').textContent = q.q;
   document.getElementById('progress-label').textContent = (qIndex + 1) + ' / ' + total;
   document.getElementById('progress-bar').style.width = (qIndex / total * 100) + '%';
@@ -369,11 +351,6 @@ function checkAnswer() {
     else if (i === selectedIndex) r.className = 'answer-row incorrect';
     else r.className = 'answer-row revealed';
   });
-
-  var panel = document.getElementById('feedback-panel');
-  panel.className = 'feedback-panel visible ' + (isCorrect ? 'correct-feedback' : 'incorrect-feedback');
-  document.getElementById('feedback-icon').textContent = isCorrect ? '✅' : '❌';
-  document.getElementById('feedback-label').textContent = isCorrect ? 'Correct!' : 'Not quite.';
 
   var btn = document.getElementById('check-btn');
   btn.className = 'check-btn next-q';
