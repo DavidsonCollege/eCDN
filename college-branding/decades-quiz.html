@@ -92,8 +92,7 @@
   .feedback-panel.correct-feedback { background: #F9F5F2; border-color: #9F8B76; }
   .feedback-panel.incorrect-feedback { background: #F9F5F2; border-color: #9F8B76; }
   .feedback-icon { font-size: 1.3rem; flex-shrink: 0; }
-  .feedback-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.15rem; }
-  .feedback-detail { font-size: 0.82rem; color: #4A484A; line-height: 1.4; }
+  .feedback-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9F8B76; }
 
   /* Footer */
   .game-footer { padding: 0.85rem 1rem 1.25rem; background: #fff; }
@@ -166,7 +165,6 @@
       <div class="feedback-icon" id="feedback-icon"></div>
       <div>
         <p class="feedback-label" id="feedback-label"></p>
-        <p class="feedback-detail" id="feedback-detail"></p>
       </div>
     </div>
     <div class="game-footer">
@@ -232,7 +230,7 @@ var currentDecade = null;   // index into categories
 var questions = [];         // active shuffled question list
 var qIndex = 0, score = 0, selectedIndex = null, checked = false;
 
-/* ── CSV helpers (from functionality file) ── */
+/* ── CSV helpers ── */
 function parseCSV(text) {
   var lines = text.trim().split('\n');
   var headers = lines[0].split(',').map(function(h) { return h.trim().toLowerCase().replace(/"/g, ''); });
@@ -257,12 +255,10 @@ function buildCategories(rows) {
     var d = row.decade.trim();
     if (!map[d]) { map[d] = []; order.push(d); }
     var ai = ['A','B','C','D'].indexOf((row.correct || 'A').trim().toUpperCase());
-    // explanation column is optional
     map[d].push({
       q: row.question,
       choices: [row.choice_a, row.choice_b, row.choice_c, row.choice_d],
-      answer: ai >= 0 ? ai : 0,
-      explanation: row.explanation || ''
+      answer: ai >= 0 ? ai : 0
     });
   });
   return order.map(function(d) { return { name: d, questions: map[d] }; });
@@ -278,7 +274,6 @@ function loadSheet() {
       categories = buildCategories(rows);
       document.getElementById('loading-area').style.display = 'none';
       buildTabs();
-      // Auto-select the first decade so the game is ready to play
       selectDecade(0);
     })
     .catch(function(e) {
@@ -382,7 +377,6 @@ function checkAnswer() {
   panel.className = 'feedback-panel visible ' + (isCorrect ? 'correct-feedback' : 'incorrect-feedback');
   document.getElementById('feedback-icon').textContent = isCorrect ? '✅' : '❌';
   document.getElementById('feedback-label').textContent = isCorrect ? 'Correct!' : 'Not quite.';
-  document.getElementById('feedback-detail').textContent = q.explanation;
 
   var btn = document.getElementById('check-btn');
   btn.className = 'check-btn next-q';
