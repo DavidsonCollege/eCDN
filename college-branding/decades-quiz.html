@@ -80,7 +80,7 @@
   @media (min-width: 600px) { .game-footer { padding: 1rem 2.5rem 1.5rem; } }
   .progress-row { display: flex; align-items: center; gap: 0.75rem; margin: 0 auto 0.85rem; max-width: 40%; }
   .progress-bar-wrap { flex: 1; height: 5px; background: #D4CFCE; border-radius: 3px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: #4285F4; border-radius: 3px; transition: width 0.4s ease; }
+  .progress-bar-fill { height: 100%; background: #2E6DC1; border-radius: 3px; transition: width 0.4s ease; }
   .progress-label { font-size: 0.7rem; font-weight: 600; color: #9F8B76; white-space: nowrap; }
   .check-btn {
     width: 100%; padding: 0.9rem; border-radius: 6px; border: none;
@@ -93,14 +93,14 @@
   .check-btn.next-q { background: #D42121; color: #fff; }
 
   /* Score screen */
-  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.25rem; min-height: 300px; background: #D42121; }
+  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.25rem; min-height: 300px; background: #F9F5F2; }
   .score-screen.visible { display: flex; }
   .score-inner { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 640px; background: #fff; border: 1.5px solid #D4CFCE; border-radius: 8px; overflow: hidden; }
   .score-gif-wrap { width: 100%; padding: 1rem 1rem 0; }
   .score-gif { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; display: block; }
   .score-content { padding: 1.25rem 1.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
   @media (min-width: 600px) {
-    .score-screen { padding: 2rem; }
+    .score-screen { padding: 2.5rem; }
     .score-inner { flex-direction: row; align-items: stretch; }
     .score-gif-wrap { width: 260px; flex-shrink: 0; padding: 1.25rem 0 1.25rem 1.25rem; display: flex; align-items: center; }
     .score-gif { height: 100%; max-height: 220px; }
@@ -111,18 +111,16 @@
   .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.05rem; color: #0F1012; margin-bottom: 1.25rem; max-width: 380px; line-height: 1.55; }
   .restart-btn { padding: 0.75rem 2rem; border-radius: 6px; border: none; background: #294878; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-bottom: 1rem; }
   .restart-btn:hover { background: #1e3560; }
-  .share-row { display: flex; align-items: center; gap: 0.6rem; }
-  .share-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #B0ABAB; }
+  .share-row { display: flex; align-items: center; gap: 0.5rem; }
+  .share-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #B0ABAB; margin-right: 0.25rem; }
   .share-btn {
-    width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1.5px solid #D4CFCE; background: #fff; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.15s; flex-shrink: 0;
+    transition: border-color 0.15s, background 0.15s; flex-shrink: 0;
   }
-  .share-btn:hover { opacity: 0.82; }
-  .share-btn svg { width: 16px; height: 16px; fill: #fff; }
-  .share-btn-x { background: #000; }
-  .share-btn-fb { background: #1877F2; }
-  .share-btn-li { background: #0A66C2; }
+  .share-btn:hover { border-color: #294878; background: #F0F4FA; }
+  .share-btn svg { width: 14px; height: 14px; fill: #294878; }
 </style>
 </head>
 <body>
