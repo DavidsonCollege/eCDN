@@ -5,69 +5,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Davidson College Trivia</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@400;500;600;700&family=Archivo+SemiExpanded:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { margin: 0; padding: 0; }
   body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; }
   .trivia-embed { background: #fff; border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
 
-  /* Decade nav bar */
-  .decade-nav { border-bottom: 1px solid #D4CFCE; display: flex; align-items: center; padding: 0.75rem 0.75rem; gap: 0.5rem; position: relative; }
-  .decade-arrow {
-    width: 38px; height: 38px; border-radius: 50%; border: 1.5px solid #D4CFCE;
-    background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: border-color 0.15s, background 0.15s; color: #294878; font-size: 1.3rem; line-height: 1;
+  /* Decade pill nav */
+  .decade-nav { border-bottom: 1px solid #D4CFCE; padding: 0.75rem 0.85rem; display: flex; align-items: center; gap: 0.5rem; }
+  .decade-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; flex: 1; }
+  .decade-pill {
+    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.04em; padding: 0.35rem 0.75rem; border-radius: 999px;
+    border: 1.5px solid #D4CFCE; background: #fff; color: #294878;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s;
+    white-space: nowrap; line-height: 1.4;
   }
-  .decade-arrow:hover { border-color: #294878; background: #F0F4FA; }
-  .decade-arrow:disabled { opacity: 0.3; cursor: default; border-color: #D4CFCE; background: #fff; }
-  .decade-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; }
-  .decade-eyebrow { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #B0ABAB; margin-bottom: 0.25rem; }
-  .decade-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 2rem; font-weight: 700; color: #D42121; line-height: 1; }
-  .decade-dots { display: flex; gap: 5px; margin-top: 0.4rem; }
-  .decade-dot { width: 6px; height: 6px; border-radius: 50%; background: #D4CFCE; transition: background 0.2s; }
-  .decade-dot.active { background: #D42121; }
+  .decade-pill:hover { border-color: #294878; background: #F0F4FA; }
+  .decade-pill.active { background: #D42121; border-color: #D42121; color: #fff; }
   .shuffle-btn {
-    flex-shrink: 0; width: 38px; height: 38px; background: #2d2b7b; border: none; border-radius: 50%;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+    background: #2d2b7b; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s; color: #F5C518; font-size: 0.85rem;
   }
   .shuffle-btn:hover { background: #23216a; }
-  .shuffle-btn svg { width: 18px; height: 18px; fill: none; stroke: #F5C518; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-  /* Decade popover */
-  .decade-popover-wrap { position: relative; }
-  .change-decade-btn {
-    background: none; border: none; cursor: pointer; padding: 0;
-    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.58rem;
-    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: #9F8B76; text-decoration: underline; margin-top: 0.3rem; display: block;
-  }
-  .change-decade-btn:hover { color: #294878; }
-  .decade-popover {
-    display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-    background: #fff; border: 1.5px solid #D4CFCE; border-radius: 8px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.13); z-index: 100; min-width: 200px; overflow: hidden;
-  }
-  .decade-popover.open { display: block; }
-  .popover-option {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.65rem 1rem; cursor: pointer; transition: background 0.12s;
-    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.8rem;
-    font-weight: 700; color: #294878; border-bottom: 1px solid #F0EDEC;
-  }
-  .popover-option:last-child { border-bottom: none; }
-  .popover-option:hover { background: #F9F5F2; }
-  .popover-option.active { color: #D42121; background: #FDF5F5; }
-  .popover-option .pop-check { color: #D42121; font-size: 0.75rem; opacity: 0; }
-  .popover-option.active .pop-check { opacity: 1; }
-  .popover-lucky {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.65rem 1rem; cursor: pointer; background: #2d2b7b;
-    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.8rem;
-    font-weight: 700; color: #F5C518; transition: background 0.12s;
-  }
-  .popover-lucky:hover { background: #23216a; }
-  .popover-lucky svg { width: 14px; height: 14px; fill: none; stroke: #F5C518; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
 
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
   .error-msg { padding: 3rem 2rem; text-align: center; color: #C8251A; font-size: 0.9rem; line-height: 1.6; }
@@ -180,20 +143,8 @@
 
 <div class="trivia-embed">
   <div class="decade-nav" id="decade-nav">
-    <button class="decade-arrow" id="decade-prev" title="Previous decade">&#8249;</button>
-    <div class="decade-center">
-      <span class="decade-eyebrow">Decade</span>
-      <span class="decade-label" id="decade-label"></span>
-      <div class="decade-dots" id="decade-dots"></div>
-      <div class="decade-popover-wrap">
-        <button class="change-decade-btn" id="change-decade-btn">Change decade</button>
-        <div class="decade-popover" id="decade-popover"></div>
-      </div>
-    </div>
-    <button class="decade-arrow" id="decade-next" title="Next decade">&#8250;</button>
-    <button class="shuffle-btn" id="lucky-btn" title="Random decade">
-      <svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg>
-    </button>
+    <div class="decade-pills" id="decade-pills"></div>
+    <button class="shuffle-btn" id="lucky-btn" title="Random decade"><i class="fa-solid fa-shuffle"></i></button>
   </div>
 
   <div id="loading-area" class="loading-msg">Loading questions…</div>
@@ -341,59 +292,21 @@ function shuffle(arr) {
 
 /* ── Nav bar ── */
 function buildNav() {
-  // Label
-  document.getElementById('decade-label').textContent = categories[currentDecade].name;
-
-  // Dots
-  var dotsEl = document.getElementById('decade-dots');
-  dotsEl.innerHTML = '';
-  categories.forEach(function(_, i) {
-    var dot = document.createElement('div');
-    dot.className = 'decade-dot' + (i === currentDecade ? ' active' : '');
-    dotsEl.appendChild(dot);
-  });
-
-  // Arrows
-  document.getElementById('decade-prev').disabled = currentDecade === 0;
-  document.getElementById('decade-next').disabled = currentDecade === categories.length - 1;
-
-  // Popover options
-  var pop = document.getElementById('decade-popover');
-  pop.innerHTML = '';
+  var pillsEl = document.getElementById('decade-pills');
+  pillsEl.innerHTML = '';
   categories.forEach(function(cat, i) {
-    var opt = document.createElement('div');
-    opt.className = 'popover-option' + (i === currentDecade ? ' active' : '');
-    opt.innerHTML = cat.name + '<span class="pop-check">✓</span>';
-    opt.addEventListener('click', function() { closePopover(); selectDecade(i); });
-    pop.appendChild(opt);
+    var pill = document.createElement('button');
+    pill.className = 'decade-pill' + (i === currentDecade ? ' active' : '');
+    pill.textContent = cat.name;
+    pill.addEventListener('click', function() { selectDecade(i); });
+    pillsEl.appendChild(pill);
   });
-  var luckyOpt = document.createElement('div');
-  luckyOpt.className = 'popover-lucky';
-  luckyOpt.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/></svg> Random Decade';
-  luckyOpt.addEventListener('click', function() { closePopover(); selectDecade(Math.floor(Math.random() * categories.length)); });
-  pop.appendChild(luckyOpt);
-}
-
-function closePopover() {
-  document.getElementById('decade-popover').classList.remove('open');
 }
 
 function initNavListeners() {
-  document.getElementById('decade-prev').addEventListener('click', function() {
-    if (currentDecade > 0) selectDecade(currentDecade - 1);
-  });
-  document.getElementById('decade-next').addEventListener('click', function() {
-    if (currentDecade < categories.length - 1) selectDecade(currentDecade + 1);
-  });
   document.getElementById('lucky-btn').addEventListener('click', function() {
     selectDecade(Math.floor(Math.random() * categories.length));
   });
-  document.getElementById('change-decade-btn').addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.getElementById('decade-popover').classList.toggle('open');
-  });
-  document.addEventListener('click', function() { closePopover(); });
-  document.getElementById('decade-popover').addEventListener('click', function(e) { e.stopPropagation(); });
 }
 
 function selectDecade(i) {
