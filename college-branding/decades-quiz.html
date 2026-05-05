@@ -307,7 +307,7 @@ function loadQuestion() {
   var q = questions[qIndex];
   var total = questions.length;
   document.getElementById('q-text').textContent = q.q;
-  document.getElementById('progress-label').textContent = (qIndex + 1) + ' / ' + total;
+  document.getElementById('progress-label').textContent = 'Question ' + (qIndex + 1) + ' / ' + total;
   document.getElementById('progress-bar').style.width = (qIndex / total * 100) + '%';
 
   var list = document.getElementById('answer-list');
