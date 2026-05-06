@@ -289,6 +289,7 @@ function initNavListeners() {
 }
 
 function selectDecade(i) {
+  if (i === currentDecade) return;
   currentDecade = i;
   questions = shuffle(categories[i].questions);
   qIndex = 0; score = 0;
