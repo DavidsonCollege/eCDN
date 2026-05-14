@@ -14,8 +14,10 @@
   .trivia-game-card { border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
   .score-screen.visible { display: flex; flex: 1; }
 
-  /* Decade pill nav */
-  .decade-nav { padding: 1.75rem 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.85rem; }
+  /* Decade selection screen */
+  .decade-nav { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; gap: 1.5rem; }
+  .decade-nav.visible { display: flex; }
+  .decade-nav-heading { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.65rem, 2vw, 0.8rem); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #9F8B76; }
   .decade-pills { display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: center; width: 100%; }
   .decade-pill {
     font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(1rem, 3.5vw, 1.25rem); font-weight: 700;
@@ -29,7 +31,14 @@
     .decade-pill { text-align: center; padding: 0.85rem 0.5rem; font-size: 1.2rem; }
   }
   .decade-pill:hover { border-color: #294878; background: #F0F4FA; }
-  .decade-pill.active { background: #D42121; border-color: #D42121; color: #fff; }
+  /* Persistent chrome bar shown on postcard / quiz / results */
+  .quiz-chrome { display: none; align-items: center; gap: 1rem; padding: 0.85rem 1.25rem; border-bottom: 1px solid #D4CFCE; background: #fff; }
+  .quiz-chrome.visible { display: flex; }
+  .quiz-chrome-decade { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.65rem, 2vw, 0.8rem); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; white-space: nowrap; }
+  .quiz-chrome-progress { flex: 1; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transition: opacity 0.2s; }
+  .quiz-chrome-progress.visible { opacity: 1; }
+  .back-btn { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.85rem, 2.5vw, 1rem); font-weight: 700; letter-spacing: 0.04em; padding: 0.55rem 1.25rem; border-radius: 999px; border: 1.5px solid #D4CFCE; background: #fff; color: #294878; cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s; white-space: nowrap; line-height: 1.4; }
+  .back-btn:hover { border-color: #294878; background: #F0F4FA; }
 
 
   .loading-msg { padding: 3rem 2rem; text-align: center; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; }
@@ -43,6 +52,8 @@
   @media (max-width: 600px) {
     .question-zone { padding: 2rem 1.5rem; }
     .question-text { font-size: 1.4rem; }
+    .postcard-decade { font-size: clamp(3.75rem, 15vw, 5rem); }
+    .score-msg { font-size: 1.65rem; }
   }
 
   /* Answer rows */
@@ -79,7 +90,7 @@
   .answer-img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
 
   /* Grid layout for image questions */
-  .answer-list.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .answer-list.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; max-width: 640px; margin-left: auto; margin-right: auto; }
   .answer-list.grid .answer-row { flex-direction: column; align-items: flex-start; padding: 0; gap: 0; }
   .answer-list.grid .answer-img { width: 100%; height: auto; aspect-ratio: 3/2; object-fit: cover; object-position: center; display: block; border-radius: 4px 4px 0 0; }
   .answer-list.grid .answer-row-label { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.75rem; width: 100%; }
@@ -91,7 +102,6 @@
   /* Footer */
   .game-footer { padding: 0.85rem 1rem 1.25rem; background: #fff; }
   @media (min-width: 600px) { .game-footer { padding: 1rem 2.5rem 1.5rem; } }
-  .progress-row { display: flex; align-items: center; gap: 0.75rem; margin: 0 auto 0.85rem; max-width: 40%; }
   .progress-bar-wrap { flex: 1; height: 5px; background: #D4CFCE; border-radius: 3px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: #2E6DC1; border-radius: 3px; transition: width 0.4s ease; }
   .progress-label { font-size: 0.7rem; font-weight: 600; color: #9F8B76; white-space: nowrap; }
@@ -145,10 +155,6 @@
 <body>
 
 <div class="trivia-embed">
-  <div class="decade-nav" id="decade-nav">
-    <div class="decade-pills" id="decade-pills"></div>
-
-  </div>
 
   <div id="preview-bar" style="background:#1a1a1a;padding:0.5rem 1rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
     <span style="color:#888;font-family:monospace;font-size:0.7rem;margin-right:0.25rem;">PREVIEW:</span>
@@ -160,6 +166,20 @@
 
   <div class="trivia-game-card">
   <div id="loading-area" class="loading-msg">Loading questions…</div>
+
+  <div class="decade-nav" id="decade-nav">
+    <p class="decade-nav-heading">Choose a Decade</p>
+    <div class="decade-pills" id="decade-pills"></div>
+  </div>
+
+  <div class="quiz-chrome" id="quiz-chrome">
+    <button class="back-btn" id="back-btn">← Back</button>
+    <div class="quiz-chrome-progress" id="quiz-chrome-progress">
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+      <span class="progress-label" id="progress-label"></span>
+    </div>
+    <span class="quiz-chrome-decade" id="quiz-chrome-decade"></span>
+  </div>
 
   <div class="postcard-screen" id="postcard-screen">
     <div class="postcard-bg" id="postcard-bg"></div>
@@ -174,10 +194,6 @@
   <div id="game-area" style="display:none;">
     <div class="question-zone">
       <div>
-        <div class="progress-row">
-          <span class="progress-label" id="progress-label"></span>
-          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
-        </div>
         <p class="question-text" id="q-text"></p>
       </div>
     </div>
@@ -259,7 +275,7 @@ function previewScore(s, t) {
   setScoreBackground(pct !== 1);
   document.getElementById('score-screen').classList.add('visible');
   requestAnimationFrame(sizeVideoBg);
-  document.getElementById('restart-btn').onclick = function() { document.getElementById('score-screen').classList.remove('visible'); document.getElementById('game-area').style.display = 'block'; };
+  document.getElementById('restart-btn').onclick = showDecadeNav;
   afterRender();
 }
 
@@ -335,8 +351,9 @@ function loadSheet() {
       if (!rows.length) throw new Error('No data rows found.');
       categories = buildCategories(rows);
       document.getElementById('loading-area').style.display = 'none';
+      buildNav();
       initNavListeners();
-      selectDecade(0);
+      showDecadeNav();
     })
     .catch(function(e) {
       document.getElementById('loading-area').className = 'error-msg';
@@ -354,13 +371,23 @@ function shuffle(arr) {
   return a;
 }
 
-/* ── Nav bar ── */
+/* ── Nav ── */
+function showDecadeNav() {
+  currentDecade = null;
+  document.getElementById('decade-nav').classList.add('visible');
+  document.getElementById('quiz-chrome').classList.remove('visible');
+  document.getElementById('postcard-screen').classList.remove('visible');
+  document.getElementById('game-area').style.display = 'none';
+  document.getElementById('score-screen').classList.remove('visible');
+  afterRender();
+}
+
 function buildNav() {
   var pillsEl = document.getElementById('decade-pills');
   pillsEl.innerHTML = '';
   categories.forEach(function(cat, i) {
     var pill = document.createElement('button');
-    pill.className = 'decade-pill' + (i === currentDecade ? ' active' : '');
+    pill.className = 'decade-pill';
     pill.textContent = cat.name;
     pill.addEventListener('click', function() { selectDecade(i); });
     pillsEl.appendChild(pill);
@@ -368,17 +395,21 @@ function buildNav() {
 }
 
 function initNavListeners() {
+  document.getElementById('back-btn').addEventListener('click', showDecadeNav);
 }
 
 function selectDecade(i) {
-  if (i === currentDecade) return;
   currentDecade = i;
   questions = categories[i].questions.slice();
   qIndex = 0; score = 0;
-  buildNav();
+  var cat = categories[i];
+  document.getElementById('quiz-chrome-decade').textContent = cat.name;
+  document.getElementById('decade-nav').classList.remove('visible');
+  document.getElementById('quiz-chrome').classList.add('visible');
+  document.getElementById('quiz-chrome-progress').classList.remove('visible');
+  document.getElementById('progress-bar').style.width = '0%';
   document.getElementById('game-area').style.display = 'none';
   document.getElementById('score-screen').classList.remove('visible');
-  var cat = categories[i];
   document.getElementById('postcard-decade').textContent = cat.name;
   var icon = document.getElementById('postcard-icon');
   icon.src = cat.coverImage || '';
@@ -391,6 +422,7 @@ function selectDecade(i) {
 function startQuiz() {
   document.getElementById('postcard-screen').classList.remove('visible');
   document.getElementById('game-area').style.display = 'block';
+  document.getElementById('quiz-chrome-progress').classList.add('visible');
   loadQuestion();
   afterRender();
 }
@@ -421,7 +453,6 @@ function loadQuestion() {
     list.appendChild(row);
   });
 
-  document.getElementById('feedback-panel').className = 'feedback-panel';
   var btn = document.getElementById('check-btn');
   btn.className = 'check-btn inactive';
   btn.textContent = 'Check';
@@ -467,6 +498,7 @@ function nextQuestion() {
     loadQuestion();
   } else {
     document.getElementById('game-area').style.display = 'none';
+    document.getElementById('quiz-chrome-progress').classList.remove('visible');
     var total = questions.length;
     var pct = score / total;
     document.getElementById('score-big').textContent = score + '/' + total;
@@ -485,12 +517,7 @@ function nextQuestion() {
     setScoreBackground(pct !== 1);
     document.getElementById('score-screen').classList.add('visible');
     requestAnimationFrame(function() { requestAnimationFrame(sizeVideoBg); });
-    document.getElementById('restart-btn').onclick = function() {
-      document.getElementById('score-screen').classList.remove('visible');
-      var i = currentDecade;
-      currentDecade = null;
-      selectDecade(i);
-    };
+    document.getElementById('restart-btn').onclick = showDecadeNav;
     afterRender();
   }
 }
