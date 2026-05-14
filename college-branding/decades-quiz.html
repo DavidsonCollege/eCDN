@@ -71,6 +71,14 @@
   .answer-row.incorrect .radio-circle { border-color: #C8251A; background: #C8251A; }
   .answer-row.incorrect .radio-circle::after { content: '✕'; }
   .answer-row-text { font-family: 'Inter', Helvetica, sans-serif; font-size: 0.9rem; font-weight: 500; color: #0F1012; line-height: 1.4; }
+  .answer-img { width: 56px; height: 56px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+
+  /* Grid layout for image questions */
+  .answer-list.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .answer-list.grid .answer-row { flex-direction: column; align-items: flex-start; padding: 0; gap: 0; }
+  .answer-list.grid .answer-img { width: 100%; height: auto; aspect-ratio: 3/2; object-fit: cover; object-position: center; display: block; border-radius: 4px 4px 0 0; }
+  .answer-list.grid .answer-row-label { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.75rem; width: 100%; }
+  .answer-list.grid .answer-row-text { font-size: 0.82rem; }
   .answer-row.incorrect .answer-row-text { text-decoration: line-through; color: #8D898A; }
 
 
@@ -93,25 +101,19 @@
   .check-btn.next-q { background: #D42121; color: #fff; }
 
   /* Score screen */
-  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1.25rem; min-height: 300px; background: #F9F5F2; }
+  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; min-height: 300px; position: relative; overflow: hidden; }
   .score-screen.visible { display: flex; }
-  .score-inner { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 640px; background: #fff; border: 1.5px solid #D4CFCE; border-radius: 8px; overflow: hidden; }
-  .score-gif-wrap { width: 100%; padding: 1rem 1rem 0; }
-  .score-gif { width: 100%; height: 160px; object-fit: cover; border-radius: 6px; display: block; }
-  .score-content { padding: 1.25rem 1.5rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
-  @media (min-width: 600px) {
-    .score-screen { padding: 2.5rem; }
-    .score-inner { flex-direction: row; align-items: stretch; }
-    .score-gif-wrap { width: 260px; flex-shrink: 0; padding: 1.25rem 0 1.25rem 1.25rem; display: flex; align-items: center; }
-    .score-gif { height: 100%; max-height: 220px; }
-    .score-content { text-align: left; align-items: flex-start; padding: 1.75rem; }
-  }
-  .score-big { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 3.5rem; font-weight: 700; color: #D42121; line-height: 1; margin-bottom: 0.35rem; }
-  .score-sub { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.85rem; }
-  .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.05rem; color: #0F1012; margin-bottom: 1.25rem; max-width: 380px; line-height: 1.55; }
-  .restart-btn { padding: 0.75rem 2rem; border-radius: 6px; border: none; background: #294878; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-bottom: 1rem; }
-  .restart-btn:hover { background: #1e3560; }
-  .share-row { display: flex; align-items: center; gap: 0.5rem; }
+  .score-bg-video { position: absolute; top: 50%; left: 50%; width: 177.78%; height: 100%; min-width: 100%; min-height: 56.25vw; transform: translate(-50%, -50%); pointer-events: none; border: none; z-index: 0; }
+  .score-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 560px; background: #fff; border: 1.5px solid #D4CFCE; border-radius: 8px; overflow: hidden; }
+  .score-gif-wrap { width: 100%; padding: 0.75rem 0.75rem 0; }
+  .score-gif { width: 100%; height: auto; object-fit: contain; border-radius: 6px; display: block; }
+  .score-content { padding: 1rem 1.25rem 1.25rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+  .score-big { font-family: 'Libre Caslon Text', Georgia, serif; font-size: clamp(2.25rem, 10vw, 3.5rem); font-weight: 700; color: #D42121; line-height: 1; margin-bottom: 0.35rem; }
+  .score-sub { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.6rem, 2vw, 0.75rem); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; margin-bottom: 0.75rem; }
+  .score-msg { font-family: 'Libre Caslon Text', Georgia, serif; font-size: clamp(0.9rem, 3vw, 1.05rem); color: #0F1012; margin-bottom: 1rem; max-width: 340px; line-height: 1.55; }
+  .restart-btn { padding: 0.75rem 1.5rem; border-radius: 6px; border: none; background: #D42121; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.7rem, 2.5vw, 0.85rem); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; margin-bottom: 0.85rem; width: 100%; max-width: 280px; }
+  .restart-btn:hover { background: #b01b1b; }
+  .share-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
   .share-label { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #B0ABAB; margin-right: 0.25rem; }
   .share-btn {
     width: 36px; height: 36px; border-radius: 50%;
@@ -121,6 +123,25 @@
   }
   .share-btn:hover { border-color: #294878; background: #F0F4FA; }
   .share-btn svg { width: 14px; height: 14px; fill: #294878; }
+  @media (min-width: 500px) {
+    .score-screen { padding: 1.5rem; }
+    .score-gif-wrap { padding: 1rem 1rem 0; }
+    .score-content { padding: 1.25rem 1.5rem 1.5rem; }
+  }
+  @media (min-width: 768px) {
+    .score-screen { padding: 2.5rem; }
+  }
+
+  /* Postcard intro screen */
+  .postcard-screen { display: none; position: relative; min-height: 480px; overflow: hidden; align-items: center; justify-content: center; }
+  @media (min-width: 600px) { .postcard-screen { min-height: 600px; } }
+  .postcard-screen.visible { display: flex; }
+  .postcard-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-color: #1a1a2e; }
+  .postcard-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+  .postcard-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; text-align: center; gap: 1.5rem; }
+  .postcard-decade { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 700; color: #fff; letter-spacing: 0.02em; line-height: 1; text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+  .postcard-start-btn { padding: 0.85rem 2.5rem; border-radius: 6px; border: none; background: #D42121; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+  .postcard-start-btn:hover { background: #b01b1b; }
 </style>
 </head>
 <body>
@@ -131,8 +152,25 @@
 
   </div>
 
+  <div id="preview-bar" style="background:#1a1a1a;padding:0.5rem 1rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+    <span style="color:#888;font-family:monospace;font-size:0.7rem;margin-right:0.25rem;">PREVIEW:</span>
+    <button onclick="previewScore(5,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">5/5 perfect</button>
+    <button onclick="previewScore(4,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">4/5 one away</button>
+    <button onclick="previewScore(3,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">3/5 middle</button>
+    <button onclick="previewScore(1,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">1/5 low</button>
+  </div>
+
   <div class="trivia-game-card">
   <div id="loading-area" class="loading-msg">Loading questions…</div>
+
+  <div class="postcard-screen" id="postcard-screen">
+    <div class="postcard-bg" id="postcard-bg"></div>
+    <div class="postcard-overlay"></div>
+    <div class="postcard-content">
+      <div class="postcard-decade" id="postcard-decade"></div>
+      <button class="postcard-start-btn" id="postcard-start-btn">Start Quiz</button>
+    </div>
+  </div>
 
   <div id="game-area" style="display:none;">
     <div class="question-zone">
@@ -154,9 +192,10 @@
   </div>
 
   <div class="score-screen" id="score-screen">
+    <iframe id="score-bg-video" class="score-bg-video" src="https://player.vimeo.com/video/1192275809?background=1&autoplay=1&loop=1&muted=1&byline=0&title=0" allow="autoplay; fullscreen"></iframe>
     <div class="score-inner">
       <div class="score-gif-wrap">
-        <img class="score-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHp6eXp0bnNuczR6czJxd2oxbHozZXFrc2JsZjBrbXY4bG53cmE0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/fUQ4rhUZJYiQsas6WD/giphy.gif" alt="Celebration" />
+        <img id="score-gif" class="score-gif" src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHp6eXp0bnNuczR6czJxd2oxbHozZXFrc2JsZjBrbXY4bG53cmE0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/fUQ4rhUZJYiQsas6WD/giphy.gif" alt="Celebration" />
       </div>
       <div class="score-content">
         <p class="score-big" id="score-big"></p>
@@ -185,6 +224,41 @@
 <script>
 var QUIZ_URL = 'https://davidson.edu/decades';
 
+function setScoreBackground(oneAway) {
+  var vid = document.getElementById('score-bg-video');
+  var screen = document.getElementById('score-screen');
+  if (oneAway) {
+    vid.style.display = 'none';
+    screen.style.background = '#1300cc';
+  } else {
+    vid.style.display = 'block';
+    screen.style.background = 'none';
+  }
+}
+
+function previewScore(s, t) {
+  score = s; questions = { length: t };
+  var pct = s / t;
+  document.getElementById('game-area').style.display = 'none';
+  document.getElementById('score-big').textContent = s + '/' + t;
+  document.getElementById('score-msg').textContent =
+    pct === 1 ? 'Perfect score — you really know your Davidson history! 🌟' :
+    s === t - 1 ? 'So close, Wildcat. Don\'t close the books just yet. You got this! 💪' :
+    pct >= 0.4 ? 'Not bad — a few more visits to the archives might help. 📚' :
+    'You\'re a little rusty, Wildcat! 😿😿😿';
+  document.getElementById('score-gif').src = pct === 1
+    ? 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWhuZGt1cmpxaXU2YnJwaDA3bHcweGJnMnZhODY4dnNkcDJiZWt2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/i4MSkeVYgXcZUwZqBJ/giphy.gif'
+    : s === t - 1
+    ? 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExenQ5YnNqMmthbHd6MzY5dHIzb2FuZWR4enE3ZTJ6OXF3djJpNGgzciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PfXVImqYhhxwoLlD88/giphy.gif'
+    : pct >= 0.4
+    ? 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjE1M2EwbWFtMWRyeGNya2YxaXp3Z3l5c3c1c2hqaTMyZTV2MndqMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujjlRiJZPlIzQeR8Jk/giphy.gif'
+    : 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWd2NXdna2ljdnlpNnl4MnVvZHU5dWZiMGdlejVzdWxhM204bmNpZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/flADEjrqxDri1QQ2Sp/giphy.gif';
+  setScoreBackground(pct !== 1);
+  document.getElementById('score-screen').classList.add('visible');
+  document.getElementById('restart-btn').onclick = function() { document.getElementById('score-screen').classList.remove('visible'); document.getElementById('game-area').style.display = 'block'; };
+  afterRender();
+}
+
 /* ── iframe height reporter ── */
 function reportHeight() {
   var h = document.body.offsetHeight;
@@ -209,6 +283,8 @@ var categories = [];        // [{ name, questions: [{q, choices, answer}] }]
 var currentDecade = null;   // index into categories
 var questions = [];         // active shuffled question list
 var qIndex = 0, score = 0, selectedIndex = null, checked = false;
+var DEFAULT_SCORE_GIF = 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHp6eXp0bnNuczR6czJxd2oxbHozZXFrc2JsZjBrbXY4bG53cmE0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/fUQ4rhUZJYiQsas6WD/giphy.gif';
+var PERFECT_SCORE_GIF = 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHkxb3YwNmMwaHBsa2RsM281bnNnamNmNHB0bTJ0bWsyOG9hZnQ4YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PQs9gLvOy0uL6/giphy.gif';
 
 /* ── CSV helpers ── */
 function parseCSV(text) {
@@ -230,23 +306,25 @@ function parseCSV(text) {
 }
 
 function buildCategories(rows) {
-  var map = {}, order = [];
+  var map = {}, coverMap = {}, order = [];
   rows.forEach(function(row) {
     var d = row.decade.trim();
     if (!map[d]) { map[d] = []; order.push(d); }
+    if (!coverMap[d] && row.cover_image) { coverMap[d] = row.cover_image; }
     var ai = ['A','B','C','D'].indexOf((row.correct || 'A').trim().toUpperCase());
     map[d].push({
       q: row.question,
       choices: [row.choice_a, row.choice_b, row.choice_c, row.choice_d],
+      images: [row.image_a || '', row.image_b || '', row.image_c || '', row.image_d || ''],
       answer: ai >= 0 ? ai : 0
     });
   });
-  return order.map(function(d) { return { name: d, questions: map[d] }; });
+  return order.map(function(d) { return { name: d, coverImage: coverMap[d] || '', questions: map[d] }; });
 }
 
 /* ── Sheet loader ── */
 function loadSheet() {
-  fetch(SHEET_CSV_URL)
+  fetch(SHEET_CSV_URL + '&t=' + Date.now())
     .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
     .then(function(text) {
       var rows = parseCSV(text);
@@ -291,11 +369,22 @@ function initNavListeners() {
 function selectDecade(i) {
   if (i === currentDecade) return;
   currentDecade = i;
-  questions = shuffle(categories[i].questions);
+  questions = categories[i].questions.slice();
   qIndex = 0; score = 0;
   buildNav();
-  document.getElementById('game-area').style.display = 'block';
+  document.getElementById('game-area').style.display = 'none';
   document.getElementById('score-screen').classList.remove('visible');
+  var cat = categories[i];
+  document.getElementById('postcard-decade').textContent = cat.name;
+  document.getElementById('postcard-bg').style.backgroundImage = cat.coverImage ? 'url(' + cat.coverImage + ')' : 'none';
+  document.getElementById('postcard-screen').classList.add('visible');
+  document.getElementById('postcard-start-btn').onclick = startQuiz;
+  afterRender();
+}
+
+function startQuiz() {
+  document.getElementById('postcard-screen').classList.remove('visible');
+  document.getElementById('game-area').style.display = 'block';
   loadQuestion();
   afterRender();
 }
@@ -311,10 +400,17 @@ function loadQuestion() {
 
   var list = document.getElementById('answer-list');
   list.innerHTML = '';
+  var hasImages = q.images.some(function(url) { return url; });
+  list.className = 'answer-list' + (hasImages ? ' grid' : '');
   q.choices.forEach(function(a, i) {
     var row = document.createElement('div');
     row.className = 'answer-row';
-    row.innerHTML = '<div class="radio-circle"></div><span class="answer-row-text">' + a + '</span>';
+    if (hasImages) {
+      var imgHtml = q.images[i] ? '<img class="answer-img" src="' + q.images[i] + '" alt="">' : '<div class="answer-img" style="background:#F0EDE9;"></div>';
+      row.innerHTML = imgHtml + '<div class="answer-row-label"><div class="radio-circle"></div><span class="answer-row-text">' + a + '</span></div>';
+    } else {
+      row.innerHTML = '<div class="radio-circle"></div><span class="answer-row-text">' + a + '</span>';
+    }
     row.addEventListener('click', function() { selectAnswer(i); });
     list.appendChild(row);
   });
@@ -369,12 +465,25 @@ function nextQuestion() {
     var pct = score / total;
     document.getElementById('score-big').textContent = score + '/' + total;
     document.getElementById('score-msg').textContent =
-      pct === 1 ? 'Perfect score — you really know your Davidson history.' :
-      pct >= 0.7 ? 'Solid showing. A true Wildcat at heart.' :
-      pct >= 0.4 ? 'Not bad — a few more visits to the archives might help.' :
-      'Room to grow. Davidson history runs deep!';
+      pct === 1 ? 'Perfect score — you really know your Davidson history! 🌟' :
+      score === total - 1 ? 'So close, Wildcat. Don\'t close the books just yet. You got this! 💪' :
+      pct >= 0.4 ? 'Not bad — a few more visits to the archives might help. 📚' :
+      'You\'re a little rusty, Wildcat! 😿😿😿';
+    document.getElementById('score-gif').src = pct === 1
+      ? 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWhuZGt1cmpxaXU2YnJwaDA3bHcweGJnMnZhODY4dnNkcDJiZWt2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/i4MSkeVYgXcZUwZqBJ/giphy.gif'
+      : score === total - 1
+      ? 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExenQ5YnNqMmthbHd6MzY5dHIzb2FuZWR4enE3ZTJ6OXF3djJpNGgzciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PfXVImqYhhxwoLlD88/giphy.gif'
+      : pct >= 0.4
+      ? 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjE1M2EwbWFtMWRyeGNya2YxaXp3Z3l5c3c1c2hqaTMyZTV2MndqMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujjlRiJZPlIzQeR8Jk/giphy.gif'
+      : 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWd2NXdna2ljdnlpNnl4MnVvZHU5dWZiMGdlejVzdWxhM204bmNpZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/flADEjrqxDri1QQ2Sp/giphy.gif';
+    setScoreBackground(pct !== 1);
     document.getElementById('score-screen').classList.add('visible');
-    document.getElementById('restart-btn').onclick = function() { selectDecade(currentDecade); };
+    document.getElementById('restart-btn').onclick = function() {
+      document.getElementById('score-screen').classList.remove('visible');
+      var i = currentDecade;
+      currentDecade = null;
+      selectDecade(i);
+    };
     afterRender();
   }
 }
