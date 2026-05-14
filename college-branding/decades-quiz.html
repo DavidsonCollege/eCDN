@@ -11,14 +11,15 @@
   html, body { margin: 0; padding: 0; }
   body { background: #fff; font-family: 'Inter', Helvetica, sans-serif; color: #0F1012; }
   .trivia-embed { background: #fff; }
-  .trivia-game-card { border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; }
+  .trivia-game-card { border: 1px solid #D4CFCE; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+  .score-screen.visible { display: flex; flex: 1; }
 
   /* Decade pill nav */
   .decade-nav { padding: 1.75rem 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.85rem; }
   .decade-pills { display: flex; flex-wrap: wrap; gap: 0.65rem; justify-content: center; width: 100%; }
   .decade-pill {
-    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.65rem, 2vw, 1.1rem); font-weight: 700;
-    letter-spacing: 0.04em; padding: 0.75rem 1.75rem; border-radius: 999px;
+    font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.85rem, 3vw, 1.1rem); font-weight: 700;
+    letter-spacing: 0.04em; padding: 0.85rem 1.75rem; border-radius: 999px;
     border: 1.5px solid #D4CFCE; background: #fff; color: #294878;
     cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s;
     white-space: nowrap; line-height: 1.4;
@@ -37,7 +38,7 @@
   .question-text { font-family: 'Libre Caslon Text', Georgia, serif; font-size: 1.8rem; font-weight: 400; color: #0F1012; line-height: 1.55; }
   @media (max-width: 600px) {
     .question-zone { padding: 2rem 1.5rem; }
-    .question-text { font-size: 1.2rem; }
+    .question-text { font-size: 1.4rem; }
   }
 
   /* Answer rows */
@@ -101,9 +102,8 @@
   .check-btn.next-q { background: #D42121; color: #fff; }
 
   /* Score screen */
-  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1rem; min-height: 300px; position: relative; overflow: hidden; }
-  .score-screen.visible { display: flex; }
-  .score-bg-video { position: absolute; top: 50%; left: 50%; width: 177.78%; height: 100%; min-width: 100%; min-height: 56.25vw; transform: translate(-50%, -50%); pointer-events: none; border: none; z-index: 0; }
+  .score-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem 1rem; min-height: 300px; position: relative; overflow: hidden; width: 100%; }
+  .score-bg-video { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; border: none; z-index: 0; }
   .score-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 560px; background: #fff; border: 1.5px solid #D4CFCE; border-radius: 8px; overflow: hidden; }
   .score-gif-wrap { width: 100%; padding: 0.75rem 0.75rem 0; }
   .score-gif { width: 100%; height: auto; object-fit: contain; border-radius: 6px; display: block; }
@@ -133,11 +133,11 @@
   }
 
   /* Postcard intro screen */
-  .postcard-screen { display: none; position: relative; min-height: 480px; overflow: hidden; align-items: center; justify-content: center; }
+  .postcard-screen { display: none; position: relative; min-height: 480px; overflow: hidden; align-items: center; justify-content: center; border-radius: 8px; }
   @media (min-width: 600px) { .postcard-screen { min-height: 600px; } }
   .postcard-screen.visible { display: flex; }
   .postcard-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-color: #1a1a2e; }
-  .postcard-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+  .postcard-overlay { display: none; }
   .postcard-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; text-align: center; gap: 1.5rem; }
   .postcard-decade { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 700; color: #fff; letter-spacing: 0.02em; line-height: 1; text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
   .postcard-start-btn { padding: 0.85rem 2.5rem; border-radius: 6px; border: none; background: #D42121; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
@@ -224,10 +224,21 @@
 <script>
 var QUIZ_URL = 'https://davidson.edu/decades';
 
-function setScoreBackground(oneAway) {
+function sizeVideoBg() {
+  var screen = document.getElementById('score-screen');
+  var vid = document.getElementById('score-bg-video');
+  var w = screen.offsetWidth;
+  var h = screen.offsetHeight;
+  var iw = h * 16 / 9 > w ? Math.ceil(h * 16 / 9) : w;
+  var ih = iw * 9 / 16 < h ? h : Math.ceil(iw * 9 / 16);
+  vid.style.width = iw + 'px';
+  vid.style.height = ih + 'px';
+}
+
+function setScoreBackground(isBlue) {
   var vid = document.getElementById('score-bg-video');
   var screen = document.getElementById('score-screen');
-  if (oneAway) {
+  if (isBlue) {
     vid.style.display = 'none';
     screen.style.background = '#1300cc';
   } else {
@@ -255,6 +266,7 @@ function previewScore(s, t) {
     : 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWd2NXdna2ljdnlpNnl4MnVvZHU5dWZiMGdlejVzdWxhM204bmNpZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/flADEjrqxDri1QQ2Sp/giphy.gif';
   setScoreBackground(pct !== 1);
   document.getElementById('score-screen').classList.add('visible');
+  requestAnimationFrame(sizeVideoBg);
   document.getElementById('restart-btn').onclick = function() { document.getElementById('score-screen').classList.remove('visible'); document.getElementById('game-area').style.display = 'block'; };
   afterRender();
 }
@@ -478,6 +490,7 @@ function nextQuestion() {
       : 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWd2NXdna2ljdnlpNnl4MnVvZHU5dWZiMGdlejVzdWxhM204bmNpZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/flADEjrqxDri1QQ2Sp/giphy.gif';
     setScoreBackground(pct !== 1);
     document.getElementById('score-screen').classList.add('visible');
+    requestAnimationFrame(function() { requestAnimationFrame(sizeVideoBg); });
     document.getElementById('restart-btn').onclick = function() {
       document.getElementById('score-screen').classList.remove('visible');
       var i = currentDecade;
