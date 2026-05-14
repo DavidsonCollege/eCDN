@@ -34,8 +34,7 @@
   /* Persistent chrome bar shown on postcard / quiz / results */
   .quiz-chrome { display: none; align-items: center; gap: 1rem; padding: 0.85rem 1.25rem; border-bottom: 1px solid #D4CFCE; background: #fff; }
   .quiz-chrome.visible { display: flex; }
-  .quiz-chrome-decade { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.65rem, 2vw, 0.8rem); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9F8B76; white-space: nowrap; }
-  .quiz-chrome-progress { flex: 1; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transition: opacity 0.2s; }
+.quiz-chrome-progress { flex: 1; display: flex; align-items: center; gap: 0.6rem; opacity: 0; transition: opacity 0.2s; }
   .quiz-chrome-progress.visible { opacity: 1; }
   .back-btn { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(0.85rem, 2.5vw, 1rem); font-weight: 700; letter-spacing: 0.04em; padding: 0.55rem 1.25rem; border-radius: 999px; border: 1.5px solid #D4CFCE; background: #fff; color: #294878; cursor: pointer; transition: border-color 0.15s, background 0.15s, color 0.15s; white-space: nowrap; line-height: 1.4; }
   .back-btn:hover { border-color: #294878; background: #F0F4FA; }
@@ -156,15 +155,7 @@
 
 <div class="trivia-embed">
 
-  <div id="preview-bar" style="background:#1a1a1a;padding:0.5rem 1rem;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-    <span style="color:#888;font-family:monospace;font-size:0.7rem;margin-right:0.25rem;">PREVIEW:</span>
-    <button onclick="previewScore(5,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">5/5 perfect</button>
-    <button onclick="previewScore(4,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">4/5 one away</button>
-    <button onclick="previewScore(3,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">3/5 middle</button>
-    <button onclick="previewScore(1,5)" style="font-family:monospace;font-size:0.7rem;padding:0.25rem 0.6rem;background:#333;color:#fff;border:1px solid #555;border-radius:4px;cursor:pointer;">1/5 low</button>
-  </div>
-
-  <div class="trivia-game-card">
+<div class="trivia-game-card">
   <div id="loading-area" class="loading-msg">Loading questions…</div>
 
   <div class="decade-nav" id="decade-nav">
@@ -178,7 +169,6 @@
       <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
       <span class="progress-label" id="progress-label"></span>
     </div>
-    <span class="quiz-chrome-decade" id="quiz-chrome-decade"></span>
   </div>
 
   <div class="postcard-screen" id="postcard-screen">
@@ -255,30 +245,6 @@ function setScoreBackground(isBlue) {
   }
 }
 
-function previewScore(s, t) {
-  score = s; questions = { length: t };
-  var pct = s / t;
-  document.getElementById('game-area').style.display = 'none';
-  document.getElementById('score-big').textContent = s + '/' + t;
-  document.getElementById('score-msg').textContent =
-    pct === 1 ? 'Perfect score — you really know your Davidson history! 🌟' :
-    s === t - 1 ? 'So close, Wildcat. Don\'t close the books just yet. You got this! 💪' :
-    pct >= 0.4 ? 'Not bad — a few more visits to the archives might help. 📚' :
-    'You\'re a little rusty, Wildcat! 😿😿😿';
-  document.getElementById('score-gif').src = pct === 1
-    ? 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWhuZGt1cmpxaXU2YnJwaDA3bHcweGJnMnZhODY4dnNkcDJiZWt2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/i4MSkeVYgXcZUwZqBJ/giphy.gif'
-    : s === t - 1
-    ? 'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExenQ5YnNqMmthbHd6MzY5dHIzb2FuZWR4enE3ZTJ6OXF3djJpNGgzciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PfXVImqYhhxwoLlD88/giphy.gif'
-    : pct >= 0.4
-    ? 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjE1M2EwbWFtMWRyeGNya2YxaXp3Z3l5c3c1c2hqaTMyZTV2MndqMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ujjlRiJZPlIzQeR8Jk/giphy.gif'
-    : 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWd2NXdna2ljdnlpNnl4MnVvZHU5dWZiMGdlejVzdWxhM204bmNpZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/flADEjrqxDri1QQ2Sp/giphy.gif';
-  setScoreBackground(pct !== 1);
-  document.getElementById('score-screen').classList.add('visible');
-  requestAnimationFrame(sizeVideoBg);
-  document.getElementById('restart-btn').onclick = showDecadeNav;
-  afterRender();
-}
-
 /* ── iframe height reporter ── */
 function reportHeight() {
   var h = document.body.offsetHeight;
@@ -288,23 +254,12 @@ var _ro = new ResizeObserver(function() { reportHeight(); });
 _ro.observe(document.body);
 function afterRender() { setTimeout(reportHeight, 80); }
 
-function getShareText() {
-  var sc = score, tot = questions.length;
-  var decade = categories[currentDecade] ? categories[currentDecade].name : '';
-  return 'I scored ' + sc + '/' + tot + ' on the Davidson ' + decade + ' Decades Quiz! How well do you know Davidson history? ' + QUIZ_URL;
-}
-function shareX() { window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(getShareText()), '_blank'); }
-function shareFacebook() { window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(QUIZ_URL) + '&quote=' + encodeURIComponent(getShareText()), '_blank'); }
-function shareLinkedIn() { window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(QUIZ_URL), '_blank'); }
-
 var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSU9oMj75iSElaN3gsiYUoeALmitGhcEOFq4SvI-fsXDXirv9U6hyxSEAjsPc0FStrmoA5z7VLo1Qy6/pub?gid=0&single=true&output=csv";
 
 var categories = [];        // [{ name, questions: [{q, choices, answer}] }]
 var currentDecade = null;   // index into categories
 var questions = [];         // active shuffled question list
 var qIndex = 0, score = 0, selectedIndex = null, checked = false;
-var DEFAULT_SCORE_GIF = 'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMHp6eXp0bnNuczR6czJxd2oxbHozZXFrc2JsZjBrbXY4bG53cmE0eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/fUQ4rhUZJYiQsas6WD/giphy.gif';
-var PERFECT_SCORE_GIF = 'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHkxb3YwNmMwaHBsa2RsM281bnNnamNmNHB0bTJ0bWsyOG9hZnQ4YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PQs9gLvOy0uL6/giphy.gif';
 
 /* ── CSV helpers ── */
 function parseCSV(text) {
@@ -403,8 +358,7 @@ function selectDecade(i) {
   questions = categories[i].questions.slice();
   qIndex = 0; score = 0;
   var cat = categories[i];
-  document.getElementById('quiz-chrome-decade').textContent = cat.name;
-  document.getElementById('decade-nav').classList.remove('visible');
+document.getElementById('decade-nav').classList.remove('visible');
   document.getElementById('quiz-chrome').classList.add('visible');
   document.getElementById('quiz-chrome-progress').classList.remove('visible');
   document.getElementById('progress-bar').style.width = '0%';
