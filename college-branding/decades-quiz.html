@@ -91,7 +91,8 @@
   /* Grid layout for image questions */
   .answer-list.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; max-width: 640px; margin-left: auto; margin-right: auto; }
   .answer-list.grid .answer-row { flex-direction: column; align-items: flex-start; padding: 0; gap: 0; }
-  .answer-list.grid .answer-img { width: 100%; height: auto; aspect-ratio: 3/2; object-fit: cover; object-position: center; display: block; border-radius: 4px 4px 0 0; }
+  .answer-list.grid .answer-img-wrap { width: 100%; aspect-ratio: 3/2; overflow: hidden; border-radius: 4px 4px 0 0; background: #F0EDE9; flex-shrink: 0; }
+  .answer-list.grid .answer-img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; border-radius: 0; }
   .answer-list.grid .answer-row-label { display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.75rem; width: 100%; }
   .answer-list.grid .answer-row-text { font-size: 0.82rem; }
   .answer-row.incorrect .answer-row-text { text-decoration: line-through; color: #8D898A; }
@@ -398,7 +399,7 @@ function loadQuestion() {
     var row = document.createElement('div');
     row.className = 'answer-row';
     if (hasImages) {
-      var imgHtml = q.images[i] ? '<img class="answer-img" src="' + q.images[i] + '" alt="">' : '<div class="answer-img" style="background:#F0EDE9;"></div>';
+      var imgHtml = '<div class="answer-img-wrap">' + (q.images[i] ? '<img class="answer-img" src="' + q.images[i] + '" alt="">' : '') + '</div>';
       row.innerHTML = imgHtml + '<div class="answer-row-label"><div class="radio-circle"></div><span class="answer-row-text">' + a + '</span></div>';
     } else {
       row.innerHTML = '<div class="radio-circle"></div><span class="answer-row-text">' + a + '</span>';
@@ -460,7 +461,7 @@ function nextQuestion() {
       pct === 1 ? 'Perfect score — you really know your Davidson history! 🌟' :
       score === total - 1 ? 'So close, Wildcat. Don\'t close the books just yet. You got this! 💪' :
       pct >= 0.4 ? 'Not bad — a few more visits to the archives might help. 📚' :
-      'You\'re a little rusty, Wildcat! 😿😿😿';
+      'You\'re a little rusty, Wildcat! 😿';
     document.getElementById('score-gif').src = pct === 1
       ? 'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWhuZGt1cmpxaXU2YnJwaDA3bHcweGJnMnZhODY4dnNkcDJiZWt2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/i4MSkeVYgXcZUwZqBJ/giphy.gif'
       : score === total - 1
