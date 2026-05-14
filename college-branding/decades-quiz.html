@@ -133,13 +133,15 @@
   }
 
   /* Postcard intro screen */
-  .postcard-screen { display: none; position: relative; min-height: 480px; overflow: hidden; align-items: center; justify-content: center; border-radius: 8px; }
+  .postcard-screen { display: none; position: relative; min-height: 480px; overflow: hidden; align-items: center; justify-content: center; border-radius: 8px; background: #F9F2E4; }
   @media (min-width: 600px) { .postcard-screen { min-height: 600px; } }
   .postcard-screen.visible { display: flex; }
-  .postcard-bg { position: absolute; inset: 0; background-size: cover; background-position: center; background-color: #1a1a2e; }
+  .postcard-bg { display: none; }
   .postcard-overlay { display: none; }
-  .postcard-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; text-align: center; gap: 1.5rem; }
-  .postcard-decade { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 700; color: #fff; letter-spacing: 0.02em; line-height: 1; text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+  .postcard-icon { width: clamp(78px, 19.5vw, 156px); height: clamp(78px, 19.5vw, 156px); object-fit: contain; display: block; animation: pulse 1.4s ease-in-out infinite; }
+  .postcard-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; text-align: center; gap: 1.25rem; }
+  .postcard-decade { font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 700; color: #0F1012; letter-spacing: 0.02em; line-height: 1; }
   .postcard-start-btn { padding: 0.85rem 2.5rem; border-radius: 6px; border: none; background: #D42121; color: #fff; font-family: 'Archivo SemiExpanded', Helvetica, sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
   .postcard-start-btn:hover { background: #b01b1b; }
 </style>
@@ -167,6 +169,7 @@
     <div class="postcard-bg" id="postcard-bg"></div>
     <div class="postcard-overlay"></div>
     <div class="postcard-content">
+      <img class="postcard-icon" id="postcard-icon" src="" alt="" />
       <div class="postcard-decade" id="postcard-decade"></div>
       <button class="postcard-start-btn" id="postcard-start-btn">Start Quiz</button>
     </div>
@@ -238,9 +241,13 @@ function sizeVideoBg() {
 function setScoreBackground(isBlue) {
   var vid = document.getElementById('score-bg-video');
   var screen = document.getElementById('score-screen');
+  var isMobile = window.innerWidth < 600;
   if (isBlue) {
     vid.style.display = 'none';
     screen.style.background = '#1300cc';
+  } else if (isMobile) {
+    vid.style.display = 'none';
+    screen.style.background = '#D42121';
   } else {
     vid.style.display = 'block';
     screen.style.background = 'none';
@@ -388,7 +395,9 @@ function selectDecade(i) {
   document.getElementById('score-screen').classList.remove('visible');
   var cat = categories[i];
   document.getElementById('postcard-decade').textContent = cat.name;
-  document.getElementById('postcard-bg').style.backgroundImage = cat.coverImage ? 'url(' + cat.coverImage + ')' : 'none';
+  var icon = document.getElementById('postcard-icon');
+  icon.src = cat.coverImage || '';
+  icon.style.display = cat.coverImage ? 'block' : 'none';
   document.getElementById('postcard-screen').classList.add('visible');
   document.getElementById('postcard-start-btn').onclick = startQuiz;
   afterRender();
