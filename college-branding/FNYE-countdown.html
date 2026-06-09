@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown to July 1, 2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a1a;
+      color: #fff;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Star field */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--dur) ease-in-out infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from { opacity: 0.2; transform: scale(1); }
+      to   { opacity: 1;   transform: scale(1.4); }
+    }
+
+    /* Firework particles */
+    .firework {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: burst var(--dur) ease-out forwards;
+    }
+
+    @keyframes burst {
+      0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+      100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+    }
+
+    /* Main content */
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .year-label {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: #c8a96e;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 20px #c8a96e88;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 3.5rem);
+      font-weight: normal;
+      letter-spacing: 0.1em;
+      color: #fff;
+      text-shadow: 0 0 40px #ffffff66, 0 0 80px #c8a96e44;
+      margin-bottom: 0.3rem;
+    }
+
+    .subtitle {
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      color: #aaa;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+    }
+
+    .countdown {
+      display: flex;
+      gap: clamp(1rem, 4vw, 3rem);
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .number {
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      background: linear-gradient(180deg, #fff 0%, #c8a96e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      filter: drop-shadow(0 0 20px #c8a96e88);
+      min-width: 2ch;
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+
+    .number.tick {
+      transform: scale(1.06);
+    }
+
+    .label {
+      font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: #c8a96e;
+    }
+
+    .separator {
+      font-size: clamp(3rem, 10vw, 6rem);
+      line-height: 1;
+      color: #c8a96e88;
+      padding-top: 0.1em;
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .message {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: #c8a96e;
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 20px #c8a96e;
+      display: none;
+    }
+
+    /* Glow ring behind numbers */
+    .countdown::before {
+      content: '';
+      position: absolute;
+      width: min(90vw, 700px);
+      height: 180px;
+      background: radial-gradient(ellipse at center, #c8a96e11 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      .separator { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas class="stars" id="stars"></canvas>
+
+  <div class="content">
+    <p class="year-label">Counting down to</p>
+    <h1>July 1, 2026</h1>
+    <p class="subtitle">The moment arrives at midnight</p>
+
+    <div class="countdown" id="countdown">
+      <div class="unit">
+        <span class="number" id="days">--</span>
+        <span class="label">Days</span>
+      </div>
+      <div class="separator">:</div>
+      <div class="unit">
+        <span class="number" id="hours">--</span>
+        <span class="label">Hours</span>
+      </div>
+      <div class="separator">:</div>
+      <div class="unit">
+        <span class="number" id="minutes">--</span>
+        <span class="label">Minutes</span>
+      </div>
+      <div class="separator">:</div>
+      <div class="unit">
+        <span class="number" id="seconds">--</span>
+        <span class="label">Seconds</span>
+      </div>
+    </div>
+
+    <p class="message" id="message">Happy New Year!</p>
+  </div>
+
+  <script>
+    // ── Star field ──────────────────────────────────────────────────────────
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const STAR_COUNT = 200;
+    const stars = Array.from({ length: STAR_COUNT }, () => ({
+      x:    Math.random(),
+      y:    Math.random(),
+      r:    Math.random() * 1.5 + 0.3,
+      a:    Math.random(),
+      da:   (Math.random() * 0.005 + 0.002) * (Math.random() < 0.5 ? 1 : -1),
+    }));
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        s.a = Math.max(0.1, Math.min(1, s.a + s.da));
+        if (s.a <= 0.1 || s.a >= 1) s.da *= -1;
+        ctx.beginPath();
+        ctx.arc(s.x * canvas.width, s.y * canvas.height, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // ── Fireworks ────────────────────────────────────────────────────────────
+    const COLORS = ['#ffe066','#ff6b6b','#6bcfff','#b3ff6b','#ff9fff','#fff'];
+
+    function spawnFirework() {
+      const x = 15 + Math.random() * 70; // % from left
+      const y = 10 + Math.random() * 50; // % from top
+      const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const count = 18 + Math.floor(Math.random() * 14);
+
+      for (let i = 0; i < count; i++) {
+        const angle = (i / count) * Math.PI * 2;
+        const dist  = 60 + Math.random() * 100;
+        const el = document.createElement('div');
+        el.className = 'firework';
+        el.style.cssText = `
+          left: ${x}vw; top: ${y}vh;
+          background: ${color};
+          --tx: ${Math.cos(angle) * dist}px;
+          --ty: ${Math.sin(angle) * dist}px;
+          --dur: ${0.7 + Math.random() * 0.8}s;
+        `;
+        document.body.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+      }
+    }
+
+    // Occasional fireworks — more frequent as the date approaches
+    function scheduleFirework() {
+      spawnFirework();
+      setTimeout(scheduleFirework, 1500 + Math.random() * 3000);
+    }
+    setTimeout(scheduleFirework, 800);
+
+    // ── Countdown ────────────────────────────────────────────────────────────
+    const TARGET = new Date('2026-07-01T00:00:00');
+
+    const elDays    = document.getElementById('days');
+    const elHours   = document.getElementById('hours');
+    const elMinutes = document.getElementById('minutes');
+    const elSeconds = document.getElementById('seconds');
+    const elMessage = document.getElementById('message');
+    const elCountdown = document.getElementById('countdown');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick(el, val) {
+      if (el.textContent !== val) {
+        el.classList.remove('tick');
+        void el.offsetWidth; // reflow
+        el.classList.add('tick');
+        el.textContent = val;
+      }
+    }
+
+    function update() {
+      const now  = new Date();
+      const diff = TARGET - now;
+
+      if (diff <= 0) {
+        elCountdown.style.display = 'none';
+        elMessage.style.display   = 'block';
+        return;
+      }
+
+      const totalSec = Math.floor(diff / 1000);
+      const secs  = totalSec % 60;
+      const mins  = Math.floor(totalSec / 60) % 60;
+      const hrs   = Math.floor(totalSec / 3600) % 24;
+      const days  = Math.floor(totalSec / 86400);
+
+      tick(elDays,    pad(days));
+      tick(elHours,   pad(hrs));
+      tick(elMinutes, pad(mins));
+      tick(elSeconds, pad(secs));
+    }
+
+    update();
+    setInterval(update, 1000);
+  </script>
+</body>
+</html>
