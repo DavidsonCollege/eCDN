@@ -26,24 +26,19 @@
     }
 
     body {
-      background: var(--davidson-gray-1);
+      background: transparent;
       color: var(--davidson-black);
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
     }
 
     .content {
       position: relative;
       z-index: 2;
       text-align: center;
-      padding: 2rem;
+      padding: 0.5rem;
       max-width: 1000px;
       width: 100%;
+      margin: 0 auto;
     }
 
     .countdown {
@@ -178,6 +173,21 @@
 
     update();
     setInterval(update, 1000);
+
+    // ── Report height to parent page for iframe auto-resize ──────────────────
+    function postHeight() {
+      var h = document.documentElement.scrollHeight;
+      window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
+    }
+
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(postHeight);
+    }
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(postHeight).observe(document.body);
+    }
   </script>
 </body>
 </html>
