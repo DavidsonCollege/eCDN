@@ -3,27 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countdown to July 1, 2026</title>
+  <title>Doug Hicks' Fiscal New Year's Eve Countdown</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Inter:wght@400;500;600;700&family=Archivo:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --davidson-red: #D42121;
+      --davidson-red:   #D42121;
       --davidson-black: #0F1012;
-      --davidson-white: #FFFFFF;
-      --davidson-sandstone: #E9DED3;
-      --davidson-gray-1: #F9F5F2;
-      --davidson-gray-3: #D4CFCE;
-      --davidson-gray-10: #6A6869;
-      --davidson-gray-dark: #4A484A;
+      /* Campaign accents */
+      --gold:        #C9A04E;
+      --night:       #1B2A4A;
+      --night-deep:  #111D36;
+      --neon-core:   #FFE4E4;
+      --neon-glow:   rgba(255, 82, 82, 0.9);
+      --neon-haze:   rgba(255, 60, 60, 0.45);
+      --star:        rgba(255, 233, 168, 0.9);
+      --star-faint:  rgba(255, 233, 168, 0.45);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: transparent;
@@ -49,16 +48,42 @@
       flex-wrap: wrap;
     }
 
+    /* Single night-sky card per unit */
     .unit {
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.85rem;
-      background: var(--davidson-white);
-      border: 1px solid var(--davidson-gray-3);
-      border-top: 4px solid var(--davidson-red);
-      padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem);
-      min-width: clamp(120px, 20vw, 170px);
+      border-radius: 8px;
+      padding: clamp(1.4rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem);
+      min-width: clamp(125px, 20vw, 175px);
+      background-image:
+        /* tiny gold stars */
+        radial-gradient(circle 1.5px at 18% 20%, var(--star) 99%, transparent),
+        radial-gradient(circle 1px   at 78% 14%, var(--star-faint) 99%, transparent),
+        radial-gradient(circle 1px   at 30% 62%, var(--star-faint) 99%, transparent),
+        radial-gradient(circle 1.5px at 88% 56%, var(--star) 99%, transparent),
+        radial-gradient(circle 1px   at 64% 84%, var(--star-faint) 99%, transparent),
+        radial-gradient(circle 1px   at 8%  44%, var(--star-faint) 99%, transparent),
+        /* faint firework glow upper-right, then night gradient */
+        radial-gradient(ellipse at 85% 0%, rgba(227, 185, 104, 0.18), transparent 55%),
+        linear-gradient(160deg, var(--night) 0%, var(--night-deep) 100%);
+      box-shadow:
+        0 2px 8px rgba(15, 16, 18, 0.18),
+        inset 0 0 24px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Slim red-to-gold campaign strip along the top */
+    .unit::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--davidson-red) 0%, var(--davidson-red) 55%, var(--gold) 100%);
     }
 
     .number {
@@ -67,27 +92,29 @@
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       line-height: 1;
-      color: var(--davidson-black);
+      color: var(--neon-core);
+      text-shadow:
+        0 0 4px  var(--neon-glow),
+        0 0 12px var(--neon-glow),
+        0 0 28px var(--neon-haze);
       min-width: 2ch;
       text-align: center;
       transition: transform 0.1s ease;
     }
 
-    .number.tick {
-      transform: scale(1.04);
-    }
+    .number.tick { transform: scale(1.04); }
 
     .label {
       font-size: clamp(0.65rem, 1.5vw, 0.8rem);
       font-weight: 600;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: var(--davidson-gray-10);
+      color: #FFFFFF;
     }
 
     .message {
-      font-family: 'Libre Caslon Text', Georgia, serif;
-      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-family: 'Great Vibes', Georgia, cursive;
+      font-size: clamp(2rem, 5.5vw, 3rem);
       color: var(--davidson-red);
       display: none;
     }
@@ -97,9 +124,11 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
       }
-      .unit {
-        min-width: 0;
-      }
+      .unit { min-width: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .number { transition: none; }
     }
   </style>
 </head>
@@ -125,7 +154,7 @@
       </div>
     </div>
 
-    <p class="message" id="message">The day has arrived.</p>
+    <p class="message" id="message">Happy Fiscal New Year!</p>
   </div>
 
   <script>
