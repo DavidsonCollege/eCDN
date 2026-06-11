@@ -6,20 +6,14 @@
   <title>Doug Hicks' Fiscal New Year's Eve Countdown</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Archivo:wght@700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --davidson-red:   #D42121;
+      --davidson-red: #D42121;
       --davidson-black: #0F1012;
-      /* Campaign accents */
-      --gold:        #C9A04E;
-      --night:       #1B2A4A;
-      --night-deep:  #111D36;
-      --neon-core:   #FFE4E4;
-      --neon-glow:   rgba(255, 82, 82, 0.9);
-      --neon-haze:   rgba(255, 60, 60, 0.45);
-      --star:        rgba(255, 233, 168, 0.9);
-      --star-faint:  rgba(255, 233, 168, 0.45);
+      --night:    #1B2A4A;
+      --gold:     #E3B968;
+      --gray-10:  #6A6869;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -35,86 +29,65 @@
       z-index: 2;
       text-align: center;
       padding: 0.5rem;
-      max-width: 1000px;
+      max-width: 1100px;
       width: 100%;
       margin: 0 auto;
     }
 
     .countdown {
       display: flex;
-      gap: clamp(0.75rem, 2.5vw, 1.5rem);
-      align-items: stretch;
+      gap: clamp(1rem, 4vw, 3rem);
+      align-items: baseline;
       justify-content: center;
       flex-wrap: wrap;
     }
 
-    /* Single night-sky card per unit */
     .unit {
-      position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.85rem;
-      border-radius: 8px;
-      padding: clamp(1.4rem, 3vw, 2rem) clamp(1rem, 3vw, 2rem);
-      min-width: clamp(125px, 20vw, 175px);
-      background-image:
-        /* tiny gold stars */
-        radial-gradient(circle 1.5px at 18% 20%, var(--star) 99%, transparent),
-        radial-gradient(circle 1px   at 78% 14%, var(--star-faint) 99%, transparent),
-        radial-gradient(circle 1px   at 30% 62%, var(--star-faint) 99%, transparent),
-        radial-gradient(circle 1.5px at 88% 56%, var(--star) 99%, transparent),
-        radial-gradient(circle 1px   at 64% 84%, var(--star-faint) 99%, transparent),
-        radial-gradient(circle 1px   at 8%  44%, var(--star-faint) 99%, transparent),
-        /* faint firework glow upper-right, then night gradient */
-        radial-gradient(ellipse at 85% 0%, rgba(227, 185, 104, 0.18), transparent 55%),
-        linear-gradient(160deg, var(--night) 0%, var(--night-deep) 100%);
-      box-shadow:
-        0 2px 8px rgba(15, 16, 18, 0.18),
-        inset 0 0 24px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Slim red-to-gold campaign strip along the top */
-    .unit::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--davidson-red) 0%, var(--davidson-red) 55%, var(--gold) 100%);
+      gap: clamp(0.6rem, 1.5vw, 1rem);
     }
 
     .number {
       font-family: 'Archivo', 'Helvetica Neue', sans-serif;
-      font-size: clamp(2.75rem, 9vw, 5rem);
-      font-weight: 700;
+      font-size: clamp(4rem, 15vw, 9rem);
+      font-weight: 800;
       font-variant-numeric: tabular-nums;
       line-height: 1;
-      color: var(--neon-core);
-      text-shadow:
-        0 0 4px  var(--neon-glow),
-        0 0 12px var(--neon-glow),
-        0 0 28px var(--neon-haze);
       min-width: 2ch;
       text-align: center;
       transition: transform 0.1s ease;
+      /* Marquee-letter look, minus the bulbs:
+         red face, gold edge, dark dimensional drop */
+      color: #B22318;
+      -webkit-text-stroke: 0.03em var(--gold);
+      filter: drop-shadow(0.045em 0.055em 0 #4E0A08);
+    }
+
+    @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+      .number {
+        background-image: linear-gradient(180deg, #D0432A 0%, #B22318 55%, #8E1410 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
     }
 
     .number.tick { transform: scale(1.04); }
 
     .label {
-      font-size: clamp(0.65rem, 1.5vw, 0.8rem);
-      font-weight: 600;
-      letter-spacing: 0.25em;
+      font-size: clamp(0.85rem, 2.2vw, 1.15rem);
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-indent: 0.3em; /* visually centers letterspaced caps */
       text-transform: uppercase;
-      color: #FFFFFF;
+      color: var(--night);
     }
 
     .message {
       font-family: 'Great Vibes', Georgia, cursive;
-      font-size: clamp(2rem, 5.5vw, 3rem);
+      font-size: clamp(2.5rem, 7vw, 4rem);
       color: var(--davidson-red);
       display: none;
     }
@@ -123,6 +96,7 @@
       .countdown {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 1.5rem 0.75rem;
       }
       .unit { min-width: 0; }
     }
