@@ -123,6 +123,114 @@
       max-width: 90%;
     }
 
+    .boards {
+      display: flex;
+      gap: clamp(1.25rem, 3vw, 2.5rem);
+      justify-content: center;
+      align-items: flex-start;
+      width: min(92%, 880px);
+      margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
+    }
+
+    .board {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .board-title {
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.8rem, 1.6vw, 0.95rem);
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-align: center;
+      color: #9FE9FF;
+      margin-bottom: 0.9rem;
+    }
+
+    .board-rows {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .board-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 0.5rem 0.75rem;
+    }
+
+    .board-row.first {
+      background: rgba(227, 185, 104, 0.16);
+      border-color: rgba(227, 185, 104, 0.45);
+    }
+
+    .board-rank {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #E3B968;
+      min-width: 1.4em;
+      text-align: center;
+    }
+
+    .board-label {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      font-weight: 500;
+      color: #FFFFFF;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .board-value {
+      font-family: 'Archivo', sans-serif;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: #FFE9A8;
+    }
+
+    .board-value.plus { color: #4ADE80; }   /* green daily-donor counts */
+
+    .board-rank.check { color: #4ADE80; font-size: 1rem; }
+
+    /* "Done" theme: every row reads as completed — green tint, no ranking gold */
+    .board--done .board-row,
+    .board--done .board-row.first {
+      background: rgba(74, 222, 128, 0.12);
+      border-color: rgba(74, 222, 128, 0.38);
+    }
+    .board--done .board-value { color: #4ADE80; }
+    .board--done .board-title { color: #4ADE80; }
+
+    .board-empty {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.65);
+      text-align: center;
+      padding: 1rem 0.5rem;
+    }
+
+    .board-updated {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.55);
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .boards { flex-direction: column; align-items: stretch; }
+    }
+
     .art-lockup {
       width: clamp(340px, 90%, 1060px);
       margin: 0 auto;
@@ -208,6 +316,17 @@
     <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
     <img class="art art-lockup" src="NYFE-Lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
     <h2 class="band-heading">Which classes are in the lead?</h2>
+    <div class="boards">
+      <section class="board">
+        <h3 class="board-title" id="board-title-0">Leaderboard 1</h3>
+        <ol class="board-rows" id="board-rows-0"></ol>
+      </section>
+      <section class="board">
+        <h3 class="board-title" id="board-title-1">Leaderboard 2</h3>
+        <ol class="board-rows" id="board-rows-1"></ol>
+      </section>
+    </div>
+    <p class="board-updated" id="board-updated"></p>
   </div>
 
   <script>
@@ -256,6 +375,143 @@
 
     update();
     setInterval(update, 1000);
+
+    // ── Leaderboards fed by a published Google Sheet ──────────────────────────
+    // Setup (one time, in Google Sheets):
+    //   1. Make a sheet with two tabs, one per leaderboard.
+    //      Each tab: column A = name (e.g. "Class of 2026"), column B = number.
+    //      Cell A1/B1 may be headers ("Class", "Points") — they're skipped.
+    //   2. File → Share → Publish to web → choose the TAB → "Comma-separated
+    //      values (.csv)" → Publish → copy the link.
+    //   3. Paste each tab's link below, and set the titles.
+    // Edits to the sheet appear here automatically (Google caches ~5 min).
+    // Sheet layout (NYFE Spreadsheet):
+    //   Tab "Daily Donors": A = decade/class, B..F = Day 1..Day 5 donor counts.
+    //     The board shows the MOST RECENT day that has any numbers in it.
+    //   Tab "Goal Reached": A = decade/class, D = % participation.
+    //     The board shows only rows at or above 50%.
+    var SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhjgD_uP8XuiBcfs2X9_ycHa7E-_BXNH2QiR777Z2Zgo175oz_dHwiYYVSyXbArlAKqL_lrUslr0T/pub?output=csv&single=true';
+    var BOARDS = [
+      { title: 'Daily Donors',
+        url: SHEET + '&gid=0',
+        format: 'plus',          // values render as green "+N"
+        rank: 'number',
+        limit: 10,               // show the top 10 classes
+        mode: 'latest-day' },
+      { title: 'Goal Reached',
+        url: SHEET + '&gid=44559502',
+        format: 'percent',       // values render as "N%"
+        rank: 'check',           // green check instead of a rank number
+        theme: 'done',           // green rows: these classes are finished
+        mode: 'goal-50' }
+    ];
+
+    function num(cell) {
+      var str = String(cell == null ? '' : cell).replace(/^"|"$/g, '').trim();
+      if (!str) return NaN;
+      var hasPct = str.indexOf('%') !== -1;
+      var v = parseFloat(str.replace(/[%,$\s]/g, ''));
+      if (isNaN(v)) return NaN;
+      // Sheets may publish percents as "52%", "52", or a 0.52 fraction
+      if (!hasPct && v > 0 && v <= 1) v = v * 100;
+      return hasPct || true ? v : v;
+    }
+
+    function parseGrid(text) {
+      return text.split(/\r?\n/).filter(function (l) { return l.trim(); })
+        .map(function (line) {
+          return (line.match(/("([^"]|"")*"|[^,]*)(?=,|$)/g) || [])
+            .map(function (c) { return c.replace(/^"|"$/g, '').replace(/""/g, '"').trim(); });
+        });
+    }
+
+    function extractRows(grid, board) {
+      var rows = [];
+      if (board.mode === 'latest-day') {
+        // find the rightmost day column that has any numeric data
+        var lastCol = -1;
+        grid.forEach(function (cells) {
+          for (var c = cells.length - 1; c >= 1; c--) {
+            if (!isNaN(parseFloat(String(cells[c]).replace(/[%,$\s]/g, '')))) {
+              if (c > lastCol) lastCol = c;
+              break;
+            }
+          }
+        });
+        if (lastCol < 1) return rows;
+        grid.forEach(function (cells) {
+          var label = cells[0];
+          var v = parseFloat(String(cells[lastCol] || '').replace(/[,$\s]/g, ''));
+          if (label && !isNaN(v)) rows.push([label, v]);
+        });
+      } else if (board.mode === 'goal-50') {
+        grid.forEach(function (cells) {
+          var label = cells[0];
+          var v = num(cells[3]); // column D: % participation
+          if (label && !isNaN(v) && v >= 50) rows.push([label, Math.round(v)]);
+        });
+      }
+      return rows;
+    }
+
+    function renderBoard(i, rows) {
+      var board = BOARDS[i];
+      var ol = document.getElementById('board-rows-' + i);
+      if (!ol) return;
+      if (board.theme === 'done') ol.closest('.board').classList.add('board--done');
+      rows.sort(function (a, b) { return b[1] - a[1]; });
+      if (board.limit) rows = rows.slice(0, board.limit);
+      ol.innerHTML = '';
+      if (!rows.length) {
+        var empty = document.createElement('li');
+        empty.className = 'board-empty';
+        empty.textContent = board.mode === 'goal-50'
+          ? 'No classes have reached 50% yet — be the first!'
+          : 'Standings coming soon!';
+        ol.appendChild(empty);
+        return;
+      }
+      rows.forEach(function (row, idx) {
+        var li = document.createElement('li');
+        li.className = 'board-row' + (idx === 0 ? ' first' : '');
+        var rank = document.createElement('span');
+        if (board.rank === 'check') {
+          rank.className = 'board-rank check';
+          rank.textContent = '\u2713';
+        } else {
+          rank.className = 'board-rank';
+          rank.textContent = idx + 1;
+        }
+        var label = document.createElement('span');
+        label.className = 'board-label';
+        // Prefix bare class years; leave names like "Avant Garde" as-is
+        label.textContent = /^\d{4}$/.test(row[0]) ? 'Class of ' + row[0] : row[0];
+        var value = document.createElement('span');
+        value.className = 'board-value' + (board.format === 'plus' ? ' plus' : '');
+        if (board.format === 'plus') {
+          value.textContent = '+' + row[1].toLocaleString();
+        } else if (board.format === 'percent') {
+          value.textContent = row[1] + '%';
+        } else {
+          value.textContent = row[1].toLocaleString();
+        }
+        li.appendChild(rank); li.appendChild(label); li.appendChild(value);
+        ol.appendChild(li);
+      });
+    }
+
+    BOARDS.forEach(function (b, i) {
+      var titleEl = document.getElementById('board-title-' + i);
+      if (titleEl) titleEl.textContent = b.title;
+      if (b.url.indexOf('PASTE') !== -1) {
+        renderBoard(i, []); // gid not wired yet → friendly empty state
+        return;
+      }
+      fetch(b.url + '&t=' + Date.now())
+        .then(function (r) { return r.text(); })
+        .then(function (text) { renderBoard(i, extractRows(parseGrid(text), b)); })
+        .catch(function () { renderBoard(i, []); });
+    });
 
     // ── Animated gold fireworks straddling the white/dark seam ───────────────
     (function () {
