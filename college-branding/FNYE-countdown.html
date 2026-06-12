@@ -239,7 +239,10 @@
       var visible = true;
       var nextBurst = 0;
 
-      var COLORS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
+      // Neon blue over the white zone (ties to the lockup), gold over the dark band
+      var BLUES = ['#00C1FD', '#5BD7FF', '#9FE9FF', '#00A6E0', '#CFF4FF'];
+      var GOLDS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
+      var SEAM = 0.78; // canvas y-fraction where white meets dark (matches translateY(-78%))
 
       function resize() {
         var r = canvas.getBoundingClientRect();
@@ -251,7 +254,9 @@
       function burst(cx, cy, scale) {
         scale = scale || 1;
         var count = Math.floor((36 + Math.random() * 28) * scale);
-        var color = COLORS[Math.floor(Math.random() * COLORS.length)];
+        var r = canvas.getBoundingClientRect();
+        var palette = (cy < r.height * SEAM) ? BLUES : GOLDS;
+        var color = palette[Math.floor(Math.random() * palette.length)];
         for (var i = 0; i < count; i++) {
           var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
           var speed = (0.9 + Math.random() * 2.1) * scale;
