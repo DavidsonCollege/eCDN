@@ -45,11 +45,21 @@
 
     .countdown {
       display: flex;
-      gap: clamp(1.5rem, 5vw, 4rem);
+      gap: clamp(1rem, 3vw, 2.25rem);
       align-items: baseline;
       justify-content: center;
       flex-wrap: wrap;
       width: 100%;
+    }
+
+    .sep {
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(2.4rem, 9vw, 5.4rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--davidson-red);
+      align-self: center;
+      transform: translateY(-0.35em); /* optically center on the digits, above the labels */
     }
 
     .unit {
@@ -101,7 +111,7 @@
     }
 
     .art-lockup {
-      width: clamp(320px, 78%, 940px);
+      width: clamp(340px, 90%, 1060px);
       margin: 0 auto;
       position: relative;
       mix-blend-mode: screen; /* PNG has a baked black bg; screen makes black invisible on the dark band */
@@ -126,15 +136,19 @@
       display: none;
     }
 
-    /* Mobile: 2×2 grid of the four units */
+    /* Mobile: 2×2 grid of the four units, tightened up */
     @media (max-width: 640px) {
       .countdown {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 1.75rem 1rem;
+        gap: 1rem 0.5rem;
         justify-items: center;
       }
-      .unit { min-width: 0; }
+      .unit { min-width: 0; gap: 0.35rem; }
+      .sep { display: none; }
+      .heading { margin-bottom: 1rem; }
+      .content { padding-top: 0.25rem; }
+      .band { margin-top: 1.75rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -153,14 +167,17 @@
         <span class="number" id="days">--</span>
         <span class="label">Days</span>
       </div>
+      <span class="sep" aria-hidden="true">:</span>
       <div class="unit">
         <span class="number" id="hours">--</span>
         <span class="label">Hours</span>
       </div>
+      <span class="sep" aria-hidden="true">:</span>
       <div class="unit">
         <span class="number" id="minutes">--</span>
         <span class="label">Minutes</span>
       </div>
+      <span class="sep" aria-hidden="true">:</span>
       <div class="unit">
         <span class="number" id="seconds">--</span>
         <span class="label">Seconds</span>
