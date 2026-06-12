@@ -340,25 +340,23 @@
           p.vy += 0.0017 * dt;          // stronger gravity → drooping willow trails
           p.vx *= 0.997; p.vy *= 0.997; // more drag → rays slow, then fall
 
-          // curved trail
+          // raindrop streak: tapers from a point at the tail
+          // to full width at the head (segment widths ramp up)
           if (p.trail.length > 1) {
-            ctx.globalAlpha = fade * 0.55;
+            ctx.globalAlpha = fade; // whole drop shares one opacity
             ctx.strokeStyle = p.color;
-            ctx.lineWidth = p.size;
             ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.beginPath();
-            ctx.moveTo(p.trail[0].x, p.trail[0].y);
-            for (var t = 1; t < p.trail.length; t++) ctx.lineTo(p.trail[t].x, p.trail[t].y);
-            ctx.lineTo(p.x, p.y);
-            ctx.stroke();
+            var pts = p.trail.concat([{ x: p.x, y: p.y }]);
+            var n = pts.length;
+            for (var t = 0; t < n - 1; t += 2) {
+              var t2 = Math.min(t + 2, n - 1);
+              ctx.lineWidth = Math.max(0.2, p.size * ((t2) / (n - 1)));
+              ctx.beginPath();
+              ctx.moveTo(pts[t].x, pts[t].y);
+              ctx.lineTo(pts[t2].x, pts[t2].y);
+              ctx.stroke();
+            }
           }
-          // bright head
-          ctx.globalAlpha = fade;
-          ctx.fillStyle = '#FFFDF2';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size * 0.9, 0, Math.PI * 2);
-          ctx.fill();
         }
         ctx.globalAlpha = 1;
         requestAnimationFrame(frame);
