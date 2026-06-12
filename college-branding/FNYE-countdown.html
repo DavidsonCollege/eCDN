@@ -33,13 +33,14 @@
     }
 
     .heading {
-      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
-      font-size: clamp(1.25rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: 0.3em;
-      text-indent: 0.3em;
-      text-transform: uppercase;
-      color: var(--night);
+      /* Matches davidson.edu's sitewide H1: signifier, 2.25rem, 400, 1.3.
+         Signifier is a licensed font the site loads; inside this iframe it
+         isn't available, so Georgia (its own declared fallback) renders. */
+      font-family: signifier, Georgia, serif;
+      font-size: 2.25rem;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--davidson-red);
       margin-bottom: clamp(1.25rem, 3.5vw, 2.5rem);
     }
 
