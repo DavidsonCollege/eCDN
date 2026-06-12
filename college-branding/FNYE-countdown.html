@@ -111,6 +111,18 @@
       box-shadow: 0 8px 30px rgba(15, 16, 18, 0.18);
     }
 
+    .band-heading {
+      /* Same sitewide H1 spec, in white on the night sky */
+      font-family: signifier, Georgia, serif;
+      font-size: 2.25rem;
+      font-weight: 400;
+      line-height: 1.3;
+      color: #FFFFFF;
+      text-align: center;
+      margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
+      max-width: 90%;
+    }
+
     .art-lockup {
       width: clamp(340px, 90%, 1060px);
       margin: 0 auto;
@@ -195,6 +207,7 @@
   <div class="band">
     <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
     <img class="art art-lockup" src="NYFE-Lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
+    <h2 class="band-heading">Which classes are in the lead?</h2>
   </div>
 
   <script>
