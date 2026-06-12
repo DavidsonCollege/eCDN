@@ -124,8 +124,8 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 760px;            /* tall enough to reach up behind the clock */
-      transform: translateY(-78%); /* ~78% above the seam, 22% in the band */
+      height: 560px;            /* reaches the clock zone, but stays below the heading */
+      transform: translateY(-55%); /* ~55% above the seam, 45% in the band */
       pointer-events: none;
     }
 
@@ -258,7 +258,7 @@
       // Gold and light blue only
       var BLUES = ['#00C1FD', '#5BD7FF', '#9FE9FF', '#7FD4F2'];
       var GOLDS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
-      var SEAM = 0.78; // canvas y-fraction where white meets dark (matches translateY(-78%))
+      var SEAM = 0.55; // canvas y-fraction where white meets dark (matches translateY(-55%))
 
       function resize() {
         var r = canvas.getBoundingClientRect();
@@ -296,7 +296,7 @@
         var r = canvas.getBoundingClientRect();
         burst(
           r.width * (0.06 + Math.random() * 0.88),
-          r.height * (0.08 + Math.random() * 0.84), // anywhere: white zone and dark band
+          r.height * (0.18 + Math.random() * 0.72), // below the heading; margin for spark spread
           1
         );
         nextBurst = now + 1100 + Math.random() * 1900;
