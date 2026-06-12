@@ -125,10 +125,10 @@
 
     .boards {
       display: flex;
-      gap: clamp(1.25rem, 3vw, 2.5rem);
+      gap: clamp(1rem, 2.5vw, 2rem);
       justify-content: center;
       align-items: flex-start;
-      width: min(92%, 880px);
+      width: min(96%, 1020px);
       margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
     }
 
@@ -152,16 +152,17 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.6rem;
     }
 
     .board-row {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.75rem;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.10);
-      padding: 0.5rem 0.75rem;
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
     }
 
     .board-row.first {
@@ -172,7 +173,7 @@
     .board-rank {
       font-family: 'Archivo', sans-serif;
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 1.05rem;
       color: #E3B968;
       min-width: 1.4em;
       text-align: center;
@@ -180,7 +181,7 @@
 
     .board-label {
       font-family: 'Inter', Helvetica, sans-serif;
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      font-size: clamp(1rem, 2vw, 1.2rem);
       font-weight: 500;
       color: #FFFFFF;
       flex: 1;
@@ -193,13 +194,13 @@
       font-family: 'Archivo', sans-serif;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
-      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      font-size: clamp(1.1rem, 2.3vw, 1.4rem);
       color: #FFE9A8;
     }
 
     .board-value.plus { color: #4ADE80; }   /* green daily-donor counts */
 
-    .board-rank.check { color: #4ADE80; font-size: 1rem; }
+    .board-rank.check { color: #4ADE80; font-size: 1.2rem; }
 
     /* "Done" theme: every row reads as completed — green tint, no ranking gold */
     .board--done .board-row,
