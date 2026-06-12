@@ -86,6 +86,40 @@
       color: var(--night);
     }
 
+    .art {
+      display: block;
+      height: auto;
+    }
+
+    .band {
+      position: relative;
+      width: 100%;
+      margin-top: clamp(2.5rem, 6vw, 4.5rem); /* room for fireworks to rise into the white zone */
+      background:
+        radial-gradient(ellipse at 80% 0%, rgba(227, 185, 104, 0.08), transparent 55%),
+        linear-gradient(160deg, #16223D 0%, #0C1526 100%);
+      padding: clamp(2rem, 5vw, 3.5rem) 1rem clamp(2.5rem, 6vw, 4rem);
+    }
+
+    .art-lockup {
+      width: clamp(280px, 60%, 760px);
+      margin: 0 auto;
+      position: relative;
+      mix-blend-mode: screen; /* PNG has a baked black bg; screen makes black invisible on the dark band */
+    }
+
+    /* Animated fireworks bridging the seam: the canvas straddles the
+       band's top edge — half over the white zone, half over the dark */
+    .fireworks {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 760px;            /* tall enough to reach up behind the clock */
+      transform: translateY(-78%); /* ~78% above the seam, 22% in the band */
+      pointer-events: none;
+    }
+
     .message {
       font-family: 'Great Vibes', Georgia, cursive;
       font-size: clamp(2.5rem, 7vw, 4rem);
@@ -112,6 +146,7 @@
 <body>
 
   <div class="content">
+
     <h2 class="heading" id="heading">Countdown to</h2>
 
     <div class="countdown" id="countdown">
@@ -134,6 +169,15 @@
     </div>
 
     <p class="message" id="message">Happy Fiscal New Year!</p>
+  </div>
+
+  <!-- ── Dark band: the neon lockup's home ─────────────────────────────
+       The band is CSS (full-width, resolution-independent); only the
+       lockup and fireworks are images. Export both as transparent PNG @2x.
+       The fireworks straddle the white/dark seam to bridge the two zones. -->
+  <div class="band">
+    <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
+    <img class="art art-lockup" src="fnye-lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
   </div>
 
   <script>
@@ -183,6 +227,119 @@
     update();
     setInterval(update, 1000);
 
+    // ── Animated gold fireworks straddling the white/dark seam ───────────────
+    (function () {
+      var canvas = document.getElementById('fireworks');
+      if (!canvas) return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var ctx = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var particles = [];
+      var running = false;
+      var visible = true;
+      var nextBurst = 0;
+
+      var COLORS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
+
+      function resize() {
+        var r = canvas.getBoundingClientRect();
+        canvas.width  = Math.floor(r.width * dpr);
+        canvas.height = Math.floor(r.height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function burst(cx, cy, scale) {
+        scale = scale || 1;
+        var count = Math.floor((36 + Math.random() * 28) * scale);
+        var color = COLORS[Math.floor(Math.random() * COLORS.length)];
+        for (var i = 0; i < count; i++) {
+          var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
+          var speed = (0.9 + Math.random() * 2.1) * scale;
+          particles.push({
+            x: cx, y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 0,
+            ttl: 1100 + Math.random() * 900, // ms
+            color: color,
+            size: 0.8 + Math.random() * 1.4,
+            prevX: cx, prevY: cy
+          });
+        }
+      }
+
+      function randomBurst(now) {
+        var r = canvas.getBoundingClientRect();
+        burst(
+          r.width * (0.06 + Math.random() * 0.88),
+          r.height * (0.08 + Math.random() * 0.84), // anywhere: white zone and dark band
+          1
+        );
+        nextBurst = now + 1100 + Math.random() * 1900;
+      }
+
+      var lastT = 0;
+      function frame(now) {
+        if (!running) return;
+        var dt = lastT ? Math.min(now - lastT, 50) : 16;
+        lastT = now;
+
+        var r = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, r.width, r.height);
+
+        if (now >= nextBurst && particles.length < 400) randomBurst(now);
+
+        for (var i = particles.length - 1; i >= 0; i--) {
+          var p = particles[i];
+          p.life += dt;
+          if (p.life >= p.ttl) { particles.splice(i, 1); continue; }
+          p.prevX = p.x; p.prevY = p.y;
+          p.x += p.vx * dt * 0.06;
+          p.y += p.vy * dt * 0.06;
+          p.vy += 0.0011 * dt;        // gravity
+          p.vx *= 0.999; p.vy *= 0.999; // drag
+          var fade = 1 - (p.life / p.ttl);
+          ctx.globalAlpha = fade * fade;
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = p.size;
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          ctx.moveTo(p.prevX, p.prevY);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running || reduceMotion.matches || !visible || document.hidden) return;
+        running = true;
+        lastT = 0;
+        nextBurst = performance.now() + 300;
+        requestAnimationFrame(frame);
+      }
+      function stop() { running = false; }
+
+      resize();
+      window.addEventListener('resize', resize);
+      document.addEventListener('visibilitychange', function () {
+        document.hidden ? stop() : start();
+      });
+      if (typeof IntersectionObserver !== 'undefined') {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          visible ? start() : stop();
+        }).observe(canvas);
+      }
+      if (reduceMotion.addEventListener) {
+        reduceMotion.addEventListener('change', function () {
+          reduceMotion.matches ? stop() : start();
+        });
+      }
+      start();
+    })();
+
     // ── Report height to parent page for iframe auto-resize ──────────────────
     // Measure the content element, NOT documentElement.scrollHeight —
     // scrollHeight is always >= the viewport, so reporting it creates a
@@ -190,7 +347,9 @@
     var lastHeight = 0;
     function postHeight() {
       var c = document.querySelector('.content');
-      var h = Math.ceil(c.getBoundingClientRect().height);
+      var b = document.querySelector('.band');
+      var h = Math.ceil(c.getBoundingClientRect().height + (b ? b.getBoundingClientRect().height : 0)) +
+              Math.ceil(parseFloat(getComputedStyle(b).marginTop) || 0);
       if (h !== lastHeight && h > 0) {
         lastHeight = h;
         window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
