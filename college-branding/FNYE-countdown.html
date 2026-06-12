@@ -70,9 +70,7 @@
       transition: transform 0.1s ease;
       /* Marquee-letter look, minus the bulbs:
          red face, gold edge, dark dimensional drop */
-      color: var(--davidson-red);
-      -webkit-text-stroke: 0.03em var(--gold);
-      filter: drop-shadow(0.045em 0.055em 0 #4E0A08);
+      color: var(--davidson-red); /* solid brand red — no outline, no shadow */
     }
 
     .number.tick { transform: scale(1.04); }
@@ -253,21 +251,21 @@
 
       function burst(cx, cy, scale) {
         scale = scale || 1;
-        var count = Math.floor((36 + Math.random() * 28) * scale);
+        var count = Math.floor((60 + Math.random() * 40) * scale);
         var r = canvas.getBoundingClientRect();
         var palette = (cy < r.height * SEAM) ? BLUES : GOLDS;
         var color = palette[Math.floor(Math.random() * palette.length)];
         for (var i = 0; i < count; i++) {
           var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
-          var speed = (0.9 + Math.random() * 2.1) * scale;
+          var speed = (1.4 + Math.random() * 3.0) * scale; // wider burst radius
           particles.push({
             x: cx, y: cy,
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
             life: 0,
-            ttl: 1100 + Math.random() * 900, // ms
+            ttl: 1400 + Math.random() * 1100, // linger longer
             color: color,
-            size: 0.8 + Math.random() * 1.4,
+            size: 1.3 + Math.random() * 1.9,  // thicker sparks
             prevX: cx, prevY: cy
           });
         }
@@ -292,7 +290,7 @@
         var r = canvas.getBoundingClientRect();
         ctx.clearRect(0, 0, r.width, r.height);
 
-        if (now >= nextBurst && particles.length < 400) randomBurst(now);
+        if (now >= nextBurst && particles.length < 700) randomBurst(now);
 
         for (var i = particles.length - 1; i >= 0; i--) {
           var p = particles[i];
@@ -304,7 +302,7 @@
           p.vy += 0.0011 * dt;        // gravity
           p.vx *= 0.999; p.vy *= 0.999; // drag
           var fade = 1 - (p.life / p.ttl);
-          ctx.globalAlpha = fade * fade;
+          ctx.globalAlpha = fade; // linear fade keeps sparks bright longer
           ctx.strokeStyle = p.color;
           ctx.lineWidth = p.size;
           ctx.lineCap = 'round';
