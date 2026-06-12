@@ -19,7 +19,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: transparent; /* TEMP: green background — revert to `transparent` when done */
+      background: transparent;
       color: var(--davidson-black);
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
@@ -60,18 +60,9 @@
       transition: transform 0.1s ease;
       /* Marquee-letter look, minus the bulbs:
          red face, gold edge, dark dimensional drop */
-      color: #B22318;
+      color: var(--davidson-red);
       -webkit-text-stroke: 0.03em var(--gold);
       filter: drop-shadow(0.045em 0.055em 0 #4E0A08);
-    }
-
-    @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-      .number {
-        background-image: linear-gradient(180deg, #D0432A 0%, #B22318 55%, #8E1410 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-      }
     }
 
     .number.tick { transform: scale(1.04); }
@@ -178,9 +169,17 @@
     setInterval(update, 1000);
 
     // ── Report height to parent page for iframe auto-resize ──────────────────
+    // Measure the content element, NOT documentElement.scrollHeight —
+    // scrollHeight is always >= the viewport, so reporting it creates a
+    // feedback loop with the parent's +32px padding (infinite growth).
+    var lastHeight = 0;
     function postHeight() {
-      var h = document.documentElement.scrollHeight;
-      window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
+      var c = document.querySelector('.content');
+      var h = Math.ceil(c.getBoundingClientRect().height);
+      if (h !== lastHeight && h > 0) {
+        lastHeight = h;
+        window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
+      }
     }
 
     window.addEventListener('load', postHeight);
