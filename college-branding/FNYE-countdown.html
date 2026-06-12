@@ -91,12 +91,13 @@
 
     .band {
       position: relative;
-      width: 100%;
-      margin-top: clamp(2.5rem, 6vw, 4.5rem); /* room for fireworks to rise into the white zone */
+      width: min(92%, 1100px);  /* inset box with white margins, not full-bleed */
+      margin: clamp(2.5rem, 6vw, 4.5rem) auto clamp(1.5rem, 4vw, 3rem);
       background:
         radial-gradient(ellipse at 80% 0%, rgba(227, 185, 104, 0.08), transparent 55%),
         linear-gradient(160deg, #16223D 0%, #0C1526 100%);
       padding: clamp(2rem, 5vw, 3.5rem) 1rem clamp(2.5rem, 6vw, 4rem);
+      box-shadow: 0 8px 30px rgba(15, 16, 18, 0.18);
     }
 
     .art-lockup {
@@ -349,10 +350,9 @@
     // feedback loop with the parent's +32px padding (infinite growth).
     var lastHeight = 0;
     function postHeight() {
-      var c = document.querySelector('.content');
       var b = document.querySelector('.band');
-      var h = Math.ceil(c.getBoundingClientRect().height + (b ? b.getBoundingClientRect().height : 0)) +
-              Math.ceil(parseFloat(getComputedStyle(b).marginTop) || 0);
+      var h = Math.ceil(b.getBoundingClientRect().bottom +
+              (parseFloat(getComputedStyle(b).marginBottom) || 0));
       if (h !== lastHeight && h > 0) {
         lastHeight = h;
         window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
