@@ -96,12 +96,12 @@
       background:
         radial-gradient(ellipse at 80% 0%, rgba(227, 185, 104, 0.08), transparent 55%),
         linear-gradient(160deg, #16223D 0%, #0C1526 100%);
-      padding: clamp(2rem, 5vw, 3.5rem) 1rem clamp(2.5rem, 6vw, 4rem);
+      padding: clamp(3.5rem, 8vw, 6rem) 1rem clamp(4rem, 9vw, 6.5rem);
       box-shadow: 0 8px 30px rgba(15, 16, 18, 0.18);
     }
 
     .art-lockup {
-      width: clamp(280px, 60%, 760px);
+      width: clamp(320px, 78%, 940px);
       margin: 0 auto;
       position: relative;
       mix-blend-mode: screen; /* PNG has a baked black bg; screen makes black invisible on the dark band */
@@ -241,6 +241,7 @@
       // Neon blue over the white zone (ties to the lockup), gold over the dark band
       var BLUES = ['#00C1FD', '#5BD7FF', '#9FE9FF', '#00A6E0', '#CFF4FF'];
       var GOLDS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
+      var REDS  = ['#D42121', '#FF5A5A', '#E8443B', '#FF8A80'];
       var SEAM = 0.78; // canvas y-fraction where white meets dark (matches translateY(-78%))
 
       function resize() {
@@ -254,7 +255,8 @@
         scale = scale || 1;
         var count = Math.floor((60 + Math.random() * 40) * scale);
         var r = canvas.getBoundingClientRect();
-        var palette = (cy < r.height * SEAM) ? BLUES : GOLDS;
+        // Mostly blue up top / gold down low, with ~1 in 4 bursts Davidson red anywhere
+        var palette = (Math.random() < 0.25) ? REDS : (cy < r.height * SEAM ? BLUES : GOLDS);
         var color = palette[Math.floor(Math.random() * palette.length)];
         for (var i = 0; i < count; i++) {
           var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
