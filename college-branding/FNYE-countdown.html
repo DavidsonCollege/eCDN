@@ -334,7 +334,7 @@
           }
 
           p.trail.push({ x: p.x, y: p.y });
-          if (p.trail.length > 9) p.trail.shift();
+          if (p.trail.length > 24) p.trail.shift();
           p.x += p.vx * dt * 0.06;
           p.y += p.vy * dt * 0.06;
           p.vy += 0.0017 * dt;          // stronger gravity → drooping willow trails
