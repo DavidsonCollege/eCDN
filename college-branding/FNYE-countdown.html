@@ -217,19 +217,6 @@
 
     .board-value.plus { color: #4ADE80; }   /* green daily-donor counts */
 
-    /* Winner emphasis: pulse the leader row red after the reorder settles */
-    @keyframes winnerPulse {
-      0%   { background: rgba(212, 33, 33, 0);   border-color: rgba(255,255,255,0.85); }
-      30%  { background: rgba(212, 33, 33, 0.85); border-color: #D42121; }
-      100% { background: rgba(212, 33, 33, 0);   border-color: rgba(255,255,255,0.85); }
-    }
-    .board-row.pulse {
-      animation: winnerPulse 1.2s ease-in-out 2;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .board-row.pulse { animation: none; }
-    }
-
     .board-rank.check { color: #4ADE80; font-size: 1.2rem; }
 
     /* "Done" theme: every row reads as completed — green tint, no ranking gold */
@@ -552,8 +539,8 @@
       });
 
       if (doReorder) {
-        var countDone = 900 + 120 * (displayRows.length - 1) + 300;
-        setTimeout(function () { reorderBoard(ol); }, countDone);
+        // Sort into rank WHILE the numbers are still counting up — one motion.
+        setTimeout(function () { reorderBoard(ol); }, 260);
       }
     }
 
@@ -589,10 +576,7 @@
       setTimeout(function () {
         var sorted = Array.prototype.slice.call(ol.children);
         sorted.forEach(function (li) { li.classList.remove('first'); });
-        if (sorted[0]) {
-          sorted[0].classList.add('first', 'pulse');
-          setTimeout(function () { sorted[0].classList.remove('pulse'); }, 2400);
-        }
+        if (sorted[0]) sorted[0].classList.add('first');
       }, 700);
     }
 
@@ -602,7 +586,7 @@
         el.textContent = '+' + target.toLocaleString();
         return;
       }
-      var dur = 900, delay = 120 * idx; // stagger rows so they land in sequence
+      var dur = 1100, delay = 40 * idx; // gentle stagger, overlaps the reorder
       el.textContent = '+0';
       setTimeout(function () {
         var start = null;
