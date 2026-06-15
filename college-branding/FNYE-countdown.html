@@ -454,9 +454,11 @@
       var hasPct = str.indexOf('%') !== -1;
       var v = parseFloat(str.replace(/[%,$\s]/g, ''));
       if (isNaN(v)) return NaN;
-      // Sheets may publish percents as "52%", "52", or a 0.52 fraction
-      if (!hasPct && v > 0 && v <= 1) v = v * 100;
-      return hasPct || true ? v : v;
+      // Google publishes percent-formatted cells as decimals: "50%" → 0.5 in CSV.
+      // Treat any value <= 1 as a fraction and scale to a whole percent.
+      // (A literal "100%" publishes as 1, also handled.)
+      if (!hasPct && v <= 1) v = v * 100;
+      return v;
     }
 
     function parseGrid(text) {
