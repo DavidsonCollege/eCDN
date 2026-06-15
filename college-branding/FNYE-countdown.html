@@ -160,6 +160,18 @@
       margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
     }
 
+    .day-progress {
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-indent: 0.28em;
+      text-transform: uppercase;
+      text-align: center;
+      color: #E3B968;
+      margin-top: clamp(0.75rem, 2vw, 1.1rem);
+    }
+
     .board {
       flex: 1 1 0;
       min-width: 0;
@@ -345,6 +357,7 @@
     <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
     <img class="art art-lockup" src="NYFE-Lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
     <h2 class="band-heading">Which classes are in the lead?</h2>
+    <p class="day-progress" id="day-progress"></p>
     <div class="boards">
       <section class="board">
         <h3 class="board-title" id="board-title-0">Leaderboard 1</h3>
@@ -426,7 +439,7 @@
         format: 'plus',          // values render as green "+N"
         rank: 'number',
         limit: 10,               // show the top 10 classes
-        mode: 'latest-day' },
+        mode: 'latest-day' },    // title auto-set from the day column's date header
       { title: 'Goal Reached',
         url: SHEET + '&gid=44559502',
         format: 'percent',       // values render as "N%"
@@ -457,9 +470,10 @@
     function extractRows(grid, board) {
       var rows = [];
       if (board.mode === 'latest-day') {
-        // find the rightmost day column that has any numeric data
+        // find the rightmost day column that has any numeric data (skip header row)
         var lastCol = -1;
-        grid.forEach(function (cells) {
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return; // header row holds the date labels
           for (var c = cells.length - 1; c >= 1; c--) {
             if (!isNaN(parseFloat(String(cells[c]).replace(/[%,$\s]/g, '')))) {
               if (c > lastCol) lastCol = c;
@@ -468,13 +482,19 @@
           }
         });
         if (lastCol < 1) return rows;
-        grid.forEach(function (cells) {
+        board.dayNumber = lastCol;   // col B=1, C=2, … = how many days are in
+        // Title from that column's header, e.g. "June 25, 2026" → "June 25, 2026 Donors"
+        var header = (grid[0] && grid[0][lastCol] || '').trim();
+        if (header) board.dynamicTitle = /donors?$/i.test(header) ? header : header + ' Donors';
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return;
           var label = cells[0];
           var v = parseFloat(String(cells[lastCol] || '').replace(/[,$\s]/g, ''));
           if (label && !isNaN(v)) rows.push([label, v]);
         });
       } else if (board.mode === 'goal-50') {
-        grid.forEach(function (cells) {
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return;
           var label = cells[0];
           var v = num(cells[3]); // column D: % participation
           if (label && !isNaN(v) && v >= 50) rows.push([label, Math.round(v)]);
@@ -611,7 +631,17 @@
       }
       fetch(b.url + '&t=' + Date.now())
         .then(function (r) { return r.text(); })
-        .then(function (text) { renderBoard(i, extractRows(parseGrid(text), b)); })
+        .then(function (text) {
+          var rows = extractRows(parseGrid(text), b);
+          // Daily board retitles itself from the displayed day's column header
+          if (b.dynamicTitle && titleEl) titleEl.textContent = b.dynamicTitle;
+          // "Day N of 5" progress label, derived from filled day columns
+          if (b.mode === 'latest-day' && b.dayNumber) {
+            var prog = document.getElementById('day-progress');
+            if (prog) prog.textContent = 'Day ' + b.dayNumber + ' of 5';
+          }
+          renderBoard(i, rows);
+        })
         .catch(function () { renderBoard(i, []); });
     });
 
