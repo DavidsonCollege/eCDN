@@ -8,6 +8,34 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Archivo:wght@300;700;800&display=swap" rel="stylesheet">
   <style>
+    /* ─────────────────────────────────────────────────────────────────────
+       BRAND FONTS — activate ONLY when hosted on a davidson.edu domain.
+       Klim's web font license is tied to davidson.edu and forbids serving the
+       fonts from other domains (e.g. github.io). On github.io these rules stay
+       commented out and the page uses the Georgia/Archivo fallbacks already in
+       the font stacks — which is fully license-compliant.
+
+       To turn the real fonts on after the file is hosted under davidson.edu:
+         1. Place the foundry-provided WOFF2 files next to this HTML (or at a
+            known path on the Davidson server). WOFF2 ONLY — the license
+            prohibits TTF/OTF/SVG.
+         2. Uncomment the block below and fix the url() paths + family names to
+            match the actual files and the names used in the font stacks
+            ('signifier' and 'Nimbus Sans Extended').
+       No other edits are needed — the stacks already prefer these names.
+
+    @font-face {
+      font-family: 'signifier';
+      src: url('Signifier-Regular.woff2') format('woff2');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Nimbus Sans Extended';
+      src: url('NimbusSansExtended-Bold.woff2') format('woff2');
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+    ───────────────────────────────────────────────────────────────────── */
+
     :root {
       --davidson-red: #D42121;
       --davidson-black: #0F1012;
@@ -138,7 +166,7 @@
     }
 
     .board-title {
-      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-family: 'Nimbus Sans Extended', 'Archivo', 'Helvetica Neue', sans-serif;
       font-size: clamp(0.8rem, 1.6vw, 0.95rem);
       font-weight: 700;
       letter-spacing: 0.2em;
@@ -160,13 +188,9 @@
       align-items: center;
       gap: 0.75rem;
       background: transparent;
-      border: 2px solid rgba(255, 255, 255, 0.85);
-      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 0;
       padding: 1rem 1.25rem;
-    }
-
-    .board-row.first {
-      border-color: #E3B968;
     }
 
     .board-rank {
@@ -179,9 +203,10 @@
     }
 
     .board-label {
-      font-family: 'Inter', Helvetica, sans-serif;
+      font-family: 'Nimbus Sans Extended', 'Archivo', Helvetica, sans-serif;
       font-size: clamp(1rem, 2vw, 1.2rem);
-      font-weight: 500;
+      font-weight: 700;
+      letter-spacing: 0.02em;
       color: #FFFFFF;
       flex: 1;
       overflow: hidden;
@@ -190,11 +215,11 @@
     }
 
     .board-value {
-      font-family: 'Archivo', sans-serif;
+      font-family: 'Nimbus Sans Extended', 'Archivo', sans-serif;
       font-weight: 800;
       font-variant-numeric: tabular-nums;
       font-size: clamp(1.1rem, 2.3vw, 1.4rem);
-      color: #FFE9A8;
+      color: #FFFFFF;
     }
 
     .board-value.plus { color: #4ADE80; }   /* green daily-donor counts */
@@ -205,7 +230,8 @@
     .board--done .board-row,
     .board--done .board-row.first {
       background: #2EA84D;
-      border-color: #2EA84D;
+      border: 1px solid #2EA84D;
+      border-radius: 0;
       justify-content: center;
     }
     .board--done .board-label {
