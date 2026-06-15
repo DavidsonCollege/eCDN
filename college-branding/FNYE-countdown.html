@@ -217,6 +217,19 @@
 
     .board-value.plus { color: #4ADE80; }   /* green daily-donor counts */
 
+    /* Winner emphasis: pulse the leader row red after the reorder settles */
+    @keyframes winnerPulse {
+      0%   { background: rgba(212, 33, 33, 0);   border-color: rgba(255,255,255,0.85); }
+      30%  { background: rgba(212, 33, 33, 0.85); border-color: #D42121; }
+      100% { background: rgba(212, 33, 33, 0);   border-color: rgba(255,255,255,0.85); }
+    }
+    .board-row.pulse {
+      animation: winnerPulse 1.2s ease-in-out 2;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .board-row.pulse { animation: none; }
+    }
+
     .board-rank.check { color: #4ADE80; font-size: 1.2rem; }
 
     /* "Done" theme: every row reads as completed — green tint, no ranking gold */
@@ -500,9 +513,17 @@
         ol.appendChild(empty);
         return;
       }
-      rows.forEach(function (row, idx) {
+      // Donor board: enter in scrambled order, count up, then slide into rank.
+      var doReorder = (board.format === 'plus' &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+        rows.length > 1);
+      var displayRows = rows.slice();
+      if (doReorder) shuffle(displayRows);
+
+      displayRows.forEach(function (row, idx) {
         var li = document.createElement('li');
-        li.className = 'board-row' + (idx === 0 ? ' first' : '');
+        li.className = 'board-row';
+        li.dataset.value = row[1];
         var rank = document.createElement('span');
         if (board.rank === 'check') {
           rank.className = 'board-rank check';
@@ -518,15 +539,61 @@
         var value = document.createElement('span');
         value.className = 'board-value' + (board.format === 'plus' ? ' plus' : '');
         if (board.format === 'plus') {
-          countUp(value, row[1], idx);   // "+N" tallies up live
+          countUp(value, row[1], idx);
         } else if (board.format === 'percent') {
           value.textContent = row[1] + '%';
         } else {
           value.textContent = row[1].toLocaleString();
         }
+        // static (non-reordering) boards mark their leader immediately
+        if (idx === 0 && !doReorder) li.classList.add('first');
         li.appendChild(rank); li.appendChild(label); li.appendChild(value);
         ol.appendChild(li);
       });
+
+      if (doReorder) {
+        var countDone = 900 + 120 * (displayRows.length - 1) + 300;
+        setTimeout(function () { reorderBoard(ol); }, countDone);
+      }
+    }
+
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+    }
+
+    // FLIP reorder: measure, sort by value, animate each row from old → new,
+    // then pulse the new leader red.
+    function reorderBoard(ol) {
+      var items = Array.prototype.slice.call(ol.children);
+      var firstTop = new Map();
+      items.forEach(function (li) { firstTop.set(li, li.getBoundingClientRect().top); });
+
+      items.sort(function (a, b) { return (+b.dataset.value) - (+a.dataset.value); });
+      items.forEach(function (li) { ol.appendChild(li); });
+
+      items.forEach(function (li) {
+        var dy = firstTop.get(li) - li.getBoundingClientRect().top;
+        li.style.transition = 'none';
+        li.style.transform = 'translateY(' + dy + 'px)';
+      });
+      requestAnimationFrame(function () {
+        items.forEach(function (li) {
+          li.style.transition = 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+          li.style.transform = '';
+        });
+      });
+
+      setTimeout(function () {
+        var sorted = Array.prototype.slice.call(ol.children);
+        sorted.forEach(function (li) { li.classList.remove('first'); });
+        if (sorted[0]) {
+          sorted[0].classList.add('first', 'pulse');
+          setTimeout(function () { sorted[0].classList.remove('pulse'); }, 2400);
+        }
+      }, 700);
     }
 
     // Count a "+N" value up from zero, like a live tally landing.
