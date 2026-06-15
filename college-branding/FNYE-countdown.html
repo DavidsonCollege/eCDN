@@ -159,15 +159,14 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.10);
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.85);
       border-radius: 12px;
-      padding: 0.85rem 1rem;
+      padding: 1rem 1.25rem;
     }
 
     .board-row.first {
-      background: rgba(227, 185, 104, 0.16);
-      border-color: rgba(227, 185, 104, 0.45);
+      border-color: #E3B968;
     }
 
     .board-rank {
@@ -205,10 +204,20 @@
     /* "Done" theme: every row reads as completed — green tint, no ranking gold */
     .board--done .board-row,
     .board--done .board-row.first {
-      background: rgba(74, 222, 128, 0.12);
-      border-color: rgba(74, 222, 128, 0.38);
+      background: #2EA84D;
+      border-color: #2EA84D;
+      justify-content: center;
     }
-    .board--done .board-value { color: #4ADE80; }
+    .board--done .board-label {
+      flex: 0 1 auto;
+      text-align: center;
+      font-weight: 700;
+      overflow: visible;
+      white-space: normal;
+    }
+    /* On the filled green board, hide rank + value so only the centered name shows */
+    .board--done .board-rank,
+    .board--done .board-value { display: none; }
     .board--done .board-title { color: #4ADE80; }
 
     .board-empty {
