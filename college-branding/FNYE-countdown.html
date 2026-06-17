@@ -61,9 +61,6 @@
     }
 
     .heading {
-      /* Matches davidson.edu's sitewide H1: signifier, 2.25rem, 400, 1.3.
-         Signifier is a licensed font the site loads; inside this iframe it
-         isn't available, so Georgia (its own declared fallback) renders. */
       font-family: signifier, Georgia, serif;
       font-size: 2.25rem;
       font-weight: 400;
@@ -88,7 +85,7 @@
       line-height: 1;
       color: var(--davidson-red);
       align-self: center;
-      transform: translateY(-0.35em); /* optically center on the digits, above the labels */
+      transform: translateY(-0.35em);
     }
 
     .unit {
@@ -107,9 +104,7 @@
       min-width: 2ch;
       text-align: center;
       transition: transform 0.1s ease;
-      /* Marquee-letter look, minus the bulbs:
-         red face, gold edge, dark dimensional drop */
-      color: var(--davidson-red); /* solid brand red — no outline, no shadow */
+      color: var(--davidson-red);
     }
 
     .number.tick { transform: scale(1.04); }
@@ -118,7 +113,7 @@
       font-size: clamp(0.85rem, 2.2vw, 1.15rem);
       font-weight: 700;
       letter-spacing: 0.3em;
-      text-indent: 0.3em; /* visually centers letterspaced caps */
+      text-indent: 0.3em;
       text-transform: uppercase;
       color: var(--night);
     }
@@ -130,25 +125,56 @@
 
     .band {
       position: relative;
-      width: min(92%, 1100px);  /* inset box with white margins, not full-bleed */
-      margin: clamp(2.5rem, 6vw, 4.5rem) auto clamp(1.5rem, 4vw, 3rem);
+      width: 100%;
+      margin: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+      background: #F9F5F2;
+    }
+
+    .band-inner {
+      display: flex;
+      align-items: stretch;
+      min-height: clamp(360px, 50vw, 560px);
+    }
+
+    .band-text {
+      flex: 0 0 50%;
+      padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem) clamp(2rem, 7vw, 7rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .band-figure {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2rem, 4vw, 3.5rem);
+      margin: 0;
       background:
-        radial-gradient(ellipse at 80% 0%, rgba(227, 185, 104, 0.08), transparent 55%),
+        radial-gradient(ellipse at 80% 30%, rgba(227, 185, 104, 0.12), transparent 55%),
         linear-gradient(160deg, #16223D 0%, #0C1526 100%);
-      padding: clamp(3.5rem, 8vw, 6rem) 1rem clamp(4rem, 9vw, 6.5rem);
-      box-shadow: 0 8px 30px rgba(15, 16, 18, 0.18);
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0 100%);
+      overflow: hidden;
     }
 
     .band-heading {
-      /* Same sitewide H1 spec, in white on the night sky */
       font-family: signifier, Georgia, serif;
       font-size: 2.25rem;
       font-weight: 400;
       line-height: 1.3;
-      color: #FFFFFF;
-      text-align: center;
-      margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
-      max-width: 90%;
+      color: var(--davidson-black);
+      text-align: left;
+      margin: 0 0 0.75rem;
+    }
+
+    .band-intro {
+      font-family: 'Nimbus Sans Extended', 'Inter', Helvetica, sans-serif;
+      font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+      color: var(--davidson-black);
+      line-height: 1.6;
+      margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
     }
 
     .boards {
@@ -156,21 +182,129 @@
       gap: clamp(1rem, 2.5vw, 2rem);
       justify-content: center;
       align-items: flex-start;
-      width: min(96%, 1020px);
-      margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
+      width: 100%;
+      margin: 0;
     }
 
-    .day-progress {
-      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
-      font-size: clamp(0.7rem, 1.5vw, 0.85rem);
-      font-weight: 700;
-      letter-spacing: 0.28em;
-      text-indent: 0.28em;
-      text-transform: uppercase;
-      text-align: center;
-      color: #E3B968;
-      margin-top: clamp(0.75rem, 2vw, 1.1rem);
+    #progressbar {
+      display: flex;
+      position: relative;
+      width: 100%;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0.75rem;
+      background: #E9DED3;
+      border: 1px solid #E9DED3;
+      border-radius: 999px;
+      overflow: hidden;
     }
+    #progressbar li {
+      flex: 1;
+      text-align: center;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(15, 16, 18, 0.32);
+      padding: 0.6rem 0.4rem;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+      user-select: none;
+    }
+    #progressbar li:not(.active)::after {
+      content: '';
+      display: inline-block;
+      width: 0.875em;
+      height: 0.875em;
+      margin-left: 0.3em;
+      flex-shrink: 0;
+      background-color: var(--davidson-red);
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    #progressbar li:not(.active):not(.selected) { cursor: pointer; }
+    #progressbar li:not(.active):not(.selected):hover { color: var(--davidson-red); }
+    #progressbar li:not(.active):not(.selected):hover::after { opacity: 0.85; }
+    #progressbar li:not(.active).selected::after { opacity: 1; background-color: #ffffff; }
+    #progressbar li.active {
+      color: var(--davidson-black);
+      cursor: pointer;
+    }
+    #progressbar li.active:hover { background: rgba(0, 0, 0, 0.08); }
+    #progressbar li.selected {
+      color: #FFFFFF;
+      text-shadow: none;
+      cursor: default;
+    }
+    #progressbar li:focus-visible {
+      outline: 2px solid var(--night);
+      outline-offset: -3px;
+      border-radius: 999px;
+    }
+    .day-glider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 20%;
+      background: var(--davidson-red);
+      box-shadow: none;
+      z-index: 1;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .board-body {
+      border: 1px solid rgba(15,16,18,0.15);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .board-day-label {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: var(--davidson-red);
+      margin: 0;
+      padding: 0.65rem 1.25rem;
+      border-bottom: 1px solid rgba(15,16,18,0.12);
+      background: rgba(15,16,18,0.02);
+      min-height: 0;
+    }
+
+    .board-unavailable {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border: none;
+      border-radius: 0;
+      padding: 2.5rem 1rem;
+      min-height: 220px;
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: rgba(15,16,18,0.4);
+      background: rgba(15,16,18,0.03);
+      list-style: none;
+      box-sizing: border-box;
+    }
+    .board-unavailable svg { flex-shrink: 0; }
 
     .board {
       flex: 1 1 0;
@@ -184,7 +318,7 @@
       letter-spacing: 0.2em;
       text-transform: uppercase;
       text-align: center;
-      color: #9FE9FF;
+      color: var(--night);
       margin-bottom: 0.9rem;
     }
 
@@ -192,7 +326,8 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.6rem;
+      gap: 0;
+      min-height: 220px;
     }
 
     .board-row {
@@ -200,10 +335,12 @@
       align-items: center;
       gap: 0.75rem;
       background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.85);
+      border: none;
+      border-top: 1px solid rgba(15,16,18,0.1);
       border-radius: 0;
-      padding: 1rem 1.25rem;
+      padding: 0.9rem 1.25rem;
     }
+    .board-row:first-child { border-top: none; }
 
     .board-rank { display: none; }
 
@@ -212,7 +349,7 @@
       font-size: clamp(1rem, 2vw, 1.2rem);
       font-weight: 700;
       letter-spacing: 0.02em;
-      color: #FFFFFF;
+      color: var(--davidson-black);
       flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -224,14 +361,13 @@
       font-weight: 800;
       font-variant-numeric: tabular-nums;
       font-size: clamp(1.1rem, 2.3vw, 1.4rem);
-      color: #FFFFFF;
+      color: var(--davidson-black);
     }
 
-    .board-value.plus { color: #4ADE80; }   /* green daily-donor counts */
+    .board-value.plus { color: #15803D; }
 
-    .board-rank.check { color: #4ADE80; font-size: 1.2rem; }
+    .board-rank.check { color: #15803D; font-size: 1.2rem; }
 
-    /* "Done" theme: every row reads as completed — green tint, no ranking gold */
     .board--done .board-row,
     .board--done .board-row.first {
       background: #2EA84D;
@@ -246,16 +382,15 @@
       overflow: visible;
       white-space: normal;
     }
-    /* On the filled green board, hide rank + value so only the centered name shows */
     .board--done .board-rank,
     .board--done .board-value { display: none; }
-    .board--done .board-title { color: #4ADE80; }
+    .board--done .board-title { color: #15803D; }
 
     .board-empty {
       font-family: 'Inter', Helvetica, sans-serif;
       font-size: 0.9rem;
       font-style: italic;
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(15, 16, 18, 0.5);
       text-align: center;
       padding: 1rem 0.5rem;
     }
@@ -263,32 +398,90 @@
     .board-updated {
       font-family: 'Inter', Helvetica, sans-serif;
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(15, 16, 18, 0.45);
       text-align: center;
       margin-top: 1rem;
     }
 
+    .goal-section {
+      width: min(92%, 860px);
+      margin: clamp(2rem, 5vw, 3.5rem) auto clamp(2rem, 5vw, 3.5rem);
+    }
+
+    .goal-heading {
+      font-family: signifier, Georgia, serif;
+      font-size: 2rem;
+      font-weight: 400;
+      color: var(--davidson-black);
+      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+    }
+
+    .goal-rows {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .band-pair {
+      display: flex;
+      flex-direction: column;
+      margin: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+    }
+    .band-pair .band { margin: 0; }
+
+    .band--alt {
+      position: relative;
+    }
+    .band-hero-img {
+      width: 100%;
+      height: clamp(420px, 55vw, 620px);
+      object-fit: cover;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+    .band-blue {
+      background: var(--davidson-red);
+      padding: clamp(1.75rem, 3.5vw, 2.75rem) clamp(2rem, 4vw, 3.5rem);
+      width: min(72%, 680px);
+      margin: -clamp(7rem, 14vw, 11rem) auto 0;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
+    .band-blue .goal-heading { color: #fff; }
+    .band-blue .board-updated { color: rgba(255,255,255,0.45); margin-top: 0.75rem; }
+    .band-blue .board-row { border-color: rgba(255,255,255,0.2); }
+    .band-blue .board-label { color: #fff; }
+    .band-blue .board-value { color: #fff; }
+    .band-blue .board-empty { color: rgba(255,255,255,0.5); }
+    .band-blue .board { min-width: 0; }
+
     @media (max-width: 640px) {
+      .band-inner { flex-direction: column; min-height: 0; }
+      .band-figure { flex: 0 0 auto; clip-path: none; padding: clamp(1.5rem, 5vw, 2.5rem); min-height: 260px; }
+      .band-text { flex: 0 0 auto; padding: clamp(1.5rem, 5vw, 2.5rem); }
+      .band-heading { text-align: center; }
       .boards { flex-direction: column; align-items: stretch; }
+      .band-hero-img { height: 260px; }
+      .band-blue { width: 90%; margin-top: -2rem; }
     }
 
     .art-lockup {
-      width: clamp(340px, 90%, 1060px);
-      margin: 0 auto;
+      width: 100%;
       position: relative;
-      mix-blend-mode: screen; /* PNG has a baked black bg; screen makes black invisible on the dark band */
+      z-index: 2;
+      mix-blend-mode: screen;
     }
 
-    /* Animated fireworks bridging the seam: the canvas straddles the
-       band's top edge — half over the white zone, half over the dark */
     .fireworks {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 560px;            /* reaches the clock zone, but stays below the heading */
-      transform: translateY(-55%); /* ~55% above the seam, 45% in the band */
+      height: 100%;
       pointer-events: none;
+      z-index: 1;
     }
 
     .message {
@@ -298,7 +491,6 @@
       display: none;
     }
 
-    /* Mobile: 2×2 grid of the four units, tightened up */
     @media (max-width: 640px) {
       .countdown {
         display: grid;
@@ -322,7 +514,7 @@
 
   <div class="content">
 
-    <h2 class="heading" id="heading">Join us in the countdown to</h2>
+    <h2 class="heading" id="heading">You heard that right — we're ringing in the New Year on July 1.</h2>
 
     <div class="countdown" id="countdown">
       <div class="unit">
@@ -349,26 +541,46 @@
     <p class="message" id="message">Happy Fiscal New Year!</p>
   </div>
 
-  <!-- ── Dark band: the neon lockup's home ─────────────────────────────
-       The band is CSS (full-width, resolution-independent); only the
-       lockup and fireworks are images. Export both as transparent PNG @2x.
-       The fireworks straddle the white/dark seam to bridge the two zones. -->
+  <div class="band-pair">
   <div class="band">
-    <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
-    <img class="art art-lockup" src="NYFE-Lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
-    <h2 class="band-heading">Which classes are in the lead?</h2>
-    <p class="day-progress" id="day-progress"></p>
-    <div class="boards">
-      <section class="board">
-        <h3 class="board-title" id="board-title-0">Leaderboard 1</h3>
-        <ol class="board-rows" id="board-rows-0"></ol>
-      </section>
-      <section class="board">
-        <h3 class="board-title" id="board-title-1">Leaderboard 2</h3>
-        <ol class="board-rows" id="board-rows-1"></ol>
-      </section>
+    <div class="band-inner">
+      <article class="band-text">
+        <h2 class="band-heading">Which class is in the lead?</h2>
+        <p class="band-intro">Five days left for your class to make a difference before Fiscal New Year's Eve. See where your class stands below! 👇</p>
+        <div class="boards">
+          <section class="board">
+            <ul id="progressbar" role="tablist" aria-label="Select day">
+              <li role="tab" tabindex="-1">Day 1</li>
+              <li role="tab" tabindex="-1">Day 2</li>
+              <li role="tab" tabindex="-1">Day 3</li>
+              <li role="tab" tabindex="-1">Day 4</li>
+              <li role="tab" tabindex="-1">Day 5</li>
+              <span class="day-glider" aria-hidden="true"></span>
+            </ul>
+            <div class="board-body">
+              <p class="board-day-label" id="board-day-label"></p>
+              <ol class="board-rows" id="board-rows-0"></ol>
+            </div>
+          </section>
+        </div>
+      </article>
+      <figure class="band-figure">
+        <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
+        <img class="art art-lockup" src="NYFE-Lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
+      </figure>
     </div>
-    <p class="board-updated" id="board-updated"></p>
+  </div>
+
+  <div class="band band--alt">
+    <img class="band-hero-img" src="Reunion_0053.jpg" alt="Davidson College Reunion">
+    <div class="band-blue">
+      <h2 class="goal-heading" id="board-title-1">Winners Circle</h2>
+      <section class="board">
+        <ol class="board-rows goal-rows" id="board-rows-1"></ol>
+      </section>
+      <p class="board-updated" id="board-updated"></p>
+    </div>
+  </div>
   </div>
 
   <script>
@@ -386,7 +598,7 @@
     function tick(el, val) {
       if (el.textContent !== val) {
         el.classList.remove('tick');
-        void el.offsetWidth; // reflow
+        void el.offsetWidth;
         el.classList.add('tick');
         el.textContent = val;
       }
@@ -418,33 +630,19 @@
     update();
     setInterval(update, 1000);
 
-    // ── Leaderboards fed by a published Google Sheet ──────────────────────────
-    // Setup (one time, in Google Sheets):
-    //   1. Make a sheet with two tabs, one per leaderboard.
-    //      Each tab: column A = name (e.g. "Class of 2026"), column B = number.
-    //      Cell A1/B1 may be headers ("Class", "Points") — they're skipped.
-    //   2. File → Share → Publish to web → choose the TAB → "Comma-separated
-    //      values (.csv)" → Publish → copy the link.
-    //   3. Paste each tab's link below, and set the titles.
-    // Edits to the sheet appear here automatically (Google caches ~5 min).
-    // Sheet layout (NYFE Spreadsheet):
-    //   Tab "Daily Donors": A = decade/class, B..F = Day 1..Day 5 donor counts.
-    //     The board shows the MOST RECENT day that has any numbers in it.
-    //   Tab "Goal Reached": A = decade/class, D = % participation.
-    //     The board shows only rows at or above 50%.
     var SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhjgD_uP8XuiBcfs2X9_ycHa7E-_BXNH2QiR777Z2Zgo175oz_dHwiYYVSyXbArlAKqL_lrUslr0T/pub?output=csv&single=true';
     var BOARDS = [
       { title: 'Daily Donors',
         url: SHEET + '&gid=0',
-        format: 'plus',          // values render as green "+N"
+        format: 'plus',
         rank: 'number',
-        limit: 10,               // show the top 10 classes
-        mode: 'latest-day' },    // title auto-set from the day column's date header
+        limit: 10,
+        mode: 'latest-day' },
       { title: 'Goal Reached',
         url: SHEET + '&gid=44559502',
-        format: 'percent',       // values render as "N%"
-        rank: 'check',           // green check instead of a rank number
-        theme: 'done',           // green rows: these classes are finished
+        format: 'percent',
+        rank: 'check',
+        theme: 'done',
         mode: 'goal-50' }
     ];
 
@@ -454,9 +652,6 @@
       var hasPct = str.indexOf('%') !== -1;
       var v = parseFloat(str.replace(/[%,$\s]/g, ''));
       if (isNaN(v)) return NaN;
-      // Google publishes percent-formatted cells as decimals: "50%" → 0.5 in CSV.
-      // Treat any value <= 1 as a fraction and scale to a whole percent.
-      // (A literal "100%" publishes as 1, also handled.)
       if (!hasPct && v <= 1) v = v * 100;
       return v;
     }
@@ -464,18 +659,23 @@
     function parseGrid(text) {
       return text.split(/\r?\n/).filter(function (l) { return l.trim(); })
         .map(function (line) {
-          return (line.match(/("([^"]|"")*"|[^,]*)(?=,|$)/g) || [])
-            .map(function (c) { return c.replace(/^"|"$/g, '').replace(/""/g, '"').trim(); });
+          var result = [];
+          var re = /("(?:[^"]|"")*"|[^,]*)(,|$)/g;
+          var m;
+          while ((m = re.exec(line)) !== null) {
+            result.push(m[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim());
+            if (m[2] === '') break;
+          }
+          return result;
         });
     }
 
     function extractRows(grid, board) {
       var rows = [];
       if (board.mode === 'latest-day') {
-        // find the rightmost day column that has any numeric data (skip header row)
         var lastCol = -1;
         grid.forEach(function (cells, rowIdx) {
-          if (rowIdx === 0) return; // header row holds the date labels
+          if (rowIdx === 0) return;
           for (var c = cells.length - 1; c >= 1; c--) {
             if (!isNaN(parseFloat(String(cells[c]).replace(/[%,$\s]/g, '')))) {
               if (c > lastCol) lastCol = c;
@@ -484,8 +684,7 @@
           }
         });
         if (lastCol < 1) return rows;
-        board.dayNumber = lastCol;   // col B=1, C=2, … = how many days are in
-        // Title from that column's header, e.g. "June 25, 2026" → "June 25, 2026 Donors"
+        board.dayNumber = lastCol;
         var header = (grid[0] && grid[0][lastCol] || '').trim();
         if (header) board.dynamicTitle = /donors?$/i.test(header) ? header : header + ' Donors';
         grid.forEach(function (cells, rowIdx) {
@@ -498,7 +697,7 @@
         grid.forEach(function (cells, rowIdx) {
           if (rowIdx === 0) return;
           var label = cells[0];
-          var v = num(cells[3]); // column D: % participation
+          var v = num(cells[3]);
           if (label && !isNaN(v) && v >= 50) rows.push([label, Math.round(v)]);
         });
       }
@@ -522,7 +721,6 @@
         ol.appendChild(empty);
         return;
       }
-      // Donor board: enter in scrambled order, count up, then slide into rank.
       var doReorder = (board.format === 'plus' &&
         !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
         rows.length > 1);
@@ -543,7 +741,6 @@
         }
         var label = document.createElement('span');
         label.className = 'board-label';
-        // Prefix bare class years; leave names like "Avant Garde" as-is
         label.textContent = /^\d{4}$/.test(row[0]) ? 'Class of ' + row[0] : row[0];
         var value = document.createElement('span');
         value.className = 'board-value' + (board.format === 'plus' ? ' plus' : '');
@@ -554,14 +751,12 @@
         } else {
           value.textContent = row[1].toLocaleString();
         }
-        // static (non-reordering) boards mark their leader immediately
         if (idx === 0 && !doReorder) li.classList.add('first');
         li.appendChild(rank); li.appendChild(label); li.appendChild(value);
         ol.appendChild(li);
       });
 
       if (doReorder) {
-        // Sort into rank WHILE the numbers are still counting up — one motion.
         setTimeout(function () { reorderBoard(ol); }, 260);
       }
     }
@@ -573,8 +768,6 @@
       }
     }
 
-    // FLIP reorder: measure, sort by value, animate each row from old → new,
-    // then pulse the new leader red.
     function reorderBoard(ol) {
       var items = Array.prototype.slice.call(ol.children);
       var firstTop = new Map();
@@ -602,20 +795,19 @@
       }, 700);
     }
 
-    // Count a "+N" value up from zero, like a live tally landing.
     function countUp(el, target, idx) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         el.textContent = '+' + target.toLocaleString();
         return;
       }
-      var dur = 1100, delay = 40 * idx; // gentle stagger, overlaps the reorder
+      var dur = 1100, delay = 40 * idx;
       el.textContent = '+0';
       setTimeout(function () {
         var start = null;
         function step(t) {
           if (start === null) start = t;
           var p = Math.min((t - start) / dur, 1);
-          var eased = 1 - Math.pow(1 - p, 3); // ease-out
+          var eased = 1 - Math.pow(1 - p, 3);
           el.textContent = '+' + Math.round(target * eased).toLocaleString();
           if (p < 1) requestAnimationFrame(step);
           else el.textContent = '+' + target.toLocaleString();
@@ -628,26 +820,100 @@
       var titleEl = document.getElementById('board-title-' + i);
       if (titleEl) titleEl.textContent = b.title;
       if (b.url.indexOf('PASTE') !== -1) {
-        renderBoard(i, []); // gid not wired yet → friendly empty state
+        renderBoard(i, []);
         return;
       }
       fetch(b.url + '&t=' + Date.now())
         .then(function (r) { return r.text(); })
         .then(function (text) {
-          var rows = extractRows(parseGrid(text), b);
-          // Daily board retitles itself from the displayed day's column header
-          if (b.dynamicTitle && titleEl) titleEl.textContent = b.dynamicTitle;
-          // "Day N of 5" progress label, derived from filled day columns
-          if (b.mode === 'latest-day' && b.dayNumber) {
-            var prog = document.getElementById('day-progress');
-            if (prog) prog.textContent = 'Day ' + b.dayNumber + ' of 5';
+          if (b.mode === 'latest-day') {
+            var grid = parseGrid(text);
+            var total = 5;
+            var allDays = [];
+            for (var col = 1; col <= total; col++) {
+              var dayRows = [];
+              grid.forEach(function (cells, rowIdx) {
+                if (rowIdx === 0) return;
+                var label = cells[0];
+                var v = parseFloat(String(cells[col] || '').replace(/[,$\s]/g, ''));
+                if (label && !isNaN(v) && v > 0) dayRows.push([label, v]);
+              });
+              allDays.push(dayRows);
+            }
+            // Last day with actual data (for default selection)
+            var lastDay = 0;
+            allDays.forEach(function (rows, idx) {
+              if (rows.length > 0) lastDay = idx + 1;
+            });
+            // During testing: current day = last column that has data
+            var currentDay = lastDay;
+
+            var chips = document.querySelectorAll('#progressbar li');
+            var glider = document.querySelector('.day-glider');
+
+            var dateLabels = [];
+            for (var di = 1; di <= total; di++) {
+              dateLabels.push((grid[0] && grid[0][di] || '').replace(/\s*donors?$/i, '').trim());
+            }
+
+            function setChip(idx) {
+              chips.forEach(function (c) { c.classList.remove('selected'); });
+              chips[idx].classList.add('selected');
+              if (glider) {
+                glider.style.transform = 'translateX(' + (idx * 100) + '%)';
+                glider.style.opacity = '1';
+              }
+              var labelEl = document.getElementById('board-day-label');
+              if (labelEl) labelEl.textContent = dateLabels[idx] || '';
+            }
+
+            function selectDay(idx) {
+              setChip(idx);
+              renderBoard(0, allDays[idx]);
+            }
+
+            function showUnavailable(idx) {
+              setChip(idx);
+              var ol = document.getElementById('board-rows-0');
+              if (!ol) return;
+              ol.innerHTML = '';
+              var item = document.createElement('li');
+              item.className = 'board-unavailable';
+              item.innerHTML =
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="28" height="28" aria-hidden="true">' +
+                  '<path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/>' +
+                '</svg>' +
+                '<span>Not yet available</span>';
+              ol.appendChild(item);
+            }
+
+            chips.forEach(function (li, idx) {
+              if (idx < currentDay) {
+                li.classList.add('active');
+                li.setAttribute('tabindex', '0');
+                li.addEventListener('click', function () { selectDay(idx); });
+                li.addEventListener('keydown', function (e) {
+                  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDay(idx); }
+                });
+              } else {
+                li.addEventListener('click', function () { showUnavailable(idx); });
+              }
+            });
+            if (currentDay > 0) {
+              selectDay(currentDay - 1);
+            } else {
+              renderBoard(0, []);
+            }
+          } else {
+            var rows = extractRows(parseGrid(text), b);
+            if (b.dynamicTitle && titleEl) titleEl.textContent = b.dynamicTitle;
+            renderBoard(i, rows);
           }
-          renderBoard(i, rows);
         })
         .catch(function () { renderBoard(i, []); });
     });
 
-    // ── Animated gold fireworks straddling the white/dark seam ───────────────
+    // ── Animated gold fireworks ───────────────────────────────────────────────
     (function () {
       var canvas = document.getElementById('fireworks');
       if (!canvas) return;
@@ -659,10 +925,9 @@
       var visible = true;
       var nextBurst = 0;
 
-      // Gold and light blue only
       var BLUES = ['#00C1FD', '#5BD7FF', '#9FE9FF', '#7FD4F2'];
       var GOLDS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
-      var SEAM = 0.55; // canvas y-fraction where white meets dark (matches translateY(-55%))
+      var SEAM = 0.55;
 
       function resize() {
         var r = canvas.getBoundingClientRect();
@@ -675,24 +940,22 @@
         scale = scale || 1;
         var count = Math.floor((44 + Math.random() * 28) * scale);
         var r = canvas.getBoundingClientRect();
-        // Even mix of gold and light blue, anywhere
         var palette = (Math.random() < 0.5) ? BLUES : GOLDS;
         var color = palette[Math.floor(Math.random() * palette.length)];
         for (var i = 0; i < count; i++) {
           var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
-          var speed = (0.8 + Math.random() * 2.2) * scale; // smaller burst radius
+          var speed = (0.8 + Math.random() * 2.2) * scale;
           particles.push({
             x: cx, y: cy,
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
             life: 0,
-            ttl: 1600 + Math.random() * 1400, // long-lived, willow-style
+            ttl: 1600 + Math.random() * 1400,
             color: color,
-            size: 1.8 + Math.random() * 1.6,  // fat, juicy sparks
-            trail: []                          // tail of recent positions
+            size: 1.8 + Math.random() * 1.6,
+            trail: []
           });
         }
-        // White-hot core flash at the burst center
         particles.push({ flash: true, x: cx, y: cy, life: 0, ttl: 320, r: 9 * scale });
       }
 
@@ -700,7 +963,7 @@
         var r = canvas.getBoundingClientRect();
         burst(
           r.width * (0.06 + Math.random() * 0.88),
-          r.height * (0.18 + Math.random() * 0.72), // below the heading; margin for spark spread
+          r.height * (0.18 + Math.random() * 0.72),
           1
         );
         nextBurst = now + 1100 + Math.random() * 1900;
@@ -724,7 +987,6 @@
           var fade = 1 - (p.life / p.ttl);
 
           if (p.flash) {
-            // expanding white-hot core that dies fast
             var fr = p.r * (0.6 + 0.8 * (p.life / p.ttl));
             var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, fr);
             g.addColorStop(0, 'rgba(255,255,245,' + (0.95 * fade) + ')');
@@ -741,13 +1003,11 @@
           if (p.trail.length > 24) p.trail.shift();
           p.x += p.vx * dt * 0.06;
           p.y += p.vy * dt * 0.06;
-          p.vy += 0.0017 * dt;          // stronger gravity → drooping willow trails
-          p.vx *= 0.997; p.vy *= 0.997; // more drag → rays slow, then fall
+          p.vy += 0.0017 * dt;
+          p.vx *= 0.997; p.vy *= 0.997;
 
-          // raindrop streak: tapers from a point at the tail
-          // to full width at the head (segment widths ramp up)
           if (p.trail.length > 1) {
-            ctx.globalAlpha = fade; // whole drop shares one opacity
+            ctx.globalAlpha = fade;
             ctx.strokeStyle = p.color;
             ctx.lineCap = 'round';
             var pts = p.trail.concat([{ x: p.x, y: p.y }]);
@@ -795,9 +1055,6 @@
     })();
 
     // ── Report height to parent page for iframe auto-resize ──────────────────
-    // Measure the content element, NOT documentElement.scrollHeight —
-    // scrollHeight is always >= the viewport, so reporting it creates a
-    // feedback loop with the parent's +32px padding (infinite growth).
     var lastHeight = 0;
     function postHeight() {
       var b = document.querySelector('.band');
@@ -820,3 +1077,4 @@
   </script>
 </body>
 </html>
+
