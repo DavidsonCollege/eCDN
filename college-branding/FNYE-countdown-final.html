@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FNYE Countdown</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Archivo:wght@300;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --davidson-red: #D42121;
+      --davidson-black: #0F1012;
+      --night:    #1B2A4A;
+      --gold:     #E3B968;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: transparent;
+      color: var(--davidson-black);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 0.5rem;
+      width: 100%;
+    }
+
+    .heading {
+      font-family: signifier, Georgia, serif;
+      font-size: 2.25rem;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--davidson-black);
+      margin-bottom: clamp(1.25rem, 3.5vw, 2.5rem);
+    }
+
+    .countdown {
+      display: flex;
+      gap: clamp(1rem, 3vw, 2.25rem);
+      align-items: baseline;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .sep {
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(2.4rem, 9vw, 5.4rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--davidson-red);
+      align-self: center;
+      transform: translateY(-0.35em);
+    }
+
+    .unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(0.6rem, 1.5vw, 1rem);
+    }
+
+    .number {
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(4rem, 15vw, 9rem);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      min-width: 2ch;
+      text-align: center;
+      transition: transform 0.1s ease;
+      color: var(--davidson-red);
+    }
+
+    .number.tick { transform: scale(1.04); }
+
+    .label {
+      font-size: clamp(0.85rem, 2.2vw, 1.15rem);
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-indent: 0.3em;
+      text-transform: uppercase;
+      color: var(--night);
+    }
+
+    .message {
+      font-family: 'Great Vibes', Georgia, cursive;
+      font-size: clamp(2.5rem, 7vw, 4rem);
+      color: var(--davidson-red);
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .countdown {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 0.5rem;
+        justify-items: center;
+      }
+      .unit { min-width: 0; gap: 0.35rem; }
+      .sep { display: none; }
+      .heading { margin-bottom: 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .number { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="content">
+    <h2 class="heading" id="heading">You heard that right — we're ringing in the New Year on July 1.</h2>
+    <div class="countdown" id="countdown">
+      <div class="unit">
+        <span class="number" id="days">--</span>
+        <span class="label">Days</span>
+      </div>
+      <span class="sep" aria-hidden="true">:</span>
+      <div class="unit">
+        <span class="number" id="hours">--</span>
+        <span class="label">Hours</span>
+      </div>
+      <span class="sep" aria-hidden="true">:</span>
+      <div class="unit">
+        <span class="number" id="minutes">--</span>
+        <span class="label">Minutes</span>
+      </div>
+      <span class="sep" aria-hidden="true">:</span>
+      <div class="unit">
+        <span class="number" id="seconds">--</span>
+        <span class="label">Seconds</span>
+      </div>
+    </div>
+    <p class="message" id="message">Happy Fiscal New Year!</p>
+  </div>
+
+  <script>
+    const TARGET = new Date('2026-07-01T00:00:00');
+
+    const elDays      = document.getElementById('days');
+    const elHours     = document.getElementById('hours');
+    const elMinutes   = document.getElementById('minutes');
+    const elSeconds   = document.getElementById('seconds');
+    const elMessage   = document.getElementById('message');
+    const elCountdown = document.getElementById('countdown');
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function tick(el, val) {
+      if (el.textContent !== val) {
+        el.classList.remove('tick');
+        void el.offsetWidth;
+        el.classList.add('tick');
+        el.textContent = val;
+      }
+    }
+
+    function update() {
+      const now  = new Date();
+      const diff = TARGET - now;
+
+      if (diff <= 0) {
+        elCountdown.style.display = 'none';
+        document.getElementById('heading').style.display = 'none';
+        elMessage.style.display = 'block';
+        postHeight();
+        return;
+      }
+
+      const totalSec = Math.floor(diff / 1000);
+      const secs  = totalSec % 60;
+      const mins  = Math.floor(totalSec / 60) % 60;
+      const hrs   = Math.floor(totalSec / 3600) % 24;
+      const days  = Math.floor(totalSec / 86400);
+
+      tick(elDays,    pad(days));
+      tick(elHours,   pad(hrs));
+      tick(elMinutes, pad(mins));
+      tick(elSeconds, pad(secs));
+    }
+
+    update();
+    setInterval(update, 1000);
+
+    // Report height to parent for iframe auto-resize
+    var lastHeight = 0;
+    function postHeight() {
+      var h = Math.ceil(document.body.getBoundingClientRect().bottom);
+      if (h !== lastHeight && h > 0) {
+        lastHeight = h;
+        window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
+      }
+    }
+
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(postHeight);
+    }
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(postHeight).observe(document.body);
+    }
+  </script>
+</body>
+</html>

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FNYE Countdown Leaderboard</title>
+  <title>FNYE Leaderboard &amp; Winners Circle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Archivo:wght@300;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo:wght@300;700;800&display=swap" rel="stylesheet">
   <style>
     /* ─────────────────────────────────────────────────────────────────────
        BRAND FONTS — activate ONLY when hosted on a davidson.edu domain.
@@ -52,81 +52,10 @@
       font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
-    .content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 0.5rem;
-      width: 100%;
-    }
-
-    .heading {
-      font-family: signifier, Georgia, serif;
-      font-size: 2.25rem;
-      font-weight: 400;
-      line-height: 1.3;
-      color: var(--davidson-black);
-      margin-bottom: clamp(1.25rem, 3.5vw, 2.5rem);
-    }
-
-    .countdown {
-      display: flex;
-      gap: clamp(1rem, 3vw, 2.25rem);
-      align-items: baseline;
-      justify-content: center;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .sep {
-      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
-      font-size: clamp(2.4rem, 9vw, 5.4rem);
-      font-weight: 300;
-      line-height: 1;
-      color: var(--davidson-red);
-      align-self: center;
-      transform: translateY(-0.35em);
-    }
-
-    .unit {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(0.6rem, 1.5vw, 1rem);
-    }
-
-    .number {
-      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
-      font-size: clamp(4rem, 15vw, 9rem);
-      font-weight: 800;
-      font-variant-numeric: tabular-nums;
-      line-height: 1;
-      min-width: 2ch;
-      text-align: center;
-      transition: transform 0.1s ease;
-      color: var(--davidson-red);
-    }
-
-    .number.tick { transform: scale(1.04); }
-
-    .label {
-      font-size: clamp(0.85rem, 2.2vw, 1.15rem);
-      font-weight: 700;
-      letter-spacing: 0.3em;
-      text-indent: 0.3em;
-      text-transform: uppercase;
-      color: var(--night);
-    }
-
-    .art {
-      display: block;
-      height: auto;
-    }
-
     .band {
       position: relative;
       width: 100%;
-      margin: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(1.5rem, 4vw, 3rem);
+      margin: clamp(2.5rem, 6vw, 4.5rem) 0 0;
       background: #F9F5F2;
     }
 
@@ -238,29 +167,17 @@
     #progressbar li:not(.active):not(.selected):hover { background: rgba(255,255,255,0.7); }
     #progressbar li:not(.active):not(.selected):hover::after { opacity: 0.85; background-color: rgba(15,16,18,0.35); }
     #progressbar li:not(.active).selected::after { opacity: 1; background-color: #ffffff; }
-    #progressbar li.active {
-      color: var(--davidson-black);
-      cursor: pointer;
-    }
+    #progressbar li.active { color: var(--davidson-black); cursor: pointer; }
     #progressbar li.active:not(.selected):hover { background: rgba(255,255,255,0.7); }
     #progressbar li.selected:hover { background: rgba(0,0,0,0.12); }
-    #progressbar li.selected {
-      color: #FFFFFF;
-      text-shadow: none;
-      cursor: default;
-    }
-    #progressbar li:focus-visible {
-      outline: 2px solid var(--night);
-      outline-offset: -3px;
-    }
+    #progressbar li.selected { color: #FFFFFF; text-shadow: none; cursor: default; }
+    #progressbar li:focus-visible { outline: 2px solid var(--night); outline-offset: -3px; }
+
     .day-glider {
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
+      top: 0; left: 0; bottom: 0;
       width: 20%;
       background: var(--davidson-red);
-      box-shadow: none;
       z-index: 1;
       transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
       pointer-events: none;
@@ -273,10 +190,7 @@
       overflow: hidden;
       background: #fff;
     }
-    .board-body--empty {
-      border-color: transparent;
-      background: transparent;
-    }
+    .board-body--empty { border-color: transparent; background: transparent; }
 
     .board-day-label {
       display: block;
@@ -295,36 +209,19 @@
       align-items: center;
       justify-content: center;
       gap: 0.75rem;
-      border: none;
-      border-radius: 0;
       padding: 2.5rem 1rem;
       min-height: 220px;
       font-family: 'Inter', Helvetica, sans-serif;
       font-size: 0.9rem;
       font-style: italic;
       color: rgba(15,16,18,0.4);
-      background: #fff;
       list-style: none;
       box-sizing: border-box;
       background: transparent;
     }
     .board-unavailable svg { flex-shrink: 0; }
 
-    .board {
-      flex: 1 1 0;
-      min-width: 0;
-    }
-
-    .board-title {
-      font-family: 'Nimbus Sans Extended', 'Archivo', 'Helvetica Neue', sans-serif;
-      font-size: clamp(0.8rem, 1.6vw, 0.95rem);
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      text-align: center;
-      color: var(--night);
-      margin-bottom: 0.9rem;
-    }
+    .board { flex: 1 1 0; min-width: 0; }
 
     .board-rows {
       list-style: none;
@@ -341,7 +238,6 @@
       background: transparent;
       border: none;
       border-top: 1px solid rgba(15,16,18,0.1);
-      border-radius: 0;
       padding: 0.9rem 1.25rem;
     }
     .board-row:first-child { border-top: none; }
@@ -377,7 +273,6 @@
       font-size: clamp(1.1rem, 2.3vw, 1.4rem);
       color: var(--davidson-black);
     }
-
     .board-value.plus { color: #15803D; }
 
     .board-value-group {
@@ -396,7 +291,6 @@
     }
     .board-value-group .board-value.plus + .board-unit { color: #15803D; opacity: 0.7; }
     .board--done .board-value-group .board-unit { color: #15803D; opacity: 0.7; }
-
     .board-rank.check { color: #15803D; font-size: 1.2rem; }
 
     .board--done .board-row,
@@ -404,16 +298,13 @@
       background: transparent;
       border: none;
       border-top: 1px solid rgba(15,16,18,0.1);
-      border-radius: 0;
       justify-content: flex-start;
     }
     .board--done .board-row:first-child { border-top: none; }
     .board--done .board-rank { display: none; }
     .board--done .board-value { display: block; color: #15803D; }
 
-    .board-search {
-      margin-top: 0.6rem;
-    }
+    .board-search { margin-top: 0.6rem; }
     .board-search-label {
       display: block;
       font-family: 'Archivo', 'Helvetica Neue', sans-serif;
@@ -458,7 +349,7 @@
       color: var(--davidson-black);
       background: #F9F5F2;
       border: 1px solid var(--davidson-black);
-      padding: 1.25rem 1.25rem;
+      padding: 1.25rem;
       outline: none;
       -webkit-appearance: none;
       appearance: none;
@@ -466,9 +357,7 @@
     }
     .board-search-input::placeholder { color: rgba(15,16,18,0.35); letter-spacing: 0.16em; }
     .board-search-input:focus { border-color: var(--davidson-red); }
-    .board-search-result .board-body {
-      margin-top: 0.4rem;
-    }
+    .board-search-result .board-body { margin-top: 0.4rem; }
     .board-search-result .board-rank {
       display: block;
       font-family: 'Archivo', sans-serif;
@@ -478,7 +367,6 @@
       color: rgba(15,16,18,0.4);
       min-width: 2.5em;
     }
-
     .board-search-none {
       font-family: 'Inter', Helvetica, sans-serif;
       font-size: 0.85rem;
@@ -489,7 +377,6 @@
       border: 1px solid rgba(15,16,18,0.15);
       margin-top: 0.4rem;
     }
-
     .board-empty {
       font-family: 'Inter', Helvetica, sans-serif;
       font-size: 0.9rem;
@@ -498,7 +385,6 @@
       text-align: center;
       padding: 1rem 0.5rem;
     }
-
     .board-updated {
       font-family: 'Inter', Helvetica, sans-serif;
       font-size: 0.75rem;
@@ -506,6 +392,7 @@
       text-align: center;
       margin-top: 1rem;
     }
+    .board-updated:empty { display: none; }
 
     .art-lockup {
       width: 100%;
@@ -516,20 +403,63 @@
 
     .fireworks {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
       z-index: 1;
     }
 
-    .message {
-      font-family: 'Great Vibes', Georgia, cursive;
-      font-size: clamp(2.5rem, 7vw, 4rem);
-      color: var(--davidson-red);
-      display: none;
+    /* ── Winners Circle band ── */
+    .band--alt {
+      background: url('https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png') center/cover no-repeat;
+      padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 5vw, 4rem);
+      width: 100%;
     }
+    .band-float {
+      background: #fff;
+      width: min(88%, 640px);
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 3rem);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.22);
+    }
+    .band-float .band-heading,
+    .band-float .band-intro { text-align: center; }
+    .band-float .board-rows { gap: 0.4rem; min-height: 0; }
+    .band-float .board-body { border: none; background: transparent; overflow: visible; }
+    .band-float .board--done .board-rank {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.4rem;
+      height: 1.4rem;
+      min-width: 1.4rem;
+      background: #15803D;
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 3px;
+    }
+    .band-float .board--done .board-row,
+    .band-float .board--done .board-row.first,
+    .band-float .board--done .board-row:first-child {
+      border: 1px solid rgba(15,16,18,0.15);
+      background: #fff;
+    }
+    .celebrate-btn {
+      display: block;
+      margin: 0.75rem auto 0;
+      background: var(--davidson-red);
+      color: #fff;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: pointer;
+    }
+    .celebrate-btn:hover { background: #B81C1C; }
+    .celebrate-btn:active { transform: scale(0.97); }
 
     @media (max-width: 640px) {
       .band-inner { flex-direction: column; min-height: 0; }
@@ -537,51 +467,10 @@
       .band-text { flex: 0 0 auto; padding: clamp(1.5rem, 5vw, 2.5rem); }
       .band-heading { text-align: center; }
       .boards { flex-direction: column; align-items: stretch; }
-      .countdown {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem 0.5rem;
-        justify-items: center;
-      }
-      .unit { min-width: 0; gap: 0.35rem; }
-      .sep { display: none; }
-      .heading { margin-bottom: 1rem; }
-      .content { padding-top: 0.25rem; }
-      .band { margin-top: 1.75rem; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .number { transition: none; }
     }
   </style>
 </head>
 <body>
-
-  <div class="content">
-    <h2 class="heading" id="heading">You heard that right — we're ringing in the New Year on July 1.</h2>
-    <div class="countdown" id="countdown">
-      <div class="unit">
-        <span class="number" id="days">--</span>
-        <span class="label">Days</span>
-      </div>
-      <span class="sep" aria-hidden="true">:</span>
-      <div class="unit">
-        <span class="number" id="hours">--</span>
-        <span class="label">Hours</span>
-      </div>
-      <span class="sep" aria-hidden="true">:</span>
-      <div class="unit">
-        <span class="number" id="minutes">--</span>
-        <span class="label">Minutes</span>
-      </div>
-      <span class="sep" aria-hidden="true">:</span>
-      <div class="unit">
-        <span class="number" id="seconds">--</span>
-        <span class="label">Seconds</span>
-      </div>
-    </div>
-    <p class="message" id="message">Happy Fiscal New Year!</p>
-  </div>
 
   <div class="band">
     <div class="band-inner">
@@ -619,53 +508,23 @@
     </div>
   </div>
 
+  <div class="band--alt">
+    <div class="band-float">
+      <h2 class="band-heading" id="board-title-1">Winner's Circle</h2>
+      <p class="band-intro">These classes have reached their goal of 50% participation.</p>
+      <div class="boards">
+        <section class="board">
+          <div class="board-body">
+            <ol class="board-rows" id="board-rows-1"></ol>
+          </div>
+        </section>
+      </div>
+      <p class="board-updated" id="board-updated"></p>
+      <button class="celebrate-btn" id="celebrate-btn">🎉 Celebrate!</button>
+    </div>
+  </div>
+
   <script>
-    const TARGET = new Date('2026-07-01T00:00:00');
-
-    const elDays    = document.getElementById('days');
-    const elHours   = document.getElementById('hours');
-    const elMinutes = document.getElementById('minutes');
-    const elSeconds = document.getElementById('seconds');
-    const elMessage = document.getElementById('message');
-    const elCountdown = document.getElementById('countdown');
-
-    function pad(n) { return String(n).padStart(2, '0'); }
-
-    function tick(el, val) {
-      if (el.textContent !== val) {
-        el.classList.remove('tick');
-        void el.offsetWidth;
-        el.classList.add('tick');
-        el.textContent = val;
-      }
-    }
-
-    function update() {
-      const now  = new Date();
-      const diff = TARGET - now;
-
-      if (diff <= 0) {
-        elCountdown.style.display = 'none';
-        document.getElementById('heading').style.display = 'none';
-        elMessage.style.display   = 'block';
-        return;
-      }
-
-      const totalSec = Math.floor(diff / 1000);
-      const secs  = totalSec % 60;
-      const mins  = Math.floor(totalSec / 60) % 60;
-      const hrs   = Math.floor(totalSec / 3600) % 24;
-      const days  = Math.floor(totalSec / 86400);
-
-      tick(elDays,    pad(days));
-      tick(elHours,   pad(hrs));
-      tick(elMinutes, pad(mins));
-      tick(elSeconds, pad(secs));
-    }
-
-    update();
-    setInterval(update, 1000);
-
     var SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhjgD_uP8XuiBcfs2X9_ycHa7E-_BXNH2QiR777Z2Zgo175oz_dHwiYYVSyXbArlAKqL_lrUslr0T/pub?output=csv&single=true';
     var BOARDS = [
       { title: 'Daily Donors',
@@ -673,7 +532,13 @@
         format: 'plus',
         rank: 'number',
         limit: 10,
-        mode: 'latest-day' }
+        mode: 'latest-day' },
+      { title: "Winner's Circle",
+        url: SHEET + '&gid=44559502',
+        format: 'percent',
+        rank: 'check',
+        theme: 'done',
+        mode: 'goal-50' }
     ];
 
     function num(cell) {
@@ -723,6 +588,13 @@
           var v = parseFloat(String(cells[lastCol] || '').replace(/[,$\s]/g, ''));
           if (label && !isNaN(v)) rows.push([label, v]);
         });
+      } else if (board.mode === 'goal-50') {
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return;
+          var label = cells[0];
+          var v = num(cells[3]);
+          if (label && !isNaN(v) && v >= 50) rows.push([label, Math.round(v)]);
+        });
       }
       return rows;
     }
@@ -742,6 +614,7 @@
           ? 'No classes have reached 50% yet — be the first!'
           : 'Standings coming soon!';
         ol.appendChild(empty);
+        postHeight();
         return;
       }
       var doReorder = (board.format === 'plus' &&
@@ -799,6 +672,7 @@
       if (doReorder) {
         setTimeout(function () { reorderBoard(ol); }, 260);
       }
+      postHeight();
     }
 
     function ordinal(n) {
@@ -824,10 +698,8 @@
       var items = Array.prototype.slice.call(ol.children);
       var firstTop = new Map();
       items.forEach(function (li) { firstTop.set(li, li.getBoundingClientRect().top); });
-
       items.sort(function (a, b) { return (+b.dataset.value) - (+a.dataset.value); });
       items.forEach(function (li) { ol.appendChild(li); });
-
       items.forEach(function (li) {
         var dy = firstTop.get(li) - li.getBoundingClientRect().top;
         li.style.transition = 'none';
@@ -839,7 +711,6 @@
           li.style.transform = '';
         });
       });
-
       setTimeout(function () {
         var sorted = Array.prototype.slice.call(ol.children);
         sorted.forEach(function (li) { li.classList.remove('first'); });
@@ -871,21 +742,16 @@
     BOARDS.forEach(function (b, i) {
       var titleEl = document.getElementById('board-title-' + i);
       if (titleEl) titleEl.textContent = b.title;
-      if (b.url.indexOf('PASTE') !== -1) {
-        renderBoard(i, []);
-        return;
-      }
+      if (b.url.indexOf('PASTE') !== -1) { renderBoard(i, []); return; }
       fetch(b.url + '&t=' + Date.now())
         .then(function (r) { return r.text(); })
         .then(function (text) {
           if (b.mode === 'latest-day') {
             var grid = parseGrid(text);
             var total = 5;
-            var allDays = [];
-            var allDaysSearch = [];
+            var allDays = [], allDaysSearch = [];
             for (var col = 1; col <= total; col++) {
-              var dayRows = [];
-              var dayRowsSearch = [];
+              var dayRows = [], dayRowsSearch = [];
               grid.forEach(function (cells, rowIdx) {
                 if (rowIdx === 0) return;
                 var label = cells[0];
@@ -897,14 +763,10 @@
               allDaysSearch.push(dayRowsSearch);
             }
             var lastDay = 0;
-            allDays.forEach(function (rows, idx) {
-              if (rows.length > 0) lastDay = idx + 1;
-            });
+            allDays.forEach(function (rows, idx) { if (rows.length > 0) lastDay = idx + 1; });
             var currentDay = lastDay;
-
             var chips = document.querySelectorAll('#progressbar li');
             var glider = document.querySelector('.day-glider');
-
             var dateLabels = [];
             for (var di = 1; di <= total; di++) {
               dateLabels.push((grid[0] && grid[0][di] || '').replace(/\s*donors?$/i, '').trim());
@@ -961,8 +823,7 @@
               item.innerHTML =
                 '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="28" height="28" aria-hidden="true">' +
                   '<path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/>' +
-                '</svg>' +
-                '<span>Not yet available</span>';
+                '</svg><span>Not yet available</span>';
               ol.appendChild(item);
             }
 
@@ -976,9 +837,7 @@
                 var raw = currentDayAllRows[i][0];
                 var display = /^\d{4}$/.test(raw) ? 'Class of ' + raw : raw;
                 if (display.toLowerCase().includes(query) || raw.toLowerCase().includes(query)) {
-                  found = currentDayAllRows[i];
-                  rank = i + 1;
-                  break;
+                  found = currentDayAllRows[i]; rank = i + 1; break;
                 }
               }
               if (!found) {
@@ -1032,11 +891,7 @@
                 li.addEventListener('click', function () { showUnavailable(idx); });
               }
             });
-            if (currentDay > 0) {
-              selectDay(currentDay - 1);
-            } else {
-              renderBoard(0, []);
-            }
+            if (currentDay > 0) { selectDay(currentDay - 1); } else { renderBoard(0, []); }
           } else {
             var rows = extractRows(parseGrid(text), b);
             if (b.dynamicTitle && titleEl) titleEl.textContent = b.dynamicTitle;
@@ -1053,12 +908,7 @@
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       var ctx = canvas.getContext('2d');
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      var particles = [];
-      var running = false;
-      var visible = true;
-      var nextBurst = 0;
-      var nextGoldBurst = 0;
-
+      var particles = [], running = false, visible = true, nextBurst = 0, nextGoldBurst = 0;
       var REDS  = ['#D42121', '#FF4444', '#FF7A7A', '#B81C1C', '#FF2D2D'];
       var GOLDS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
 
@@ -1077,27 +927,15 @@
         for (var i = 0; i < count; i++) {
           var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
           var speed = (0.8 + Math.random() * 2.2) * scale;
-          particles.push({
-            x: cx, y: cy,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            life: 0,
-            ttl: 1600 + Math.random() * 1400,
-            color: color,
-            size: 1.8 + Math.random() * 1.6,
-            trail: []
-          });
+          particles.push({ x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            life: 0, ttl: 1600 + Math.random() * 1400, color: color, size: 1.8 + Math.random() * 1.6, trail: [] });
         }
         particles.push({ flash: true, x: cx, y: cy, life: 0, ttl: 320, r: 9 * scale });
       }
 
       function randomBurst(now) {
         var r = canvas.getBoundingClientRect();
-        burst(
-          r.width * (0.06 + Math.random() * 0.88),
-          r.height * (0.18 + Math.random() * 0.72),
-          1
-        );
+        burst(r.width * (0.06 + Math.random() * 0.88), r.height * (0.18 + Math.random() * 0.72), 1);
         nextBurst = now + 1100 + Math.random() * 1900;
       }
 
@@ -1106,60 +944,40 @@
         if (!running) return;
         var dt = lastT ? Math.min(now - lastT, 50) : 16;
         lastT = now;
-
         var r = canvas.getBoundingClientRect();
         ctx.clearRect(0, 0, r.width, r.height);
-
         if (now >= nextBurst && particles.length < 450) randomBurst(now);
         if (now >= nextGoldBurst && particles.length < 450) {
           var r2 = canvas.getBoundingClientRect();
-          burst(
-            r2.width * (0.62 + Math.random() * 0.32),
-            r2.height * (0.12 + Math.random() * 0.65),
-            0.6
-          );
+          burst(r2.width * (0.62 + Math.random() * 0.32), r2.height * (0.12 + Math.random() * 0.65), 0.6);
           nextGoldBurst = now + 2800 + Math.random() * 2400;
         }
-
         for (var i = particles.length - 1; i >= 0; i--) {
           var p = particles[i];
           p.life += dt;
           if (p.life >= p.ttl) { particles.splice(i, 1); continue; }
           var fade = 1 - (p.life / p.ttl);
-
           if (p.flash) {
             var fr = p.r * (0.6 + 0.8 * (p.life / p.ttl));
             var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, fr);
             g.addColorStop(0, 'rgba(255,255,245,' + (0.95 * fade) + ')');
             g.addColorStop(1, 'rgba(255,240,200,0)');
-            ctx.globalAlpha = 1;
-            ctx.fillStyle = g;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, fr, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.globalAlpha = 1; ctx.fillStyle = g;
+            ctx.beginPath(); ctx.arc(p.x, p.y, fr, 0, Math.PI * 2); ctx.fill();
             continue;
           }
-
           p.trail.push({ x: p.x, y: p.y });
           if (p.trail.length > 24) p.trail.shift();
-          p.x += p.vx * dt * 0.06;
-          p.y += p.vy * dt * 0.06;
-          p.vy += 0.0017 * dt;
-          p.vx *= 0.997; p.vy *= 0.997;
-
+          p.x += p.vx * dt * 0.06; p.y += p.vy * dt * 0.06;
+          p.vy += 0.0017 * dt; p.vx *= 0.997; p.vy *= 0.997;
           if (p.trail.length > 1) {
-            ctx.globalAlpha = fade;
-            ctx.strokeStyle = p.color;
-            ctx.lineCap = 'round';
+            ctx.globalAlpha = fade; ctx.strokeStyle = p.color; ctx.lineCap = 'round';
             var pts = p.trail.concat([{ x: p.x, y: p.y }]);
             var n = pts.length;
             for (var t = 0; t < n - 1; t += 2) {
               var t2 = Math.min(t + 2, n - 1);
               ctx.lineWidth = Math.max(0.2, p.size * ((t2) / (n - 1)));
-              ctx.beginPath();
-              ctx.moveTo(pts[t].x, pts[t].y);
-              ctx.lineTo(pts[t2].x, pts[t2].y);
-              ctx.stroke();
+              ctx.beginPath(); ctx.moveTo(pts[t].x, pts[t].y); ctx.lineTo(pts[t2].x, pts[t2].y); ctx.stroke();
             }
           }
         }
@@ -1169,8 +987,7 @@
 
       function start() {
         if (running || reduceMotion.matches || !visible || document.hidden) return;
-        running = true;
-        lastT = 0;
+        running = true; lastT = 0;
         nextBurst = performance.now() + 300;
         nextGoldBurst = performance.now() + 600;
         requestAnimationFrame(frame);
@@ -1179,9 +996,7 @@
 
       resize();
       window.addEventListener('resize', resize);
-      document.addEventListener('visibilitychange', function () {
-        document.hidden ? stop() : start();
-      });
+      document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
       if (typeof IntersectionObserver !== 'undefined') {
         new IntersectionObserver(function (entries) {
           visible = entries[0].isIntersecting;
@@ -1189,33 +1004,71 @@
         }).observe(canvas);
       }
       if (reduceMotion.addEventListener) {
-        reduceMotion.addEventListener('change', function () {
-          reduceMotion.matches ? stop() : start();
-        });
+        reduceMotion.addEventListener('change', function () { reduceMotion.matches ? stop() : start(); });
       }
       start();
+    })();
+
+    // ── Confetti burst ───────────────────────────────────────────────────────
+    (function () {
+      var btn = document.getElementById('celebrate-btn');
+      if (!btn) return;
+      var COLORS = ['#D42121','#E3B968','#FFFFFF','#F3C969','#FF4444','#FFE9A8','#B81C1C'];
+      btn.addEventListener('click', function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        var particles = [];
+        for (var i = 0; i < 140; i++) {
+          particles.push({ x: Math.random() * canvas.width, y: -10 - Math.random() * 40,
+            vx: (Math.random() - 0.5) * 5, vy: 1.2 + Math.random() * 2.5,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            w: 7 + Math.random() * 8, h: 4 + Math.random() * 4,
+            rot: Math.random() * Math.PI * 2, rotV: (Math.random() - 0.5) * 0.18,
+            life: 0, ttl: 220 + Math.random() * 100 });
+        }
+        function frame() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          var any = false;
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i]; p.life++;
+            if (p.life >= p.ttl) continue;
+            any = true;
+            p.x += p.vx; p.y += p.vy; p.vy += 0.055; p.rot += p.rotV;
+            var fade = 1 - Math.max(0, (p.life - p.ttl * 0.65) / (p.ttl * 0.35));
+            ctx.globalAlpha = fade; ctx.save();
+            ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          }
+          ctx.globalAlpha = 1;
+          if (any) requestAnimationFrame(frame);
+          else document.body.removeChild(canvas);
+        }
+        requestAnimationFrame(frame);
+      });
     })();
 
     // ── Report height to parent page for iframe auto-resize ──────────────────
     var lastHeight = 0;
     function postHeight() {
-      var b = document.querySelector('.band');
-      var h = Math.ceil(b.getBoundingClientRect().bottom +
-              (parseFloat(getComputedStyle(b).marginBottom) || 0));
+      var h = Math.ceil(document.body.getBoundingClientRect().bottom);
       if (h !== lastHeight && h > 0) {
         lastHeight = h;
-        window.parent.postMessage({ type: 'fnye-countdown-height', height: h }, '*');
+        window.parent.postMessage({ type: 'fnye-leaderboard-height', height: h }, '*');
       }
     }
 
     window.addEventListener('load', postHeight);
     window.addEventListener('resize', postHeight);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(postHeight);
-    }
-    if (typeof ResizeObserver !== 'undefined') {
-      new ResizeObserver(postHeight).observe(document.body);
-    }
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(postHeight); }
+    if (typeof ResizeObserver !== 'undefined') { new ResizeObserver(postHeight).observe(document.body); }
+    var bgImg = new Image();
+    bgImg.src = 'https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png';
+    bgImg.onload = postHeight;
   </script>
 </body>
 </html>
