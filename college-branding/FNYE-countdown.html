@@ -1386,7 +1386,7 @@
       }
     }
 
-    window.addEventListener('load', postHeight);
+    window.addEventListener('load', postHeight); var bgImg = new Image(); bgImg.src = 'https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png'; bgImg.onload = postHeight;
     window.addEventListener('resize', postHeight);
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(postHeight);
