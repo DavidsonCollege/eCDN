@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FNYE Leaderboard &amp; Winners Circle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo:wght@300;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ─────────────────────────────────────────────────────────────────────
+       BRAND FONTS — activate ONLY when hosted on a davidson.edu domain.
+       Klim's web font license is tied to davidson.edu and forbids serving the
+       fonts from other domains (e.g. github.io). On github.io these rules stay
+       commented out and the page uses the Georgia/Archivo fallbacks already in
+       the font stacks — which is fully license-compliant.
+
+       To turn the real fonts on after the file is hosted under davidson.edu:
+         1. Place the foundry-provided WOFF2 files next to this HTML (or at a
+            known path on the Davidson server). WOFF2 ONLY — the license
+            prohibits TTF/OTF/SVG.
+         2. Uncomment the block below and fix the url() paths + family names to
+            match the actual files and the names used in the font stacks
+            ('signifier' and 'Nimbus Sans Extended').
+       No other edits are needed — the stacks already prefer these names.
+
+    @font-face {
+      font-family: 'signifier';
+      src: url('Signifier-Regular.woff2') format('woff2');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Nimbus Sans Extended';
+      src: url('NimbusSansExtended-Bold.woff2') format('woff2');
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+    ───────────────────────────────────────────────────────────────────── */
+
+    :root {
+      --davidson-red: #D42121;
+      --davidson-black: #0F1012;
+      --night:    #1B2A4A;
+      --gold:     #E3B968;
+      --gray-10:  #6A6869;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: transparent;
+      color: var(--davidson-black);
+      font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .band {
+      position: relative;
+      width: 100%;
+      margin: clamp(2.5rem, 6vw, 4.5rem) 0 0;
+      background: #F9F5F2;
+    }
+
+    .band-inner {
+      display: flex;
+      align-items: stretch;
+      min-height: clamp(360px, 50vw, 560px);
+    }
+
+    .band-text {
+      flex: 0 0 50%;
+      padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem) clamp(2rem, 7vw, 7rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .band-figure {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(2rem, 4vw, 3.5rem);
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 80% 30%, rgba(227, 185, 104, 0.12), transparent 55%),
+        linear-gradient(160deg, #16223D 0%, #0C1526 100%);
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0 100%);
+      overflow: hidden;
+    }
+
+    .band-heading {
+      font-family: signifier, Georgia, serif;
+      font-size: 2.25rem;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--davidson-black);
+      text-align: left;
+      margin: 0 0 0.75rem;
+    }
+
+    .band-intro {
+      font-family: 'Nimbus Sans Extended', 'Inter', Helvetica, sans-serif;
+      font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+      color: var(--davidson-black);
+      line-height: 1.6;
+      margin-bottom: clamp(0.75rem, 1.5vw, 1rem);
+    }
+
+    .boards {
+      display: flex;
+      gap: clamp(1rem, 2.5vw, 2rem);
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      margin: 0;
+    }
+
+    #progressbar {
+      display: flex;
+      position: relative;
+      width: 100%;
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0.75rem;
+      background: #F9F5F2;
+      border: 1px solid var(--davidson-black);
+      border-radius: 0;
+      overflow: hidden;
+    }
+    #progressbar li {
+      flex: 1;
+      text-align: center;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--davidson-black);
+      padding: 1.25rem 0.4rem;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      transition: color 0.25s ease, text-shadow 0.25s ease;
+      user-select: none;
+    }
+    #progressbar li:not(.active)::after {
+      content: '';
+      display: inline-block;
+      width: 0.875em;
+      height: 0.875em;
+      margin-left: 0.3em;
+      flex-shrink: 0;
+      background-color: var(--davidson-red);
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill-rule='evenodd' d='M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z' clip-rule='evenodd'/%3E%3C/svg%3E");
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    #progressbar li:not(.active):not(.selected) { cursor: pointer; color: rgba(15,16,18,0.35); }
+    #progressbar li:not(.active):not(.selected):hover { background: rgba(255,255,255,0.7); }
+    #progressbar li:not(.active):not(.selected):hover::after { opacity: 0.85; background-color: rgba(15,16,18,0.35); }
+    #progressbar li:not(.active).selected::after { opacity: 1; background-color: #ffffff; }
+    #progressbar li.active { color: var(--davidson-black); cursor: pointer; }
+    #progressbar li.active:not(.selected):hover { background: rgba(255,255,255,0.7); }
+    #progressbar li.selected:hover { background: rgba(0,0,0,0.12); }
+    #progressbar li.selected { color: #FFFFFF; text-shadow: none; cursor: default; }
+    #progressbar li:focus-visible { outline: 2px solid var(--night); outline-offset: -3px; }
+
+    .day-glider {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 20%;
+      background: var(--davidson-red);
+      z-index: 1;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .board-body {
+      border: 1px solid rgba(15,16,18,0.15);
+      border-radius: 0;
+      overflow: hidden;
+      background: #fff;
+    }
+    .board-body--empty { border-color: transparent; background: transparent; }
+
+    .board-day-label {
+      display: block;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--davidson-black);
+      margin: 0.75rem 0 0.4rem;
+    }
+
+    .board-unavailable {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 2.5rem 1rem;
+      min-height: 220px;
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: rgba(15,16,18,0.4);
+      list-style: none;
+      box-sizing: border-box;
+      background: transparent;
+    }
+    .board-unavailable svg { flex-shrink: 0; }
+
+    .board { flex: 1 1 0; min-width: 0; }
+
+    .board-rows {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-height: 220px;
+    }
+
+    .board-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: transparent;
+      border: none;
+      border-top: 1px solid rgba(15,16,18,0.1);
+      padding: 0.9rem 1.25rem;
+    }
+    .board-row:first-child { border-top: none; }
+
+    .board-rank {
+      display: flex;
+      align-items: center;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: rgba(15,16,18,0.38);
+      min-width: 2.25em;
+      flex-shrink: 0;
+    }
+
+    .board-label {
+      font-family: 'Nimbus Sans Extended', 'Archivo', Helvetica, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--davidson-black);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .board-value {
+      font-family: 'Nimbus Sans Extended', 'Archivo', sans-serif;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(1.1rem, 2.3vw, 1.4rem);
+      color: var(--davidson-black);
+    }
+    .board-value.plus { color: #15803D; }
+
+    .board-value-group {
+      display: flex;
+      align-items: center;
+      gap: 0.3em;
+      flex-shrink: 0;
+    }
+    .board-unit {
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(15,16,18,0.38);
+    }
+    .board-value-group .board-value.plus + .board-unit { color: #15803D; opacity: 0.7; }
+    .board--done .board-value-group .board-unit { color: #15803D; opacity: 0.7; }
+    .board-rank.check { color: #15803D; font-size: 1.2rem; }
+
+    .board--done .board-row,
+    .board--done .board-row.first {
+      background: transparent;
+      border: none;
+      border-top: 1px solid rgba(15,16,18,0.1);
+      justify-content: flex-start;
+    }
+    .board--done .board-row:first-child { border-top: none; }
+    .board--done .board-rank { display: none; }
+    .board--done .board-value { display: block; color: #15803D; }
+
+    .board-search { margin-top: 0.6rem; }
+    .board-search-label {
+      display: block;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--davidson-black);
+      margin: 0.75rem 0 0.4rem;
+    }
+    .board-search-helper {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.72rem;
+      color: rgba(15,16,18,0.45);
+      margin-top: 0.35rem;
+    }
+    .give-now-btn {
+      display: block;
+      width: 100%;
+      background: var(--davidson-red);
+      color: #fff;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      padding: 1.25rem;
+      margin-top: 0.6rem;
+      box-sizing: border-box;
+    }
+    .give-now-btn:hover { background: #B81C1C; }
+    .board-search-input {
+      width: 100%;
+      display: block;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--davidson-black);
+      background: #F9F5F2;
+      border: 1px solid var(--davidson-black);
+      padding: 1.25rem;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+      box-sizing: border-box;
+    }
+    .board-search-input::placeholder { color: rgba(15,16,18,0.35); letter-spacing: 0.16em; }
+    .board-search-input:focus { border-color: var(--davidson-red); }
+    .board-search-result .board-body { margin-top: 0.4rem; }
+    .board-search-result .board-rank {
+      display: block;
+      font-family: 'Archivo', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(15,16,18,0.4);
+      min-width: 2.5em;
+    }
+    .board-search-none {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(15,16,18,0.45);
+      padding: 0.9rem 1.25rem;
+      background: #fff;
+      border: 1px solid rgba(15,16,18,0.15);
+      margin-top: 0.4rem;
+    }
+    .board-empty {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.9rem;
+      font-style: italic;
+      color: rgba(15, 16, 18, 0.5);
+      text-align: center;
+      padding: 1rem 0.5rem;
+    }
+    .board-updated {
+      font-family: 'Inter', Helvetica, sans-serif;
+      font-size: 0.75rem;
+      color: rgba(15, 16, 18, 0.45);
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .board-updated:empty { display: none; }
+
+    .art-lockup {
+      width: 100%;
+      position: relative;
+      z-index: 2;
+      mix-blend-mode: screen;
+    }
+
+    .fireworks {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── Winners Circle band ── */
+    .band--alt {
+      background: url('https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png') center/cover no-repeat;
+      padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 5vw, 4rem);
+      width: 100%;
+    }
+    .band-float {
+      background: #fff;
+      width: min(88%, 640px);
+      margin: 0 auto;
+      padding: clamp(2rem, 4vw, 3rem);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.22);
+    }
+    .band-float .band-heading,
+    .band-float .band-intro { text-align: center; }
+    .band-float .board-rows { gap: 0.4rem; min-height: 0; }
+    .band-float .board-body { border: none; background: transparent; overflow: visible; }
+    .band-float .board--done .board-rank {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.4rem;
+      height: 1.4rem;
+      min-width: 1.4rem;
+      background: #15803D;
+      color: #fff;
+      font-size: 0.85rem;
+      border-radius: 3px;
+    }
+    .band-float .board--done .board-row,
+    .band-float .board--done .board-row.first,
+    .band-float .board--done .board-row:first-child {
+      border: 1px solid rgba(15,16,18,0.15);
+      background: #fff;
+    }
+    .celebrate-btn {
+      display: block;
+      margin: 0.75rem auto 0;
+      background: var(--davidson-red);
+      color: #fff;
+      font-family: 'Archivo', 'Helvetica Neue', sans-serif;
+      font-size: clamp(0.58rem, 1.15vw, 0.72rem);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border: none;
+      cursor: pointer;
+    }
+    .celebrate-btn:hover { background: #B81C1C; }
+    .celebrate-btn:active { transform: scale(0.97); }
+
+    @media (max-width: 640px) {
+      .band-inner { flex-direction: column; min-height: 0; }
+      .band-figure { flex: 0 0 auto; clip-path: none; padding: clamp(1.5rem, 5vw, 2.5rem); min-height: 260px; order: -1; }
+      .band-text { flex: 0 0 auto; padding: clamp(1.5rem, 5vw, 2.5rem); }
+      .band-heading { text-align: center; }
+      .boards { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="band">
+    <div class="band-inner">
+      <article class="band-text">
+        <h2 class="band-heading">Which class is in the lead?</h2>
+        <p class="band-intro">You can still make a difference before Fiscal New Year's Eve. See where your class stands below! 👇</p>
+        <div class="boards">
+          <section class="board">
+            <ul id="progressbar" role="tablist" aria-label="Select day">
+              <li role="tab" tabindex="-1">Day 1</li>
+              <li role="tab" tabindex="-1">Day 2</li>
+              <li role="tab" tabindex="-1">Day 3</li>
+              <li role="tab" tabindex="-1">Day 4</li>
+              <li role="tab" tabindex="-1">Day 5</li>
+              <span class="day-glider" aria-hidden="true"></span>
+            </ul>
+            <p class="board-day-label" id="board-day-label"></p>
+            <div class="board-body">
+              <ol class="board-rows" id="board-rows-0"></ol>
+            </div>
+            <div class="board-search" id="board-search" hidden>
+              <label class="board-search-label" for="board-search-input">Find your class</label>
+              <input type="search" class="board-search-input" id="board-search-input" placeholder="Type your graduation year…" autocomplete="off">
+              <p class="board-search-helper">Your rank and donor count will appear below. Data refreshes daily.</p>
+              <div id="board-search-result" aria-live="polite"></div>
+            </div>
+            <a href="https://community.davidson.edu/gift-form" target="_blank" rel="noopener" class="give-now-btn" id="give-now-btn" hidden>Give Now</a>
+          </section>
+        </div>
+      </article>
+      <figure class="band-figure">
+        <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
+        <img class="art art-lockup" src="NYFE-Lockup.png" alt="The Fiscal New Year" onerror="this.style.display='none'">
+      </figure>
+    </div>
+  </div>
+
+  <div class="band--alt">
+    <div class="band-float">
+      <h2 class="band-heading" id="board-title-1">Winner's Circle</h2>
+      <p class="band-intro">These classes have reached their goal of 50% participation.</p>
+      <div class="boards">
+        <section class="board">
+          <div class="board-body">
+            <ol class="board-rows" id="board-rows-1"></ol>
+          </div>
+        </section>
+      </div>
+      <p class="board-updated" id="board-updated"></p>
+      <button class="celebrate-btn" id="celebrate-btn">🎉 Celebrate!</button>
+    </div>
+  </div>
+
+  <script>
+    var SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhjgD_uP8XuiBcfs2X9_ycHa7E-_BXNH2QiR777Z2Zgo175oz_dHwiYYVSyXbArlAKqL_lrUslr0T/pub?output=csv&single=true';
+    var BOARDS = [
+      { title: 'Daily Donors',
+        url: SHEET + '&gid=0',
+        format: 'plus',
+        rank: 'number',
+        limit: 10,
+        mode: 'latest-day' },
+      { title: "Winner's Circle",
+        url: SHEET + '&gid=44559502',
+        format: 'percent',
+        rank: 'check',
+        theme: 'done',
+        mode: 'goal-50' }
+    ];
+
+    function num(cell) {
+      var str = String(cell == null ? '' : cell).replace(/^"|"$/g, '').trim();
+      if (!str) return NaN;
+      var hasPct = str.indexOf('%') !== -1;
+      var v = parseFloat(str.replace(/[%,$\s]/g, ''));
+      if (isNaN(v)) return NaN;
+      if (!hasPct && v <= 1) v = v * 100;
+      return v;
+    }
+
+    function parseGrid(text) {
+      return text.split(/\r?\n/).filter(function (l) { return l.trim(); })
+        .map(function (line) {
+          var result = [];
+          var re = /("(?:[^"]|"")*"|[^,]*)(,|$)/g;
+          var m;
+          while ((m = re.exec(line)) !== null) {
+            result.push(m[1].replace(/^"|"$/g, '').replace(/""/g, '"').trim());
+            if (m[2] === '') break;
+          }
+          return result;
+        });
+    }
+
+    function extractRows(grid, board) {
+      var rows = [];
+      if (board.mode === 'latest-day') {
+        var lastCol = -1;
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return;
+          for (var c = cells.length - 1; c >= 1; c--) {
+            if (!isNaN(parseFloat(String(cells[c]).replace(/[%,$\s]/g, '')))) {
+              if (c > lastCol) lastCol = c;
+              break;
+            }
+          }
+        });
+        if (lastCol < 1) return rows;
+        board.dayNumber = lastCol;
+        var header = (grid[0] && grid[0][lastCol] || '').trim();
+        if (header) board.dynamicTitle = /donors?$/i.test(header) ? header : header + ' Donors';
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return;
+          var label = cells[0];
+          var v = parseFloat(String(cells[lastCol] || '').replace(/[,$\s]/g, ''));
+          if (label && !isNaN(v)) rows.push([label, v]);
+        });
+      } else if (board.mode === 'goal-50') {
+        grid.forEach(function (cells, rowIdx) {
+          if (rowIdx === 0) return;
+          var label = cells[0];
+          var v = num(cells[3]);
+          if (label && !isNaN(v) && v >= 50) rows.push([label, Math.round(v)]);
+        });
+      }
+      return rows;
+    }
+
+    function renderBoard(i, rows) {
+      var board = BOARDS[i];
+      var ol = document.getElementById('board-rows-' + i);
+      if (!ol) return;
+      if (board.theme === 'done') ol.closest('.board').classList.add('board--done');
+      rows.sort(tiebreakerSort);
+      if (board.limit) rows = rows.slice(0, board.limit);
+      ol.innerHTML = '';
+      if (!rows.length) {
+        var empty = document.createElement('li');
+        empty.className = 'board-empty';
+        empty.textContent = board.mode === 'goal-50'
+          ? 'No classes have reached 50% yet — be the first!'
+          : 'Standings coming soon!';
+        ol.appendChild(empty);
+        postHeight();
+        return;
+      }
+      var doReorder = (board.format === 'plus' &&
+        !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+        rows.length > 1);
+      var sortedRows = rows.slice();
+      var displayRows = rows.slice();
+      if (doReorder) shuffle(displayRows);
+
+      displayRows.forEach(function (row, idx) {
+        var li = document.createElement('li');
+        li.className = 'board-row';
+        li.dataset.value = row[1];
+        var rankEl = document.createElement('span');
+        if (board.rank === 'check') {
+          rankEl.className = 'board-rank check';
+          rankEl.textContent = '\u2713';
+        } else {
+          var trueRank = sortedRows.indexOf(row) + 1;
+          rankEl.className = 'board-rank';
+          rankEl.textContent = ordinal(trueRank);
+        }
+        var label = document.createElement('span');
+        label.className = 'board-label';
+        label.textContent = /^\d{4}$/.test(row[0]) ? 'Class of ' + row[0] : row[0];
+        var value = document.createElement('span');
+        value.className = 'board-value' + (board.format === 'plus' ? ' plus' : '');
+        if (board.format === 'plus') {
+          countUp(value, row[1], idx);
+        } else if (board.format === 'percent') {
+          value.textContent = row[1] + '%';
+        } else {
+          value.textContent = row[1].toLocaleString();
+        }
+        var valueGroup = document.createElement('span');
+        valueGroup.className = 'board-value-group';
+        valueGroup.appendChild(value);
+        if (board.format === 'plus') {
+          var unit = document.createElement('span');
+          unit.className = 'board-unit';
+          unit.textContent = 'donors';
+          valueGroup.appendChild(unit);
+        }
+        if (board.format === 'percent') {
+          var unit = document.createElement('span');
+          unit.className = 'board-unit';
+          unit.textContent = 'participation';
+          valueGroup.appendChild(unit);
+        }
+        if (idx === 0 && !doReorder) li.classList.add('first');
+        li.appendChild(rankEl); li.appendChild(label); li.appendChild(valueGroup);
+        ol.appendChild(li);
+      });
+
+      if (doReorder) {
+        setTimeout(function () { reorderBoard(ol); }, 260);
+      }
+      postHeight();
+    }
+
+    function ordinal(n) {
+      var s = ['th','st','nd','rd'], v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    }
+
+    function tiebreakerSort(a, b) {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      var aYear = parseInt(a[0]), bYear = parseInt(b[0]);
+      if (!isNaN(aYear) && !isNaN(bYear)) return aYear - bYear;
+      return a[0].localeCompare(b[0]);
+    }
+
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+    }
+
+    function reorderBoard(ol) {
+      var items = Array.prototype.slice.call(ol.children);
+      var firstTop = new Map();
+      items.forEach(function (li) { firstTop.set(li, li.getBoundingClientRect().top); });
+      items.sort(function (a, b) { return (+b.dataset.value) - (+a.dataset.value); });
+      items.forEach(function (li) { ol.appendChild(li); });
+      items.forEach(function (li) {
+        var dy = firstTop.get(li) - li.getBoundingClientRect().top;
+        li.style.transition = 'none';
+        li.style.transform = 'translateY(' + dy + 'px)';
+      });
+      requestAnimationFrame(function () {
+        items.forEach(function (li) {
+          li.style.transition = 'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)';
+          li.style.transform = '';
+        });
+      });
+      setTimeout(function () {
+        var sorted = Array.prototype.slice.call(ol.children);
+        sorted.forEach(function (li) { li.classList.remove('first'); });
+        if (sorted[0]) sorted[0].classList.add('first');
+      }, 700);
+    }
+
+    function countUp(el, target, idx) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = '+' + target.toLocaleString();
+        return;
+      }
+      var dur = 1100, delay = 40 * idx;
+      el.textContent = '+0';
+      setTimeout(function () {
+        var start = null;
+        function step(t) {
+          if (start === null) start = t;
+          var p = Math.min((t - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = '+' + Math.round(target * eased).toLocaleString();
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = '+' + target.toLocaleString();
+        }
+        requestAnimationFrame(step);
+      }, delay);
+    }
+
+    BOARDS.forEach(function (b, i) {
+      var titleEl = document.getElementById('board-title-' + i);
+      if (titleEl) titleEl.textContent = b.title;
+      if (b.url.indexOf('PASTE') !== -1) { renderBoard(i, []); return; }
+      fetch(b.url + '&t=' + Date.now())
+        .then(function (r) { return r.text(); })
+        .then(function (text) {
+          if (b.mode === 'latest-day') {
+            var grid = parseGrid(text);
+            var total = 5;
+            var allDays = [], allDaysSearch = [];
+            for (var col = 1; col <= total; col++) {
+              var dayRows = [], dayRowsSearch = [];
+              grid.forEach(function (cells, rowIdx) {
+                if (rowIdx === 0) return;
+                var label = cells[0];
+                var v = parseFloat(String(cells[col] || '').replace(/[,$\s]/g, ''));
+                if (label && !isNaN(v) && v > 0) dayRows.push([label, v]);
+                if (label) dayRowsSearch.push([label, isNaN(v) ? 0 : v]);
+              });
+              allDays.push(dayRows);
+              allDaysSearch.push(dayRowsSearch);
+            }
+            var lastDay = 0;
+            allDays.forEach(function (rows, idx) { if (rows.length > 0) lastDay = idx + 1; });
+            var currentDay = lastDay;
+            var chips = document.querySelectorAll('#progressbar li');
+            var glider = document.querySelector('.day-glider');
+            var dateLabels = [];
+            for (var di = 1; di <= total; di++) {
+              dateLabels.push((grid[0] && grid[0][di] || '').replace(/\s*donors?$/i, '').trim());
+            }
+
+            function setChip(idx) {
+              chips.forEach(function (c) { c.classList.remove('selected'); });
+              chips[idx].classList.add('selected');
+              if (glider) {
+                glider.style.transform = 'translateX(' + (idx * 100) + '%)';
+                glider.style.opacity = '1';
+              }
+              var labelEl = document.getElementById('board-day-label');
+              if (labelEl) labelEl.textContent = (dateLabels[idx] ? dateLabels[idx] + ' Leaderboard' : '');
+            }
+
+            var currentDayAllRows = [];
+
+            function clearSearch() {
+              var si = document.getElementById('board-search-input');
+              var sr = document.getElementById('board-search-result');
+              if (si) si.value = '';
+              if (sr) sr.innerHTML = '';
+            }
+
+            function selectDay(idx) {
+              setChip(idx);
+              var body = document.querySelector('#board-rows-0')?.closest('.board-body');
+              if (body) body.classList.remove('board-body--empty');
+              currentDayAllRows = allDaysSearch[idx].slice().sort(tiebreakerSort);
+              clearSearch();
+              var search = document.getElementById('board-search');
+              if (search) search.hidden = false;
+              var giveBtn = document.getElementById('give-now-btn');
+              if (giveBtn) giveBtn.hidden = false;
+              renderBoard(0, allDays[idx]);
+            }
+
+            function showUnavailable(idx) {
+              setChip(idx);
+              currentDayAllRows = [];
+              clearSearch();
+              var search = document.getElementById('board-search');
+              if (search) search.hidden = true;
+              var giveBtn = document.getElementById('give-now-btn');
+              if (giveBtn) giveBtn.hidden = true;
+              var ol = document.getElementById('board-rows-0');
+              if (!ol) return;
+              var body = ol.closest('.board-body');
+              if (body) body.classList.add('board-body--empty');
+              ol.innerHTML = '';
+              var item = document.createElement('li');
+              item.className = 'board-unavailable';
+              item.innerHTML =
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="28" height="28" aria-hidden="true">' +
+                  '<path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/>' +
+                '</svg><span>Not yet available</span>';
+              ol.appendChild(item);
+            }
+
+            document.getElementById('board-search-input').addEventListener('input', function () {
+              var query = this.value.trim().toLowerCase();
+              var resultEl = document.getElementById('board-search-result');
+              resultEl.innerHTML = '';
+              if (!query) return;
+              var found = null, rank = 0;
+              for (var i = 0; i < currentDayAllRows.length; i++) {
+                var raw = currentDayAllRows[i][0];
+                var display = /^\d{4}$/.test(raw) ? 'Class of ' + raw : raw;
+                if (display.toLowerCase().includes(query) || raw.toLowerCase().includes(query)) {
+                  found = currentDayAllRows[i]; rank = i + 1; break;
+                }
+              }
+              if (!found) {
+                resultEl.innerHTML = '<p class="board-search-none">No class found for "' + query + '"</p>';
+                return;
+              }
+              var displayLabel = /^\d{4}$/.test(found[0]) ? 'Class of ' + found[0] : found[0];
+              var li = document.createElement('li');
+              li.className = 'board-row';
+              li.style.cssText = 'list-style:none';
+              var rankEl = document.createElement('span');
+              rankEl.className = 'board-rank';
+              rankEl.textContent = ordinal(rank);
+              var labelEl = document.createElement('span');
+              labelEl.className = 'board-label';
+              labelEl.textContent = displayLabel;
+              var valueEl = document.createElement('span');
+              if (found[1] === 0) {
+                valueEl.className = 'board-value';
+                valueEl.style.color = 'rgba(15,16,18,0.35)';
+                valueEl.textContent = '0';
+              } else {
+                valueEl.className = 'board-value plus';
+                valueEl.textContent = '+' + found[1].toLocaleString();
+              }
+              var valueGroupEl = document.createElement('span');
+              valueGroupEl.className = 'board-value-group';
+              valueGroupEl.appendChild(valueEl);
+              if (found[1] !== 0) {
+                var unitEl = document.createElement('span');
+                unitEl.className = 'board-unit';
+                unitEl.textContent = 'donors';
+                valueGroupEl.appendChild(unitEl);
+              }
+              li.appendChild(rankEl); li.appendChild(labelEl); li.appendChild(valueGroupEl);
+              var wrap = document.createElement('div');
+              wrap.className = 'board-body';
+              wrap.appendChild(li);
+              resultEl.appendChild(wrap);
+            });
+
+            chips.forEach(function (li, idx) {
+              if (idx < currentDay) {
+                li.classList.add('active');
+                li.setAttribute('tabindex', '0');
+                li.addEventListener('click', function () { selectDay(idx); });
+                li.addEventListener('keydown', function (e) {
+                  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDay(idx); }
+                });
+              } else {
+                li.addEventListener('click', function () { showUnavailable(idx); });
+              }
+            });
+            if (currentDay > 0) { selectDay(currentDay - 1); } else { renderBoard(0, []); }
+          } else {
+            var rows = extractRows(parseGrid(text), b);
+            if (b.dynamicTitle && titleEl) titleEl.textContent = b.dynamicTitle;
+            renderBoard(i, rows);
+          }
+        })
+        .catch(function () { renderBoard(i, []); });
+    });
+
+    // ── Animated gold fireworks ───────────────────────────────────────────────
+    (function () {
+      var canvas = document.getElementById('fireworks');
+      if (!canvas) return;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      var ctx = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var particles = [], running = false, visible = true, nextBurst = 0, nextGoldBurst = 0;
+      var REDS  = ['#D42121', '#FF4444', '#FF7A7A', '#B81C1C', '#FF2D2D'];
+      var GOLDS = ['#FFE9A8', '#F3C969', '#E3B968', '#FFF6DC', '#D9A441'];
+
+      function resize() {
+        var r = canvas.getBoundingClientRect();
+        canvas.width  = Math.floor(r.width * dpr);
+        canvas.height = Math.floor(r.height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function burst(cx, cy, scale) {
+        scale = scale || 1;
+        var count = Math.floor((44 + Math.random() * 28) * scale);
+        var palette = (Math.random() < 0.5) ? REDS : GOLDS;
+        var color = palette[Math.floor(Math.random() * palette.length)];
+        for (var i = 0; i < count; i++) {
+          var angle = (Math.PI * 2 * i) / count + Math.random() * 0.2;
+          var speed = (0.8 + Math.random() * 2.2) * scale;
+          particles.push({ x: cx, y: cy, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            life: 0, ttl: 1600 + Math.random() * 1400, color: color, size: 1.8 + Math.random() * 1.6, trail: [] });
+        }
+        particles.push({ flash: true, x: cx, y: cy, life: 0, ttl: 320, r: 9 * scale });
+      }
+
+      function randomBurst(now) {
+        var r = canvas.getBoundingClientRect();
+        burst(r.width * (0.06 + Math.random() * 0.88), r.height * (0.18 + Math.random() * 0.72), 1);
+        nextBurst = now + 1100 + Math.random() * 1900;
+      }
+
+      var lastT = 0;
+      function frame(now) {
+        if (!running) return;
+        var dt = lastT ? Math.min(now - lastT, 50) : 16;
+        lastT = now;
+        var r = canvas.getBoundingClientRect();
+        ctx.clearRect(0, 0, r.width, r.height);
+        if (now >= nextBurst && particles.length < 450) randomBurst(now);
+        if (now >= nextGoldBurst && particles.length < 450) {
+          var r2 = canvas.getBoundingClientRect();
+          burst(r2.width * (0.62 + Math.random() * 0.32), r2.height * (0.12 + Math.random() * 0.65), 0.6);
+          nextGoldBurst = now + 2800 + Math.random() * 2400;
+        }
+        for (var i = particles.length - 1; i >= 0; i--) {
+          var p = particles[i];
+          p.life += dt;
+          if (p.life >= p.ttl) { particles.splice(i, 1); continue; }
+          var fade = 1 - (p.life / p.ttl);
+          if (p.flash) {
+            var fr = p.r * (0.6 + 0.8 * (p.life / p.ttl));
+            var g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, fr);
+            g.addColorStop(0, 'rgba(255,255,245,' + (0.95 * fade) + ')');
+            g.addColorStop(1, 'rgba(255,240,200,0)');
+            ctx.globalAlpha = 1; ctx.fillStyle = g;
+            ctx.beginPath(); ctx.arc(p.x, p.y, fr, 0, Math.PI * 2); ctx.fill();
+            continue;
+          }
+          p.trail.push({ x: p.x, y: p.y });
+          if (p.trail.length > 24) p.trail.shift();
+          p.x += p.vx * dt * 0.06; p.y += p.vy * dt * 0.06;
+          p.vy += 0.0017 * dt; p.vx *= 0.997; p.vy *= 0.997;
+          if (p.trail.length > 1) {
+            ctx.globalAlpha = fade; ctx.strokeStyle = p.color; ctx.lineCap = 'round';
+            var pts = p.trail.concat([{ x: p.x, y: p.y }]);
+            var n = pts.length;
+            for (var t = 0; t < n - 1; t += 2) {
+              var t2 = Math.min(t + 2, n - 1);
+              ctx.lineWidth = Math.max(0.2, p.size * ((t2) / (n - 1)));
+              ctx.beginPath(); ctx.moveTo(pts[t].x, pts[t].y); ctx.lineTo(pts[t2].x, pts[t2].y); ctx.stroke();
+            }
+          }
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(frame);
+      }
+
+      function start() {
+        if (running || reduceMotion.matches || !visible || document.hidden) return;
+        running = true; lastT = 0;
+        nextBurst = performance.now() + 300;
+        nextGoldBurst = performance.now() + 600;
+        requestAnimationFrame(frame);
+      }
+      function stop() { running = false; }
+
+      resize();
+      window.addEventListener('resize', resize);
+      document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+      if (typeof IntersectionObserver !== 'undefined') {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+          visible ? start() : stop();
+        }).observe(canvas);
+      }
+      if (reduceMotion.addEventListener) {
+        reduceMotion.addEventListener('change', function () { reduceMotion.matches ? stop() : start(); });
+      }
+      start();
+    })();
+
+    // ── Confetti burst ───────────────────────────────────────────────────────
+    (function () {
+      var btn = document.getElementById('celebrate-btn');
+      if (!btn) return;
+      var COLORS = ['#D42121','#E3B968','#FFFFFF','#F3C969','#FF4444','#FFE9A8','#B81C1C'];
+      btn.addEventListener('click', function () {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        var particles = [];
+        for (var i = 0; i < 140; i++) {
+          particles.push({ x: Math.random() * canvas.width, y: -10 - Math.random() * 40,
+            vx: (Math.random() - 0.5) * 5, vy: 1.2 + Math.random() * 2.5,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            w: 7 + Math.random() * 8, h: 4 + Math.random() * 4,
+            rot: Math.random() * Math.PI * 2, rotV: (Math.random() - 0.5) * 0.18,
+            life: 0, ttl: 220 + Math.random() * 100 });
+        }
+        function frame() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          var any = false;
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i]; p.life++;
+            if (p.life >= p.ttl) continue;
+            any = true;
+            p.x += p.vx; p.y += p.vy; p.vy += 0.055; p.rot += p.rotV;
+            var fade = 1 - Math.max(0, (p.life - p.ttl * 0.65) / (p.ttl * 0.35));
+            ctx.globalAlpha = fade; ctx.save();
+            ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+            ctx.fillStyle = p.color; ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+          }
+          ctx.globalAlpha = 1;
+          if (any) requestAnimationFrame(frame);
+          else document.body.removeChild(canvas);
+        }
+        requestAnimationFrame(frame);
+      });
+    })();
+
+    // ── Report height to parent page for iframe auto-resize ──────────────────
+    var lastHeight = 0;
+    function postHeight() {
+      var h = Math.ceil(document.body.getBoundingClientRect().bottom);
+      if (h !== lastHeight && h > 0) {
+        lastHeight = h;
+        window.parent.postMessage({ type: 'fnye-leaderboard-height', height: h }, '*');
+      }
+    }
+
+    window.addEventListener('load', postHeight);
+    window.addEventListener('resize', postHeight);
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(postHeight); }
+    if (typeof ResizeObserver !== 'undefined') { new ResizeObserver(postHeight).observe(document.body); }
+    var bgImg = new Image();
+    bgImg.src = 'https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png';
+    bgImg.onload = postHeight;
+  </script>
+</body>
+</html>
