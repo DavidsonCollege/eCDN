@@ -592,7 +592,7 @@
         grid.forEach(function (cells, rowIdx) {
           if (rowIdx === 0) return;
           var label = cells[0];
-          var v = num(cells[3]);
+          var v = num(cells[1]);
           if (label && !isNaN(v) && v >= 50) rows.push([label, Math.round(v)]);
         });
       }
