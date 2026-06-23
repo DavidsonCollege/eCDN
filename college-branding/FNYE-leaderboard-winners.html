@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo:wght@300;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited_0.png">
   <style>
     /* ─────────────────────────────────────────────────────────────────────
        BRAND FONTS — activate ONLY when hosted on a davidson.edu domain.
@@ -418,6 +419,7 @@
       background: #fff;
       width: 100%;
       display: flex;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
       gap: 1.5rem 2.5rem;
@@ -435,16 +437,16 @@
     }
     .band-cta-text {
       font-family: signifier, Georgia, serif;
-      font-size: 2.25rem;
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
       font-weight: 400;
-      line-height: 1.3;
+      line-height: 1.2;
       color: var(--davidson-black);
-      max-width: 360px;
+      max-width: 480px;
       text-align: left;
     }
 
     .band--alt {
-      background: url('https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png') center/cover no-repeat;
+      background: url('https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited_0.png') center/cover no-repeat;
       padding: clamp(4rem, 8vw, 7rem) clamp(2rem, 5vw, 4rem);
       width: 100%;
     }
@@ -462,12 +464,6 @@
       padding: 0;
       box-shadow: 0 8px 48px rgba(0,0,0,0.22);
       overflow: hidden;
-    }
-    .section-divider {
-      border: none;
-      border-left: 1px solid rgba(15,16,18,0.12);
-      margin: 0 clamp(1rem, 2vw, 1.5rem);
-      align-self: stretch;
     }
     .band-float-columns {
       display: flex;
@@ -509,17 +505,6 @@
       border-top: 1px solid rgba(15,16,18,0.1);
     }
     .board-body--leaderboard .board-row:first-child { border-top: none; }
-    .band-float--blue {
-      background: #294878;
-    }
-    .band-float--blue .band-heading,
-    .band-float--blue .band-intro,
-    .band-float--blue .board-label,
-    .band-float--blue .board-value,
-    .band-float--blue .board-rank { color: #fff; }
-    .band-float--blue .board-row { border-top-color: rgba(255,255,255,0.15); }
-    .band-float--blue .board-body { background: transparent; border-color: rgba(255,255,255,0.15); }
-    .band-float--blue #board-rows-2 .board-value { background: rgba(255,255,255,0.15); color: #fff; }
     .band-float .band-heading,
     .band-float .band-intro { text-align: center; }
     .band-float .board-rows { gap: 0.4rem; min-height: 0; }
@@ -626,7 +611,7 @@
 
   <div class="band--cta">
     <span class="band-cta-number">1,526</span>
-    <span class="band-cta-text">more donors needed to reach Davidson's participation goal!</span>
+    <span class="band-cta-text">more donors needed to reach Davidson's participation&nbsp;goal!</span>
   </div>
 
   <div class="band--alt">
@@ -642,7 +627,6 @@
               </div>
             </section>
           </div>
-          <p class="board-updated" id="board-updated"></p>
           <button class="celebrate-btn" id="celebrate-btn">🎉 Celebrate!</button>
         </div>
         <div class="band-float-col band-float-col--muted">
@@ -769,7 +753,7 @@
       if (!rows.length) {
         var empty = document.createElement('li');
         empty.className = 'board-empty';
-        empty.textContent = board.mode === 'goal-50'
+        empty.textContent = board.mode === 'goal-yes'
           ? 'Nobody has reached their goal yet. Be the first!'
           : 'Standings coming soon!';
         ol.appendChild(empty);
@@ -856,44 +840,6 @@
         var j = Math.floor(Math.random() * (i + 1));
         var t = a[i]; a[i] = a[j]; a[j] = t;
       }
-    }
-
-    function topTwoShuffle(ol) {
-      var items = Array.prototype.slice.call(ol.children);
-      if (items.length < 2) return;
-
-      var pos0 = items[0].getBoundingClientRect().top;
-      var pos1 = items[1].getBoundingClientRect().top;
-
-      ol.insertBefore(items[1], items[0]);
-
-      var dy1 = pos1 - items[1].getBoundingClientRect().top;
-      var dy0 = pos0 - items[0].getBoundingClientRect().top;
-      items[1].style.transition = 'none'; items[1].style.transform = 'translateY(' + dy1 + 'px)';
-      items[0].style.transition = 'none'; items[0].style.transform = 'translateY(' + dy0 + 'px)';
-
-      requestAnimationFrame(function () {
-        items[1].style.transition = 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)';
-        items[1].style.transform = '';
-        items[0].style.transition = 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)';
-        items[0].style.transform = '';
-      });
-
-      setTimeout(function () {
-        var cur1 = items[1].getBoundingClientRect().top;
-        var cur0 = items[0].getBoundingClientRect().top;
-        ol.insertBefore(items[0], items[1]);
-        var newDy0 = cur0 - items[0].getBoundingClientRect().top;
-        var newDy1 = cur1 - items[1].getBoundingClientRect().top;
-        items[0].style.transition = 'none'; items[0].style.transform = 'translateY(' + newDy0 + 'px)';
-        items[1].style.transition = 'none'; items[1].style.transform = 'translateY(' + newDy1 + 'px)';
-        requestAnimationFrame(function () {
-          items[0].style.transition = 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)';
-          items[0].style.transform = '';
-          items[1].style.transition = 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)';
-          items[1].style.transform = '';
-        });
-      }, 900);
     }
 
     function reorderBoard(ol) {
@@ -1282,10 +1228,9 @@
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(postHeight); }
     if (typeof ResizeObserver !== 'undefined') { new ResizeObserver(postHeight).observe(document.body); }
     var bgImg = new Image();
-    bgImg.src = 'https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited.png';
+    bgImg.src = 'https://www.davidson.edu/sites/default/files/2026-06/reunion_0053-edited_0.png';
     bgImg.onload = postHeight;
   </script>
 
 </body>
 </html>
-
