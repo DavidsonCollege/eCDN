@@ -674,7 +674,21 @@
           var n = parseInt(String(rows[0][0]).replace(/[^0-9]/g, ''));
           if (!isNaN(n)) {
             var el = document.querySelector('.band-cta-number');
-            if (el) el.textContent = n.toLocaleString();
+            if (!el) return;
+            var start = parseInt(el.textContent.replace(/[^0-9]/g, '')) || n;
+            if (start === n) { el.textContent = n.toLocaleString(); return; }
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+              el.textContent = n.toLocaleString(); return;
+            }
+            var dur = 900, startTime = null;
+            function step(t) {
+              if (!startTime) startTime = t;
+              var p = Math.min((t - startTime) / dur, 1);
+              var eased = 1 - Math.pow(1 - p, 3);
+              el.textContent = Math.round(start + (n - start) * eased).toLocaleString();
+              if (p < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
           }
         }
       })
@@ -1266,4 +1280,3 @@
 
 </body>
 </html>
-
