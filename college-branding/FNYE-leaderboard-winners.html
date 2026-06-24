@@ -665,6 +665,20 @@
 
   <script>
     var SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQLhjgD_uP8XuiBcfs2X9_ycHa7E-_BXNH2QiR777Z2Zgo175oz_dHwiYYVSyXbArlAKqL_lrUslr0T/pub?output=csv&single=true';
+
+    fetch(SHEET + '&gid=1499907891&t=' + Date.now())
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var rows = parseGrid(text);
+        if (rows[0] && rows[0][0]) {
+          var n = parseInt(String(rows[0][0]).replace(/[^0-9]/g, ''));
+          if (!isNaN(n)) {
+            var el = document.querySelector('.band-cta-number');
+            if (el) el.textContent = n.toLocaleString();
+          }
+        }
+      })
+      .catch(function() {});
     var BOARDS = [
       { title: 'Daily Participation',
         url: SHEET + '&gid=0',
