@@ -167,9 +167,10 @@
       const diff = TARGET - now;
 
       if (diff <= 0) {
-        elCountdown.style.display = 'none';
-        document.getElementById('heading').style.display = 'none';
-        elMessage.style.display = 'block';
+        tick(elDays,    '00');
+        tick(elHours,   '00');
+        tick(elMinutes, '00');
+        tick(elSeconds, '00');
         postHeight();
         return;
       }
